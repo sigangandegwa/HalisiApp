@@ -112,10 +112,10 @@ graph TD
 
 ## 👥 The Team
 Built with ❤️ by the **Chiromo Tech Club (University of Nairobi)** for the Hackathon:
-* **Collins Kimanzi** - Lead Architect, AI Pipeline & UI/UX
+* **Dennis Kuria** - Tech Lead, Lead Architect, AI Pipeline & Database
+* **Collins Kimanzi** - UI/UX Engineer & Design System
 * **Geoffrey** - Ingestion Pipelines & External Integrations
-* **Ndegwa** - Frontend Application & Design System
-* **Dennis** - Full-Stack QA & Cross-module Integration
+* **Ndegwa** - Frontend Application & UI Components
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=rect&color=27ae60&height=40&text=Securing%20Kenya's%20Digital%20Economy&fontColor=ffffff&fontSize=20&fontAlignY=65" />
