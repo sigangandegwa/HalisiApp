@@ -56,7 +56,7 @@ This file serves as the single source of truth (SSOT) for coordinating human dev
 | **TSK-001** | **P0** | Database | Deploy Supabase SQL schema (`merchants`, `threats`, `remediation_logs`) | Collins | `[x] Done` | None |
 | **TSK-002** | **P0** | Backend Core | Initialize FastAPI monorepo scaffolding with Pydantic v2 schemas | Collins | `[x] Done` | TSK-001 |
 | **TSK-003** | **P0** | AI Engine | Implement perceptual hash calculation (`hasher.py`) with `imagehash` | Dennis | `[x] Done` | TSK-002 |
-| **TSK-004** | **P0** | AI Engine | Implement `rapidfuzz` Jaro-Winkler string similarity & Kenyan scam tokens | Dennis | `[ ] Pending` | TSK-002 |
+| **TSK-004** | **P0** | AI Engine | Implement `rapidfuzz` Jaro-Winkler string similarity & Kenyan scam tokens | Dennis | `[x] Done` | TSK-002 |
 | **TSK-005** | **P0** | Frontend | Scaffold Next.js 14 App Router with Tailwind CSS and shadcn/ui | Ndegwa | `[ ] Pending` | None |
 | **TSK-006** | **P1** | Ingestion | Build Playwright OpenGraph public scraper (`page_scraper.py`) | Geoffrey | `[ ] Pending` | TSK-002 |
 | **TSK-007** | **P1** | Ingestion | Create realistic mock dataset generator (`mock_seeder.py`) for demo | Geoffrey | `[ ] Pending` | TSK-002 |
@@ -152,7 +152,7 @@ halisi/
 ### Milestone 2: Core Engine & Ingestion (The Detection Brain)
 
 - [x] Dennis: Implement `backend/app/engine/hasher.py` and write unit test with 2 sample logos.  
-- [ ] Dennis: Implement `backend/app/engine/matcher.py` with Jaro-Winkler and token weighting.  
+- [x] Dennis: Implement `backend/app/engine/matcher.py` with Jaro-Winkler and token weighting.  
 - [ ] Dennis: Combine sub-scores in `backend/app/engine/scorer.py` and output normalized 0-100 score.  
 - [ ] Geoffrey: Build `backend/app/ingestion/mock_seeder.py` with 3 authentic Kenyan stores and 2 realistic clone targets.  
 - [ ] Geoffrey: Build basic HTTPX OpenGraph metadata scraper in `page_scraper.py`.
@@ -193,6 +193,7 @@ halisi/
 | 2026-09-24 03:15 | Antigravity / Agent | CREATE | `backend/app/*`, `database/schema.sql` | Scaffolded FastAPI monorepo, schemas, and Supabase SQL. Assigned UI to Collins/Dennis |
 | 2026-09-24 03:38 | Antigravity / Agent | CREATE | `README.md`, `LICENSE.md` | Created animated project README and open-source MIT license |
 | 2026-09-25 00:20 | Antigravity / Agent | CREATE | `backend/app/engine/hasher.py`, `test_hash.py` | Implemented TSK-003 perceptual hashing and unit tests. Fixed team roles for Dennis and Collins |
+| 2026-09-25 00:26 | Antigravity / Agent | CREATE | `backend/app/engine/matcher.py`, `test_matcher.py` | Implemented TSK-004 Jaro-Winkler string similarity and Kenyan scam token logic |
 
 ---
 
