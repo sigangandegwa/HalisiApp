@@ -28,7 +28,7 @@ This file serves as the single source of truth (SSOT) for coordinating human dev
 | Member           | Core Domain                 | Primary Files & Modules                      |  
 \+------------------+-----------------------------+----------------------------------------------+  
 | Collins Kimanzi  | Lead Architect, AI Pipeline | backend/app/engine/\*, backend/app/alerts/\*,  |  
-|                  | & Database Admin            | database schema, security, system consensus   |  
+|                  | DB Admin, Frontend UI/UX    | database schema, security, system consensus   |  
 \+------------------+-----------------------------+----------------------------------------------+  
 | Geoffrey         | Ingestion Pipelines, APIs   | backend/app/ingestion/\*, OpenGraph Scrapers, |  
 |                  | & External Integrations     | Africa's Talking SMS, mock data generator    |  
@@ -37,7 +37,7 @@ This file serves as the single source of truth (SSOT) for coordinating human dev
 |                  | Design System & UX          | Merchant Dashboard, visual risk radar charts |  
 \+------------------+-----------------------------+----------------------------------------------+  
 | Dennis           | Full-Stack (Python/TS),     | Testing, QA, API Routes, Shared Components,  |  
-|                  | QA & Cross-module support   | Integration tasks across frontend & backend  |  
+|                  | UI Assistance & Integration | Integration tasks across frontend & backend  |  
 \+------------------+-----------------------------+----------------------------------------------+  
 ---
 
@@ -53,8 +53,8 @@ This file serves as the single source of truth (SSOT) for coordinating human dev
 
 | Task ID | Priority | Module | Description | Owner | Status | Dependencies |
 | :---- | :---: | :---- | :---- | :---- | :---: | :---- |
-| **TSK-001** | **P0** | Database | Deploy Supabase SQL schema (`merchants`, `threats`, `remediation_logs`) | Collins | `[ ] Pending` | None |
-| **TSK-002** | **P0** | Backend Core | Initialize FastAPI monorepo scaffolding with Pydantic v2 schemas | Collins | `[ ] Pending` | TSK-001 |
+| **TSK-001** | **P0** | Database | Deploy Supabase SQL schema (`merchants`, `threats`, `remediation_logs`) | Collins | `[x] Done` | None |
+| **TSK-002** | **P0** | Backend Core | Initialize FastAPI monorepo scaffolding with Pydantic v2 schemas | Collins | `[x] Done` | TSK-001 |
 | **TSK-003** | **P0** | AI Engine | Implement perceptual hash calculation (`hasher.py`) with `imagehash` | Collins | `[ ] Pending` | TSK-002 |
 | **TSK-004** | **P0** | AI Engine | Implement `rapidfuzz` Jaro-Winkler string similarity & Kenyan scam tokens | Collins | `[ ] Pending` | TSK-002 |
 | **TSK-005** | **P0** | Frontend | Scaffold Next.js 14 App Router with Tailwind CSS and shadcn/ui | Ndegwa | `[ ] Pending` | None |
@@ -190,6 +190,7 @@ halisi/
 | 2026-09-23 00:51 | Gemini Spark / Collins | CREATE | `AGENTS.md` | Monorepo sync, task boards, codebase map & guidelines |
 | 2026-09-24 03:02 | Antigravity / Agent | UPDATE | `AGENTS.md` | Add Dennis to Team Ownership & Responsibilities Matrix |
 | 2026-09-24 03:06 | Antigravity / Agent | UPDATE | `All .md files` | Purged Meta Ad API & automated Safaricom escalations to ensure hackathon feasibility |
+| 2026-09-24 03:15 | Antigravity / Agent | CREATE | `backend/app/*`, `database/schema.sql` | Scaffolded FastAPI monorepo, schemas, and Supabase SQL. Assigned UI to Collins/Dennis |
 
 ---
 
