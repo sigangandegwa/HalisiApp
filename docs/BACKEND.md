@@ -28,7 +28,7 @@
 | Brev GPU deployment | **Collins** | `docs/BREV_ENGINE_SETUP.md`, `deploy/` |
 | API, config, DB, repository layer, security | **Geoffrey** | `backend/app/api/*`, `backend/app/core/*`, `database/*` |
 | Ingestion (URL parsing, OG scraper, extractors, seeder) | **Geoffrey** | `backend/app/ingestion/*` |
-| Alerts (Telegram, Africa's Talking) | **Geoffrey** | `backend/app/alerts/*` |
+| In-app alerts (dispatcher + alert endpoints; no Telegram/SMS) | **Geoffrey** | `backend/app/alerts/*` |
 
 ---
 
@@ -40,7 +40,7 @@
                                                         │
                                                         ├── engine/   pure scoring (pHash, dHash, CLIP, RapidFuzz)
                                                         ├── ingestion/ URL parse, OG fetch, extractors, seeder
-                                                        ├── alerts/    Telegram, Africa's Talking
+                                                        ├── alerts/    in-app alert dispatcher (merchant_alerts table)
                                                         └── LLM ──► NVIDIA NIM (hosted build.nvidia.com, or self-hosted on Brev)
 ```
 
@@ -77,7 +77,7 @@ backend/
 │   │   └── logging.py
 │   ├── api/v1/
 │   │   ├── router.py
-│   │   └── endpoints/  check.py  merchants.py  threats.py  remediation.py  reports.py  stats.py  simulator.py
+│   │   └── endpoints/  check.py  merchants.py  threats.py  alerts.py  remediation.py  reports.py  stats.py  simulator.py
 │   ├── engine/
 │   │   ├── imaging.py             # load/normalise images (alpha, EXIF, square pad, size limits)
 │   │   ├── hasher.py              # pHash/dHash + calibrated similarity
@@ -93,7 +93,7 @@ backend/
 │   │   ├── extractors.py          # Kenyan phone/till/paybill regexes, OG description parser
 │   │   ├── mock_seeder.py         # seeds Supabase or MemoryRepository
 │   │   └── fixtures/              # seed JSON + generated logo assets
-│   ├── alerts/  telegram_bot.py  africas_talking.py  dispatcher.py
+│   ├── alerts/  dispatcher.py
 │   └── schemas/ merchant.py  threat.py  check.py  remediation.py  report.py  common.py
 ├── tests/  (mirrors app/: tests/engine/test_hasher.py, ...)
 ├── requirements.txt  requirements-ml.txt  requirements-dev.txt
@@ -115,7 +115,7 @@ Conventions:
 
 ## 4. Data model
 
-**Source of truth: [database/schema.sql](../database/schema.sql) (v2).** Tables: `merchants`, `merchant_handles`, `threats`, `scans`, `remediation_logs`, `community_reports`, plus the RPC `match_merchant_logos`.
+**Source of truth: [database/schema.sql](../database/schema.sql) (v2).** Tables: `merchants`, `merchant_handles`, `threats`, `scans`, `remediation_logs`, `community_reports`, `merchant_alerts` (v2.1), plus the RPC `match_merchant_logos`.
 
 Why v2 replaced v1: v1 had no `logo_phash` (there was nothing to compare against), a single `risk_score` (the 5-dimension breakdown couldn't be stored), one till string, and no scans/reports tables. Its Pydantic models (`schemas/merchant.py`, `schemas/threat.py`) must be rewritten to mirror v2 (TSK-002).
 
@@ -144,6 +144,10 @@ class Repository(Protocol):
     async def get_scan(self, scan_id: UUID) -> ScanRecord | None: ...
     async def insert_remediation(self, log: RemediationCreate) -> None: ...
     async def insert_report(self, report: ReportCreate) -> UUID: ...
+    async def insert_alert(self, alert: AlertCreate) -> AlertRecord: ...
+    async def last_alert_for_threat(self, threat_id: UUID) -> AlertRecord | None: ...
+    async def list_alerts(self, merchant_id: UUID, since: datetime | None, unread_only: bool, limit: int) -> list[AlertRecord]: ...
+    async def mark_alerts_read(self, merchant_id: UUID, ids: list[UUID] | None) -> int: ...   # None = all; returns unread count
     async def stats(self, merchant_id: UUID | None) -> Stats: ...
 ```
 
@@ -164,6 +168,8 @@ Base path `/api/v1`. JSON everywhere. Write endpoints require the header `X-Hali
 | GET | `/api/v1/merchants/{slug}` | public | Public verified profile (`/v/[slug]` page) |
 | POST | `/api/v1/merchants` | key | Onboard merchant (multipart: JSON + logo file) |
 | GET | `/api/v1/merchants/{id}/threats?status=` | key | Dashboard feed |
+| GET | `/api/v1/merchants/{id}/alerts?since=&unread=` | key | In-app alerts (polled every 5 s) |
+| POST | `/api/v1/merchants/{id}/alerts/read` | key | Mark alerts read |
 | GET | `/api/v1/threats/{id}` | key | Threat detail |
 | PATCH | `/api/v1/threats/{id}` | key | Update status `{ "status": "takedown_filed" }` |
 | POST | `/api/v1/threats/{id}/playbooks?lang=en\|sw` | key | Generate remediation playbooks |
@@ -261,7 +267,7 @@ Errors: `422` invalid input, `404` scan not found, `429` rate limited, `502` `{"
 
 ### 5.5 `POST /api/v1/merchants` (key, multipart)
 
-Fields: `data` (JSON: business_name, slug, aliases[], category, location, established_on, mpesa_type, mpesa_number, mpesa_account_name, phone_numbers[], handles[{platform, handle}], telegram_chat_id?, alert_phone?) and `logo` (PNG/JPEG/WebP ≤ 5 MB). The server computes pHash, dHash and CLIP, and returns the merchant plus `logo_phash`.
+Fields: `data` (JSON: business_name, slug, aliases[], category, location, established_on, mpesa_type, mpesa_number, mpesa_account_name, phone_numbers[], handles[{platform, handle}]) and `logo` (PNG/JPEG/WebP ≤ 5 MB). The server computes pHash, dHash and CLIP, and returns the merchant plus `logo_phash`.
 
 ### 5.6 Threat endpoints (key)
 
@@ -501,24 +507,38 @@ Use **fictional** businesses only. Search each name first to make sure it isn't 
 
 ---
 
-## 8. Alerts (Geoffrey)
+## 8. In-app alerts (Geoffrey)
 
-### 8.1 Telegram (`alerts/telegram_bot.py`), TSK-012
+**Scope decision (2026-09-27): no Telegram and no SMS.** Merchants are alerted **inside Halisi**: a dashboard live feed, an unread bell, toasts, and opt-in browser notifications (FRONTEND.md section 6.10). M-Pesa is also never integrated through an API. Payment signals come only from text on the page (section 6.5).
 
-- Call the Bot API directly with the shared httpx client. No extra library is needed.
-- Use **`parse_mode: "HTML"` with `html.escape()`**. The old snippet in DEVELOPMENT.md used legacy `Markdown`. Handles like `nairobi_sneakervault_official_ke` contain underscores, which Telegram reads as italics markers, and the API rejects the message with *"can't parse entities"*.
-- Message: verdict, score, target handle, top 2 reasons, and an inline keyboard button "Open in Halisi" (dashboard threat URL). If `avatar_url` is available, use `sendPhoto` with the caption.
-- Linking a merchant: deep link `https://t.me/<bot>?start=<merchant_slug>`. A `/start` handler (webhook or `getUpdates` polling script) stores `chat_id` on the merchant.
-- Trigger: `dispatcher.py` runs in `BackgroundTasks` when a threat is created or crosses the threshold. De-duplicate: one alert per threat per 6 hours.
+### 8.1 Dispatcher (`alerts/dispatcher.py`), TSK-012
 
-### 8.2 Africa's Talking SMS (`alerts/africas_talking.py`), TSK-013
+- Runs in `BackgroundTasks` after `upsert_threat`. It writes a `merchant_alerts` row (schema v2.1) when:
+  - a threat is **created** with composite ≥ `THREAT_THRESHOLD` → `kind = "new_threat"`
+  - an existing threat's score **rises by ≥ 10** or crosses the threshold → `kind = "score_increase"`
+  - a threat becomes `resolved` → `kind = "resolved"`
+- **De-duplication:** at most one alert per threat per `ALERT_DEDUP_HOURS` (default 6), unless the score rose.
+- `title`: `"Impersonator detected: @{target_handle}"` (or `"Score rose to {score}: @{target_handle}"`). `body`: the top reason's plain text. No phone numbers in title/body. The dashboard is key-protected, but notifications can appear on lock screens.
+- The dispatcher is pure DB work: no external calls, so it works identically in `DEMO_MODE` (MemoryRepository).
 
-- The **sandbox does not deliver to real phones**. Messages appear in the AT web simulator (simulator.africastalking.com). For the demo, show the simulator on screen, or use live credits.
-- The SDK is synchronous. Call it via `asyncio.to_thread`. Keep messages at 160 characters or fewer.
+### 8.2 Alert endpoints (key), TSK-012
 
-### 8.3 (P2) Consumer checker bot, TSK-030
+`GET /api/v1/merchants/{id}/alerts?since=<ISO-8601>&unread=true&limit=20`
 
-The same Telegram bot answers consumers: forward a link or type a till/phone number, and the bot calls `/check` or `/verify/payment` internally and replies with the verdict and safe action (EN/SW).
+```json
+{ "alerts": [ { "id": "…", "threat_id": "…", "kind": "new_threat",
+                "title": "Impersonator detected: @nairobi_sneakervault_official_ke",
+                "body": "Uses a logo 97% identical to yours and asks customers to pay an unregistered number.",
+                "score": 94.25, "created_at": "2026-09-27T14:02:11Z", "read_at": null,
+                "threat": { /* ThreatSummary, section 5.6 */ } } ],
+  "unread_count": 2, "server_time": "2026-09-27T14:02:15Z" }
+```
+
+The frontend polls every 5 s and passes the previous `server_time` as `since`. That cursor is on server time, so client clock skew doesn't matter.
+
+`POST /api/v1/merchants/{id}/alerts/read` with `{ "ids": ["…"] }` or `{ "all": true }` → `{ "unread_count": 0 }`.
+
+Why polling rather than WebSockets/SSE: it passes cleanly through the Next.js proxy and ngrok, survives Wi-Fi drops, and 5 s latency is plenty for the demo. SSE is a possible P2 upgrade.
 
 ---
 
@@ -530,7 +550,7 @@ An APScheduler job in the API process (not Celery or Redis for the MVP) re-fetch
 
 ## 10. Demo mode
 
-`DEMO_MODE=true` means: `MemoryRepository` loaded from fixtures, the scraper serves tier 1 only, LLM calls are skipped (templates), and alerts are logged instead of sent unless `TELEGRAM_BOT_TOKEN` is set. The whole backend then runs with **no internet**. Test it with Wi-Fi off before demo day.
+`DEMO_MODE=true` means: `MemoryRepository` loaded from fixtures, the scraper serves tier 1 only, LLM calls are skipped (templates), and in-app alerts are written to the in-memory repository exactly as in production. The whole backend then runs with **no internet**. Test it with Wi-Fi off before demo day.
 
 ---
 
@@ -555,12 +575,13 @@ An APScheduler job in the API process (not Celery or Redis for the MVP) re-fetch
 backend/tests/
 ├── conftest.py                  # MemoryRepository fixture seeded from fixtures, TestClient, respx router
 ├── engine/test_imaging.py       # alpha->white, EXIF, square pad, bomb guard
-├── engine/test_hasher.py        # identical=100, recolor/crop >= 80, unrelated <= 10 (generated images)
+├── engine/test_hasher.py        # identical=100; jpeg/downscale/overlay/recolor >= 80; unrelated <= 10; crop = strict xfail (CLIP's job)
 ├── engine/test_matcher.py       # golden identity table (section 6.4) + language weights
 ├── engine/test_payment.py       # extractor regexes: 0712 345 678, +254-712-345678, 0112345678, "Till No. 543210"
 ├── engine/test_scorer.py        # section 6.8 required cases, renormalisation, overrides
 ├── engine/test_remediation.py   # validator rejects invented number; template fallback on timeout
 ├── api/test_check.py            # official / impersonation / no_match / 422 / 502 -> manual
+├── api/test_alerts.py           # dispatcher create / de-dup / score_increase; since cursor; mark read
 └── api/test_security.py         # SSRF (127.0.0.1, 169.254.169.254, [::1], redirect-to-private), rate limit, API key
 ```
 
@@ -583,11 +604,11 @@ target-version = "py312"
 
 Each card: owner · priority · depends on. **Done** means the code is merged, tests pass, and AGENTS.md is updated.
 
-**TSK-001 Deploy schema v2**: Geoffrey · P0. Run `database/schema.sql` in Supabase, and add the URL and service key to `backend/.env`. *Done:* all 6 tables and the RPC exist; `select match_merchant_logos(array_fill(0, array[512])::vector, 1)` runs.
+**TSK-001 Deploy schema v2**: Geoffrey · P0. Run `database/schema.sql` in Supabase, and add the URL and service key to `backend/.env`. *Done:* all 7 tables and the RPC exist; `select match_merchant_logos(array_fill(0, array[512])::vector, 1)` runs.
 
 **TSK-002 Core scaffolding**: Geoffrey · P0 · 001. `config.py`, `repository.py` (both implementations), `cache.py`, `logging.py`, `main.py` lifespan and error handlers, `api/v1/router.py`, Pydantic v2 schemas for every model in section 5, and `pyproject.toml`. *Done:* `uvicorn app.main:app` starts with `DEMO_MODE=true` and no network; `/health` matches section 5.1; `/docs` lists every route (stubs return fixtures).
 
-**TSK-015 Hasher v2 + imaging**: Collins · P0 · 002. Implements sections 6.1–6.2 and moves the download into ingestion. *Done:* `test_imaging.py` and `test_hasher.py` pass; unrelated generated images score ≤ 10.
+**TSK-015 Hasher v2 + imaging**: Collins · P0 · 002. Implements sections 6.1–6.2 and removes the download from the engine (fetching belongs in ingestion, TSK-006/019). *Done:* `test_imaging.py` and `test_hasher.py` pass; unrelated generated images score ≤ 10. **Done 2026-09-27.** Measured on the generated set: jpeg/downscale/recolour move pHash 0–4 bits, a caption overlay moves it up to 8, unrelated logos are 30–40 apart, but an 85% crop moves it 10–28 bits. **Hashes do not catch crops**; CLIP (TSK-017) must.
 
 **TSK-016 Matcher v2**: Geoffrey · P0 · 002. Implements sections 6.4 and 6.6. *Done:* the golden table passes; root test scripts are deleted.
 
@@ -607,13 +628,13 @@ Each card: owner · priority · depends on. **Done** means the code is merged, t
 
 **TSK-009 Remediation**: Collins · P1 · 008. Section 6.9. *Done:* LLM and template paths both produce EN and SW output; the validator test passes; prompts are registered in AGENTS.md section 7.
 
-**TSK-012 Telegram alerts**: Geoffrey · P1 · 018. Section 8.1. *Done:* a seeded clone triggers a real Telegram message with a photo and button, and no duplicate within 6 hours.
+**TSK-012 In-app alerts (backend)**: Geoffrey · P1 · 018. Section 8. *Done:* scoring a seeded clone creates exactly one `new_threat` alert; a repeat check within 6 h creates none; a +10 score rise creates `score_increase`; `/alerts?since=` returns only newer rows; mark-read updates `unread_count`. Tests cover all of these in DEMO_MODE.
 
 **TSK-022 Reports + payment lookup**: Geoffrey · P1 · 018. `/reports` and `/verify/payment`. *Done:* a confirmed report flips a number to `reported`, and O3 applies in `/check`.
 
 **TSK-031 Simulator endpoint**: Collins · P1 · 008. Section 5.10. *Done:* each tweak combination returns a real engine score within 1.5 s.
 
-**TSK-013 Africa's Talking SMS**: Geoffrey · P2. **TSK-029 Takedown tracker**: Geoffrey · P2. **TSK-030 Consumer Telegram bot**: Geoffrey · P2. **TSK-028 Evidence dossier PDF** (Jinja2 → HTML → PDF, including side-by-side images, hashes, timestamps and a SHA-256 of the evidence bundle): Collins · P2.
+~~TSK-013 Africa's Talking SMS~~ and ~~TSK-030 Consumer Telegram bot~~: **dropped 2026-09-27** (no Telegram/SMS). **TSK-029 Takedown tracker**: Geoffrey · P2. **TSK-028 Evidence dossier PDF** (Jinja2 → HTML → PDF, including side-by-side images, hashes, timestamps and a SHA-256 of the evidence bundle): Collins · P2.
 
 ---
 

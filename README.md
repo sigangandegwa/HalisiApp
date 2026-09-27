@@ -24,7 +24,7 @@ In Kenya, social commerce runs on Instagram, Facebook, TikTok and WhatsApp, and 
 - 🔍 **Check a page**: paste a link and get **HALISI** (official), **FEKI** (impersonator), **TAHADHARI** (caution) or **HAIJULIKANI** (not verified), with plain-language reasons.
 - 💳 **Check a till or phone**: is this number registered to a verified business, or reported by other customers?
 - 🏅 **Halisi Verified**: a certificate page and QR story sticker merchants post, so customers have one trusted place to confirm the real page and till.
-- 📡 **Merchant alerts**: Telegram (and SMS) alerts with the evidence, plus a live threat dashboard.
+- 📡 **Live merchant alerts**: in-app alerts in the Halisi dashboard (bell, toasts, and opt-in phone/browser notifications) with the evidence attached.
 - 📝 **AI-drafted response kit**: customer warnings in **English and Swahili**, Instagram/Facebook impersonation report text, and Safaricom and KE-CIRT/CC report drafts. The kit is grounded in computed evidence and **sent by the merchant**, never auto-filed.
 
 ---
@@ -55,7 +55,7 @@ graph TD
     F -->|>= 70| G[FEKI: threat created]
     F -->|40-69| H[TAHADHARI]
     F -->|< 40| I[HAIJULIKANI: not verified]
-    G --> J[Telegram / SMS alert]
+    G --> J[In-app alert + browser notification]
     G --> K[AI response kit via NVIDIA NIM, validated, human sends]
 ```
 
@@ -66,7 +66,7 @@ graph TD
 - **Backend:** FastAPI, Pydantic v2, HTTPX
 - **AI engine:** CLIP ViT-B-32 on **NVIDIA Brev** GPUs, imagehash, RapidFuzz; remediation LLM via **NVIDIA NIM** (Llama 3.1)
 - **Data:** Supabase Postgres + pgvector
-- **Integrations:** Telegram Bot API, Africa's Talking
+- **Alerts:** in-app (polling + service-worker notifications), no third-party messaging
 
 ---
 

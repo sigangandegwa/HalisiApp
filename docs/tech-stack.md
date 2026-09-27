@@ -83,11 +83,10 @@ Dropped from v0.1: the MiniLM bio embeddings (no clear gain over the lexicon for
 
 ## 7. Alerts and remediation delivery
 
-* **Telegram Bot API** (direct HTTPS via httpx, `parse_mode=HTML`): merchant alerts with photo + button; P2 consumer checker bot
-* **Africa's Talking SMS** (sandbox delivers only to the AT simulator; live credits are needed for real phones)
+* **In-app alerts only** (scope decision 2026-09-27): a `merchant_alerts` table polled by the dashboard every 5 s → bell, toast, tab badge, and opt-in browser notifications through a service worker. **No Telegram, no SMS, no M-Pesa API.**
 * **Email drafts**: `mailto:` links with pre-filled subject/body (the human sends). Resend API is P2.
 * **Evidence dossier**: Jinja2 → HTML → PDF (P2)
-* **P2 stretch**: Africa's Talking USSD "check a till" menu for feature phones
+* **P2 stretch**: Africa's Talking USSD "check a till" menu for feature phones (only if an AT account is available)
 
 ---
 

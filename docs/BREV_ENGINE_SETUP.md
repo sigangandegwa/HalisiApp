@@ -36,7 +36,6 @@ Why this shape:
 | 2 | NVIDIA API key (`nvapi-…`) | build.nvidia.com → any model → *Get API Key* | `LLM_API_KEY` |
 | 3 | ngrok account, authtoken, and **one free static domain** | dashboard.ngrok.com → *Domains* | ngrok config, `HALISI_API_URL` |
 | 4 | Supabase URL + service-role key | Supabase project → Settings → API | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` |
-| 5 | Telegram bot token | @BotFather | `TELEGRAM_BOT_TOKEN` |
 | 6 | *(Optional, self-hosted NIM)* NGC API key | ngc.nvidia.com → Setup → API Key | `NGC_API_KEY` |
 | 7 | GitHub access for the private repo | fine-grained PAT (read-only) or `gh auth login` | instance git |
 
@@ -140,7 +139,6 @@ LLM_ENABLED=true
 LLM_BASE_URL=https://integrate.api.nvidia.com/v1
 LLM_API_KEY=nvapi-...
 LLM_MODEL=meta/llama-3.1-8b-instruct
-TELEGRAM_BOT_TOKEN=...
 ```
 
 Generate a key with `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
@@ -318,7 +316,7 @@ python -m app.engine.calibrate --fixtures app/ingestion/fixtures --out ../docs/c
 1. `brev start halisi-engine` → `brev shell halisi-engine` → `systemctl status halisi-api halisi-tunnel`.
 2. `curl -s https://$NGROK_DOMAIN/health -H "ngrok-skip-browser-warning: 1"`. `clip` must be `cuda` and `db` must be `ok`.
 3. Warm-up: run the 3 simulator presets once (this triggers CLIP, the DB and the LLM paths).
-4. Confirm the Telegram alert arrives on the presenter's phone.
+4. Confirm the in-app alert arrives as a browser notification on the presenter's Android phone (dashboard open, alerts enabled).
 
 **Failover ladder (practise it once before the day)**
 

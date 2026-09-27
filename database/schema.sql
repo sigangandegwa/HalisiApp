@@ -1,5 +1,6 @@
 -- =============================================================================
--- Halisi Supabase schema v2 (TSK-001)
+-- Halisi Supabase schema v2.1 (TSK-001)
+-- v2.1 (2026-09-27): Telegram/SMS alert columns removed; merchant_alerts table added for in-app alerts.
 -- Run in the Supabase SQL Editor on a fresh project. Safe to re-run (IF NOT EXISTS).
 -- This file is the single source of truth for the data model.
 -- backend/app/schemas/*.py (Pydantic) must mirror it. See docs/BACKEND.md section 4.
@@ -31,8 +32,6 @@ create table if not exists merchants (
     mpesa_number       text,                  -- till / paybill / pochi phone
     mpesa_account_name text,                  -- name shown on the M-Pesa confirmation SMS
     phone_numbers      text[] not null default '{}',  -- official numbers, E.164 (+2547XXXXXXXX)
-    telegram_chat_id   text,
-    alert_phone        text,                  -- E.164, for Africa's Talking SMS alerts
     is_verified        boolean not null default false,
     created_at         timestamptz not null default now(),
     updated_at         timestamptz not null default now()
@@ -100,7 +99,7 @@ create table if not exists scans (
     platform         text,
     target_handle    text,
     source           text not null default 'public_checker'
-                     check (source in ('public_checker', 'telegram_bot', 'scheduled', 'simulator', 'seed')),
+                     check (source in ('public_checker', 'scheduled', 'simulator', 'seed')),
     verdict          text not null check (verdict in ('official', 'impersonation', 'suspicious', 'no_match', 'error')),
     composite_score  numeric(5,2),
     merchant_id      uuid references merchants(id) on delete set null,
@@ -145,6 +144,22 @@ create table if not exists community_reports (
 );
 
 -- -----------------------------------------------------------------------------
+-- merchant_alerts: in-app alerts shown in the dashboard bell, toasts and browser notifications
+-- (no Telegram/SMS). One row per threat event; de-duplicated by the dispatcher.
+-- -----------------------------------------------------------------------------
+create table if not exists merchant_alerts (
+    id           uuid primary key default gen_random_uuid(),
+    merchant_id  uuid not null references merchants(id) on delete cascade,
+    threat_id    uuid not null references threats(id) on delete cascade,
+    kind         text not null check (kind in ('new_threat', 'score_increase', 'resolved')),
+    title        text not null,                -- e.g. "Impersonator detected: @nairobi_sneakervault_official_ke"
+    body         text not null,                -- top reason, plain language
+    score        numeric(5,2),
+    created_at   timestamptz not null default now(),
+    read_at      timestamptz
+);
+
+-- -----------------------------------------------------------------------------
 -- Indexes
 -- -----------------------------------------------------------------------------
 create index if not exists idx_handles_merchant      on merchant_handles (merchant_id);
@@ -156,6 +171,8 @@ create index if not exists idx_merchants_mpesa        on merchants (mpesa_number
 create index if not exists idx_scans_created          on scans (created_at desc);
 create index if not exists idx_reports_phone          on community_reports (reported_phone);
 create index if not exists idx_reports_till           on community_reports (reported_till);
+create index if not exists idx_alerts_merchant_time  on merchant_alerts (merchant_id, created_at desc);
+create index if not exists idx_alerts_unread         on merchant_alerts (merchant_id) where read_at is null;
 
 -- -----------------------------------------------------------------------------
 -- updated_at trigger
@@ -196,3 +213,4 @@ alter table threats            enable row level security;
 alter table scans              enable row level security;
 alter table remediation_logs   enable row level security;
 alter table community_reports  enable row level security;
+alter table merchant_alerts    enable row level security;
