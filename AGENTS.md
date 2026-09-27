@@ -56,11 +56,11 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[x] Done` | 002 |
 | TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[x] Done` | 002, 008 |
 | TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[x] Done` | 018 |
-| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[ ] Pending` | 018 |
+| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[x] Done` | 018 |
 | TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | 015 |
 | TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | 008 |
-| TSK-012 | P1 | Alerts | Telegram alerts (HTML mode, photo, button, de-dup) + chat linking | Geoffrey | `[ ] Pending` | 018 |
-| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[ ] Pending` | 018 |
+| TSK-012 | P1 | Alerts | Telegram alerts (HTML mode, photo, button, de-dup) + chat linking | Geoffrey | `[x] Done` | 018 |
+| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[x] Done` | 018 |
 | TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[ ] Pending` | 008 |
 | TSK-013 | P2 | Alerts | Africa's Talking SMS (sandbox simulator) | Geoffrey | `[ ] Pending` | 018 |
 | TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
@@ -118,11 +118,11 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[x] Done` | 002 |
 | TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[x] Done` | 002, 008 |
 | TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[x] Done` | 018 |
-| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[ ] Pending` | 018 |
+| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[x] Done` | 018 |
 | TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | 015 |
 | TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | 008 |
-| TSK-012 | P1 | Alerts | **In-app alerts backend**: `merchant_alerts` dispatcher (create, de-dup, score rise) + `/alerts` poll + mark-read (was Telegram) | Geoffrey | `[ ] Pending` | 018 |
-| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[ ] Pending` | 018 |
+| TSK-012 | P1 | Alerts | **In-app alerts backend**: `merchant_alerts` dispatcher (create, de-dup, score rise) + `/alerts` poll + mark-read (was Telegram) | Geoffrey | `[x] Done` | 018 |
+| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[x] Done` | 018 |
 | TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[ ] Pending` | 008 |
 | TSK-013 | — | Alerts | ~~Africa's Talking SMS~~ | — | `[-] Dropped` (no SMS) | — |
 | TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
@@ -201,7 +201,7 @@ halisi/
 │   │   │   ├── remediation.py + prompts/  [PLANNED] TSK-009
 │   │   │   └── calibrate.py               [PLANNED] TSK-017
 │   │   ├── ingestion/ url_parser.py page_scraper.py extractors.py mock_seeder.py fixtures/   [PLANNED] TSK-006/007/018/021
-│   │   ├── alerts/ dispatcher.py                                                            [PLANNED] TSK-012 (in-app only)
+│   │   ├── alerts/ dispatcher.py                                                            [DONE] TSK-012 (in-app only)
 │   │   └── schemas/ merchant.py threat.py check.py remediation.py report.py common.py   [DONE] Pydantic v2 (TSK-002)
 │   └── tests/engine/                      [DONE] hasher, imaging, matcher, payment, scorer tests · api/ [PLANNED]
 ├── frontend/                              [PLANNED] TSK-005, full tree in FRONTEND.md section 3.1
@@ -232,8 +232,8 @@ halisi/
 ### Milestone 3: Remediation & alerts
 
 - [ ] Collins: NIM playbooks + validator + EN/SW templates (TSK-009); prompts registered in section 7.
-- [ ] Geoffrey: In-app alert rows created and de-duplicated; `/alerts` poll works (TSK-012).
-- [ ] Geoffrey: Reports + payment lookup (TSK-022).
+- [x] Geoffrey: In-app alert rows created and de-duplicated; `/alerts` poll works (TSK-012).
+- [x] Geoffrey: Reports + payment lookup (TSK-022).
 
 ### Milestone 4: Frontend control center & public verification
 
@@ -286,9 +286,17 @@ halisi/
 | 2026-09-27 15:23 | Antigravity / Ndegwa | CREATE / UPDATE | `frontend/src/*`, `AGENTS.md` | TSK-020 & TSK-033 completed: Brand ornaments (Guilloche, Microprint, Stamp, Seal) and Styleguide page built. API layer configured with Next.js proxy, auth middleware, and demo JSON fixtures. |
 
 
-| 2026-09-27 15:52 | Antigravity / Geoffrey | UPDATE | `backend/tests/engine/test_payment.py`, `AGENTS.md` | Added explicit tests for TSK-021 extractors as per BACKEND.md section 12, resolved Git conflict, and marked task as done |
+| 2026-09-27 15:52 | Antigravity / Geoffrey | UPDATE | `backend/app/tests/engine/test_payment.py`, `AGENTS.md` | Added explicit tests for TSK-021 extractors as per BACKEND.md section 12, resolved Git conflict, and marked task as done |
+| 2026-09-27 16:15 | Antigravity / Agent | CREATE / UPDATE | `backend/app/alerts/dispatcher.py`, `backend/app/schemas/alert.py`, `backend/app/api/v1/router.py`, `backend/app/core/repository.py`, `backend/tests/api/test_alerts.py` | Implemented TSK-012 (In-app alerts backend): added `Alert` schemas and repository methods, implemented `dispatch_alert` BackgroundTask, created alert endpoints `/merchants/{id}/alerts` and `/alerts/read`, and added test suite `test_alerts.py` |
+| 2026-09-27 16:27 | Antigravity / Agent | UPDATE | `backend/app/alerts/dispatcher.py`, `backend/app/schemas/alert.py`, `AGENTS.md` | TSK-012 finalisation: fixed all ruff lint errors (import order, unused imports, `Optional`→`X\|None`, `timezone.UTC` alias, line-length); tightened de-dup logic (score_increase bypasses window per spec, resolved/new_threat still obey it; timezone-aware comparison). All 4 `test_alerts.py` tests pass, ruff clean. Marked TSK-012 `[x] Done` in both task matrices. |
+| 2026-09-27 16:26 | Antigravity / Agent | UPDATE | `backend/app/ingestion/page_scraper.py`, `backend/tests/ingestion/test_page_scraper.py` | TSK-006: Fixed incomplete edit — added missing `from datetime import date` import (F821), sorted imports (I001), converted `Optional[X]` to `X \| None` (UP045), split long User-Agent string (E501), added `raise … from err` (B904). Used `getattr` for optional ThreatRecord fields. Fixed incorrect PNG magic-bytes assertion in tests. `ruff check` clean; 4/4 tests pass. |
+| 2026-09-27 16:30 | Antigravity / Agent | CREATE | `backend/tests/conftest.py` | TSK-022: Root pytest conftest with `mem_repo` + `client` fixtures. Sets `DEMO_MODE=true` env var before app import and patches `settings.demo_mode` so `lifespan` always picks `MemoryRepository`. No network required. |
+| 2026-09-27 16:30 | Antigravity / Agent | CREATE | `backend/tests/api/__init__.py` | TSK-022: Empty package init so pytest can discover `conftest.py` from the root `tests/` directory. |
+| 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `backend/app/api/v1/router.py` | TSK-022: Rewrote router clean — removed unused `MerchantCreate` import, replaced `Dict`/`List`/`Optional` with built-ins, fixed all E501 long lines, changed `/reports` validation error from `HTTPException` (returns `{detail}`) to `JSONResponse(422, {error:{code,message}})` matching the global DomainException shape; moved `parse_input` import inside endpoint to avoid circular load. `ruff check` clean. |
+| 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `AGENTS.md` | TSK-022: Marked `[x] Done` in both task matrices and the Milestone 3 checklist; appended mutation log rows. Override O3 already wired in `scorer.py` (lines 269-271). |
 
 ---
+
 
 ## 7. Prompt & Heuristic Registry
 
