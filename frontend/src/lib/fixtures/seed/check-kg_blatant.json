@@ -1,0 +1,131 @@
+{
+  "scan_id": "18695b9a-d183-5487-bd97-4a7d454527e1",
+  "verdict": "impersonation",
+  "score": 96.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "kilimaniglow_official_ke",
+    "display_name": "Kilimani Glow Official",
+    "url": "https://instagram.com/kilimaniglow_official_ke",
+    "avatar_url": "/seed/kg_blatant.png",
+    "follower_count": 150,
+    "post_count": 6,
+    "account_created_on": "2026-09-20",
+    "fetched_via": "seed"
+  },
+  "matched_merchant": {
+    "id": "760e3dc7-886b-55d1-b96c-a400ed66d0f2",
+    "business_name": "Kilimani Glow",
+    "slug": "kilimani-glow",
+    "logo_url": "/seed/kg_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "kilimaniglow",
+        "url": "https://instagram.com/kilimaniglow"
+      },
+      {
+        "platform": "facebook",
+        "handle": "kilimaniglow",
+        "url": "https://facebook.com/kilimaniglow"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "400200",
+      "account_name": "KILIMANI GLOW"
+    }
+  },
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 90.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 6/64 · dHash distance 8/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'kilimaniglow_official_ke' is 'kilimaniglow' + affix 'official' 'ke'"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Asks for payment to personal number 0733 *** 111 (not registered to this business) · 1 payment number(s) confirmed in community scam reports"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 100.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "'lipa kabla', 'tuma pesa', 'no refunds'"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 90.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "Account is 5 days old · 6 posts · 150 followers"
+    }
+  ],
+  "reasons": [
+    {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+    },
+    {
+      "code": "COMMUNITY_REPORTED",
+      "severity": "high",
+      "text": "The payment number on this page has been reported by other customers.",
+      "text_sw": "Namba ya malipo kwenye ukurasa huu imeripotiwa na wateja wengine."
+    },
+    {
+      "code": "POCHI_REQUEST",
+      "severity": "high",
+      "text": "Asks for payment to a personal number, not Kilimani Glow's official payment channel.",
+      "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Kilimani Glow."
+    },
+    {
+      "code": "SCAM_LANGUAGE",
+      "severity": "high",
+      "text": "Uses pressure phrases common in scams: 'lipa kabla', 'tuma pesa', 'no refunds'.",
+      "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'lipa kabla', 'tuma pesa', 'no refunds'."
+    },
+    {
+      "code": "LOGO_COPY",
+      "severity": "high",
+      "text": "Uses a logo 90% similar to Kilimani Glow's.",
+      "text_sw": "Inatumia nembo inayofanana 90% na ya Kilimani Glow."
+    },
+    {
+      "code": "NEW_ACCOUNT",
+      "severity": "high",
+      "text": "The account was created recently (Account is 5 days old · 6 posts · 150 followers).",
+      "text_sw": "Akaunti hii imefunguliwa hivi karibuni."
+    }
+  ],
+  "hashes": {
+    "target_phash": "9d6a0f6a1de2f230",
+    "reference_phash": "9d6a1d6a1de2e262",
+    "hamming_distance": 6
+  },
+  "safe_action": {
+    "text": "Pay only via Paybill 400200 (KILIMANI GLOW) through @kilimaniglow.",
+    "text_sw": "Lipa tu kwa Paybill 400200 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
+  },
+  "threat_id": "7d1975e3-848c-5ae4-b1c3-ca43aa489f34",
+  "elapsed_ms": 1
+}

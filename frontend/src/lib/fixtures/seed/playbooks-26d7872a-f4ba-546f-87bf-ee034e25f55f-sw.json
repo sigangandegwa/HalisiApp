@@ -1,0 +1,37 @@
+{
+  "generator": "template",
+  "model": null,
+  "language": "sw",
+  "prompt_ids": [
+    "PROMPT_CONSUMER_DEFENSE_V2",
+    "PROMPT_PLATFORM_TAKEDOWN_V2",
+    "PROMPT_SAFARICOM_REPORT_V2",
+    "PROMPT_KECIRT_REPORT_V1"
+  ],
+  "consumer_warning": {
+    "title": "Tahadhari: ukurasa bandia wa Nairobi Sneaker Vault",
+    "body": "Tahadhari: @nairobisneakervau1t si ukurasa wa Nairobi Sneaker Vault.\nUsitume pesa kwa 0711 222 333.\nLipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault.\nTafadhali ripoti ukurasa huo bandia na uwatumie marafiki na familia ujumbe huu.",
+    "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20bandia%20wa%20Nairobi%20Sneaker%20Vault%0ATahadhari%3A%20%40nairobisneakervau1t%20si%20ukurasa%20wa%20Nairobi%20Sneaker%20Vault.%0AUsitume%20pesa%20kwa%200711%20222%20333.%0ALipa%20tu%20kwa%20Till%20543210%20%28NAIROBI%20SNEAKER%20VAULT%29.%20Ukurasa%20rasmi%20ni%20%40nairobisneakervault.%0ATafadhali%20ripoti%20ukurasa%20huo%20bandia%20na%20uwatumie%20marafiki%20na%20familia%20ujumbe%20huu.",
+    "generator": "template"
+  },
+  "platform_takedown": {
+    "platform": "instagram",
+    "report_url": "https://help.instagram.com/",
+    "body": "Ninaripoti akaunti inayoiga biashara yangu, Nairobi Sneaker Vault.\n\nAkaunti bandia: @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t)\nAkaunti zetu rasmi: @nairobisneakervault (instagram), @nairobisneakervault (tiktok)\n\nUshahidi uliorekodiwa na Halisi (ilionekana mara ya kwanza 2026-09-26):\n- Picha ya wasifu: umbali wa pHash 10/64 kutoka nembo yetu iliyosajiliwa (ufanano wa 70%).\n- Ufanano wa jina/akaunti na akaunti yetu rasmi: 100%.\n- Inawaomba wateja walipe kwa 0711 222 333, ambayo haijasajiliwa na biashara yetu.\n- Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault.\n- Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Nairobi Sneaker Vault.\n- Inatumia nembo inayofanana 70% na ya Nairobi Sneaker Vault.\n- Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pochi la biashara', 'delivery countrywide'.\n\nTafadhali ondoeni akaunti hii. Inatumia utambulisho wetu kupokea malipo kutoka kwa wateja wetu.",
+    "generator": "template"
+  },
+  "safaricom_report": {
+    "channel": "email",
+    "to": "<Safaricom fraud-reporting address: confirm on safaricom.co.ke before sending>",
+    "subject": "Ripoti ya ulaghai: namba ya M-Pesa inayotumika kuiga Nairobi Sneaker Vault",
+    "body": "Kwa timu ya Safaricom ya kupambana na ulaghai,\n\nNinaripoti maelezo ya malipo ya M-Pesa yanayotumiwa na ukurasa bandia wa mitandao ya kijamii unaoiga biashara yangu, Nairobi Sneaker Vault.\n\nNamba zinazopokea pesa kwenye ukurasa bandia: 0711 222 333\nUkurasa bandia: @nairobisneakervau1t kwenye instagram (https://instagram.com/nairobisneakervau1t), ulionekana mara ya kwanza 2026-09-26.\nNjia yetu rasmi ya malipo: Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault.\n\nJinsi wateja wanavyodanganywa:\n- Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault.\n- Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Nairobi Sneaker Vault.\n- Inatumia nembo inayofanana 70% na ya Nairobi Sneaker Vault.\n- Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pochi la biashara', 'delivery countrywide'.\n\nTafadhali chunguzeni maelezo ya malipo yaliyotajwa hapo juu. SMS za ulaghai pia zinaweza kutumwa kwa <Safaricom scam-SMS forwarding short code: confirm on safaricom.co.ke (commonly cited as 333)>.",
+    "generator": "template"
+  },
+  "kecirt_report": {
+    "to": "<National KE-CIRT/CC incident address: confirm on ke-cirt.go.ke before sending>",
+    "subject": "Ripoti ya tukio: uigaji wa Nairobi Sneaker Vault mtandaoni",
+    "body": "Kwa National KE-CIRT/CC,\n\nNinaripoti akaunti ya mitandao ya kijamii inayoonekana kuiga biashara yangu, Nairobi Sneaker Vault, ili kupokea malipo kutoka kwa wateja wetu. Hili linaweza kuwa kosa chini ya Sheria ya Matumizi Mabaya ya Kompyuta na Uhalifu wa Mtandao, 2018 (Computer Misuse and Cybercrimes Act, 2018).\n\nAkaunti inayoripotiwa: @nairobisneakervau1t kwenye instagram (https://instagram.com/nairobisneakervau1t)\nIlionekana mara ya kwanza: 2026-09-26\nAkaunti zetu rasmi: @nairobisneakervault (instagram), @nairobisneakervault (tiktok)\nMaelezo ya malipo kwenye akaunti hiyo: 0711 222 333\n\nUshahidi uliorekodiwa na Halisi:\n- Umbali wa pHash wa picha ya wasifu ni 10/64 kutoka nembo yetu iliyosajiliwa.\n- Alama ya jumla ya uigaji ni 90/100 (uhakika 0.9).\n- Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault.\n- Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Nairobi Sneaker Vault.\n- Inatumia nembo inayofanana 70% na ya Nairobi Sneaker Vault.\n- Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pochi la biashara', 'delivery countrywide'.\n\nNiko tayari kutoa maelezo zaidi.",
+    "generator": "template"
+  },
+  "contacts_verified": false
+}

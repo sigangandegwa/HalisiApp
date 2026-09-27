@@ -1,0 +1,28 @@
+{
+  "id": "190bec2a-588a-54e5-8590-c237c6239a4a",
+  "business_name": "Nairobi Sneaker Vault",
+  "slug": "nairobi-sneaker-vault",
+  "logo_url": "/seed/nsv_logo.png",
+  "category": "Sneakers",
+  "location": "Nairobi CBD",
+  "established_on": "2021-03-01",
+  "is_verified": true,
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "nairobisneakervault",
+      "url": "https://instagram.com/nairobisneakervault"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "nairobisneakervault",
+      "url": "https://tiktok.com/@nairobisneakervault"
+    }
+  ],
+  "payment": {
+    "type": "till",
+    "number": "543210",
+    "account_name": "NAIROBI SNEAKER VAULT"
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

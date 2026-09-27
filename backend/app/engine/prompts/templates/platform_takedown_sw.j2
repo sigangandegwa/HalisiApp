@@ -1,0 +1,20 @@
+Ninaripoti akaunti inayoiga biashara yangu, {{ merchant_name }}.
+
+Akaunti bandia: @{{ target_handle }} ({{ target_url }})
+Akaunti zetu rasmi: {{ official_handles | join(", ") }}
+
+Ushahidi uliorekodiwa na Halisi (ilionekana mara ya kwanza {{ first_seen_on }}):
+{% if phash_distance is not none and visual_score is not none %}
+- Picha ya wasifu: umbali wa pHash {{ phash_distance }}/64 kutoka nembo yetu iliyosajiliwa (ufanano wa {{ visual_score | round | int }}%).
+{% endif %}
+{% if identity_score is not none %}
+- Ufanano wa jina/akaunti na akaunti yetu rasmi: {{ identity_score | round | int }}%.
+{% endif %}
+{% if phones_local or extracted_tills %}
+- Inawaomba wateja walipe kwa {{ (phones_local + extracted_tills) | join(", ") }}, ambayo haijasajiliwa na biashara yetu.
+{% endif %}
+{% for reason in reasons_sw %}
+- {{ reason }}
+{% endfor %}
+
+Tafadhali ondoeni akaunti hii. Inatumia utambulisho wetu kupokea malipo kutoka kwa wateja wetu.

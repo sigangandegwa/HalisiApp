@@ -1,0 +1,21 @@
+To the National KE-CIRT/CC,
+
+I wish to report a social-media account that appears to impersonate my business, {{ merchant_name }}, in order to collect payments from our customers. This may amount to an offence under the Computer Misuse and Cybercrimes Act, 2018.
+
+Account reported: @{{ target_handle }} on {{ target_platform }} ({{ target_url }})
+First seen: {{ first_seen_on }}
+Our official account(s): {{ official_handles | join(", ") }}
+{% if phones_local or extracted_tills %}
+Payment details shown on the account: {{ (phones_local + extracted_tills) | join(", ") }}
+{% endif %}
+
+Evidence recorded by Halisi:
+{% if phash_distance is not none %}
+- Profile picture perceptual-hash distance {{ phash_distance }}/64 from our registered logo.
+{% endif %}
+- Overall impersonation score {{ composite_score | round | int }}/100 (confidence {{ confidence }}).
+{% for reason in reasons_en %}
+- {{ reason }}
+{% endfor %}
+
+I am available to provide further information.

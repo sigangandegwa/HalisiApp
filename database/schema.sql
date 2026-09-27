@@ -1,6 +1,8 @@
 -- =============================================================================
--- Halisi Supabase schema v2.1 (TSK-001)
+-- Halisi Supabase schema v2.2 (TSK-001)
 -- v2.1 (2026-09-27): Telegram/SMS alert columns removed; merchant_alerts table added for in-app alerts.
+-- v2.2 (2026-09-27): threats.avatar_dhash + threats.status_history; target_profiles table (tier-1 known
+--                    pages for the scraper, docs/BACKEND.md section 7.2). Upgrade block at the end of the file.
 -- Run in the Supabase SQL Editor on a fresh project. Safe to re-run (IF NOT EXISTS).
 -- This file is the single source of truth for the data model.
 -- backend/app/schemas/*.py (Pydantic) must mirror it. See docs/BACKEND.md section 4.
@@ -63,6 +65,7 @@ create table if not exists threats (
     bio                 text,
     avatar_url          text,
     avatar_phash        char(16),
+    avatar_dhash        char(16),                       -- v2.2
     avatar_embedding    vector(512),
     account_created_on  date,
     follower_count      integer,
@@ -83,6 +86,7 @@ create table if not exists threats (
                         check (status in ('detected', 'advisory_sent', 'takedown_filed', 'resolved', 'false_positive')),
     source              text not null default 'public_checker'
                         check (source in ('public_checker', 'scheduled', 'community_report', 'simulator', 'seed')),
+    status_history      jsonb not null default '[]',    -- v2.2: [{"status": "...", "at": "ISO-8601"}]
     first_seen_at       timestamptz not null default now(),
     last_checked_at     timestamptz not null default now(),
     resolved_at         timestamptz,
@@ -160,6 +164,29 @@ create table if not exists merchant_alerts (
 );
 
 -- -----------------------------------------------------------------------------
+-- target_profiles (v2.2): tier-1 "known targets" for the scraper. Seeded pages and OpenGraph fetches
+-- (hashed at fetch time: IG og:image URLs expire). Manual submissions are NEVER stored here, so one
+-- user cannot poison the result another user sees.
+-- -----------------------------------------------------------------------------
+create table if not exists target_profiles (
+    platform            text not null,
+    handle              text not null check (handle = lower(handle)),
+    url                 text,
+    display_name        text,
+    bio                 text,
+    avatar_url          text,
+    avatar_phash        char(16),
+    avatar_dhash        char(16),
+    avatar_embedding    vector(512),
+    follower_count      integer,
+    post_count          integer,
+    account_created_on  date,
+    fetched_via         text not null default 'opengraph' check (fetched_via in ('seed', 'opengraph')),
+    fetched_at          timestamptz not null default now(),
+    primary key (platform, handle)
+);
+
+-- -----------------------------------------------------------------------------
 -- Indexes
 -- -----------------------------------------------------------------------------
 create index if not exists idx_handles_merchant      on merchant_handles (merchant_id);
@@ -214,3 +241,10 @@ alter table scans              enable row level security;
 alter table remediation_logs   enable row level security;
 alter table community_reports  enable row level security;
 alter table merchant_alerts    enable row level security;
+alter table target_profiles    enable row level security;
+
+-- -----------------------------------------------------------------------------
+-- Upgrade an existing v2.1 database to v2.2 (no-ops on a fresh install)
+-- -----------------------------------------------------------------------------
+alter table threats add column if not exists avatar_dhash   char(16);
+alter table threats add column if not exists status_history jsonb not null default '[]';

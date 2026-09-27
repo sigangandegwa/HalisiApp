@@ -1,0 +1,1292 @@
+[
+  {
+    "scan_id": "f11faff4-c72e-526a-8c8d-07a2c04c3103",
+    "verdict": "impersonation",
+    "score": 99.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "nairobi_sneakervault_official_ke",
+      "display_name": "Nairobi Sneaker Vault Official",
+      "url": "https://instagram.com/nairobi_sneakervault_official_ke",
+      "avatar_url": "/fixtures/logos/nsv_clone.jpg",
+      "follower_count": 212,
+      "post_count": 9,
+      "account_created_on": "2026-09-19",
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 100.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 2/64 · dHash distance 0/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'nairobi_sneakervault_official_ke' is 'nairobisneakervault' + affix 'official' 'ke'"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Asks for payment to number 0798 *** 111 (not registered to this business) · 1 payment number(s) confirmed in community scam reports"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 100.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'pay before delivery', 'lipa kwanza', 'offer ends today'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 90.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "Account is 8 days old · 9 posts · 212 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Nairobi Sneaker Vault."
+      },
+      {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault."
+      },
+      {
+        "code": "COMMUNITY_REPORTED",
+        "severity": "high",
+        "text": "The payment number on this page has been reported by other customers.",
+        "text_sw": "Namba ya malipo kwenye ukurasa huu imeripotiwa na wateja wengine."
+      },
+      {
+        "code": "PAYMENT_MISMATCH",
+        "severity": "high",
+        "text": "Asks you to pay a number that is not registered to Nairobi Sneaker Vault.",
+        "text_sw": "Inakuomba ulipe namba ambayo haijasajiliwa na Nairobi Sneaker Vault."
+      },
+      {
+        "code": "SCAM_LANGUAGE",
+        "severity": "high",
+        "text": "Uses pressure phrases common in scams: 'pay before delivery', 'lipa kwanza', 'offer ends today'.",
+        "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pay before delivery', 'lipa kwanza', 'offer ends today'."
+      },
+      {
+        "code": "NEW_ACCOUNT",
+        "severity": "high",
+        "text": "The account was created recently (Account is 8 days old · 9 posts · 212 followers).",
+        "text_sw": "Akaunti hii imefunguliwa hivi karibuni."
+      }
+    ],
+    "hashes": {
+      "target_phash": "c1933e6cc9c3353c",
+      "reference_phash": "c1913e6cc9d3353c",
+      "hamming_distance": 2
+    },
+    "safe_action": {
+      "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+      "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+    },
+    "threat_id": "f8d6ea05-c3b3-5994-8e22-56dcc11a1e44",
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "nsv-blatant",
+      "kind": "blatant",
+      "rules": [
+        "O2",
+        "O3"
+      ]
+    }
+  },
+  {
+    "scan_id": "609dbadf-9adc-5290-9436-63d3f048c244",
+    "verdict": "impersonation",
+    "score": 90.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "nairobisneakervau1t",
+      "display_name": "Nairobi Sneaker Vault",
+      "url": "https://instagram.com/nairobisneakervau1t",
+      "avatar_url": "/fixtures/logos/nsv_subtle.webp",
+      "follower_count": 530,
+      "post_count": 14,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 60.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 12/64 · dHash distance 17/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'nairobisneakervau1t' imitates 'nairobisneakervault' (look-alike characters)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Asks for payment to personal number 0798 *** 444 (not registered to this business)"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 100.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'pochi la biashara', 'tuma pesa', 'dm for price'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "14 posts · 530 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault."
+      },
+      {
+        "code": "POCHI_REQUEST",
+        "severity": "high",
+        "text": "Asks for payment to a personal number, not Nairobi Sneaker Vault's official payment channel.",
+        "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Nairobi Sneaker Vault."
+      },
+      {
+        "code": "SCAM_LANGUAGE",
+        "severity": "high",
+        "text": "Uses pressure phrases common in scams: 'pochi la biashara', 'tuma pesa', 'dm for price'.",
+        "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pochi la biashara', 'tuma pesa', 'dm for price'."
+      },
+      {
+        "code": "LOGO_COPY",
+        "severity": "medium",
+        "text": "Uses a logo 60% similar to Nairobi Sneaker Vault's.",
+        "text_sw": "Inatumia nembo inayofanana 60% na ya Nairobi Sneaker Vault."
+      }
+    ],
+    "hashes": {
+      "target_phash": "c0d1176ecad1793c",
+      "reference_phash": "c1913e6cc9d3353c",
+      "hamming_distance": 12
+    },
+    "safe_action": {
+      "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+      "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+    },
+    "threat_id": "057c7e58-70d3-5b36-a3f0-801db1cc8e1f",
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "nsv-subtle",
+      "kind": "subtle",
+      "rules": [
+        "O2"
+      ]
+    }
+  },
+  {
+    "scan_id": "22622b3b-f6a7-51e7-8981-68467bba79e7",
+    "verdict": "no_match",
+    "score": 19.06,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "nairobisneakerhub",
+      "display_name": "Nairobi Sneaker Hub",
+      "url": "https://instagram.com/nairobisneakerhub",
+      "avatar_url": "/fixtures/logos/nairobisneakerhub.webp",
+      "follower_count": 4820,
+      "post_count": 312,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": null,
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 0.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 28/64 · dHash distance 29/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 43.23,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'nairobisneakerhub' resembles 'nairobisneakervault' (43% similar)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 25.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Till/Paybill 778812 is not registered to this business"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'delivery countrywide'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "312 posts · 4820 followers"
+      }
+    ],
+    "reasons": [],
+    "hashes": {
+      "target_phash": "926d6d9e9063653c",
+      "reference_phash": "c1913e6cc9d3353c",
+      "hamming_distance": 28
+    },
+    "safe_action": null,
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "nsv-competitor",
+      "kind": "competitor",
+      "rules": [
+        "G1"
+      ]
+    }
+  },
+  {
+    "scan_id": "f65a4a90-b65f-59b4-bb8c-534f902ae6c5",
+    "verdict": "suspicious",
+    "score": 55.99,
+    "confidence": 0.75,
+    "target": {
+      "platform": "instagram",
+      "handle": "sneakervault_resale_ke",
+      "display_name": "Sneaker Vault Resale KE",
+      "url": "https://instagram.com/sneakervault_resale_ke",
+      "avatar_url": "/fixtures/logos/sneakervault_resale_ke.webp",
+      "follower_count": 1340,
+      "post_count": 41,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 100.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 6/64 · dHash distance 2/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 43.96,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'sneakervault_resale_ke' resembles 'nairobisneakervault' (44% similar)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 0.0,
+        "weight": 0.25,
+        "available": false,
+        "evidence": "No data"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 0.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "No scam phrases found"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "41 posts · 1340 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Nairobi Sneaker Vault."
+      }
+    ],
+    "hashes": {
+      "target_phash": "c1533e6cc9c1357c",
+      "reference_phash": "c1913e6cc9d3353c",
+      "hamming_distance": 6
+    },
+    "safe_action": {
+      "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+      "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+    },
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "nsv-suspicious",
+      "kind": "suspicious",
+      "rules": []
+    }
+  },
+  {
+    "scan_id": "36394386-6473-5f23-b419-cd6914ac2654",
+    "verdict": "official",
+    "score": 0.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "nairobisneakervault",
+      "display_name": "Nairobi Sneaker Vault",
+      "url": "https://instagram.com/nairobisneakervault",
+      "avatar_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "follower_count": null,
+      "post_count": null,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      }
+    },
+    "dimensions": [],
+    "reasons": [],
+    "hashes": null,
+    "safe_action": {
+      "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+      "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+    },
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "nsv-official",
+      "kind": "official",
+      "rules": [
+        "O1"
+      ]
+    }
+  },
+  {
+    "scan_id": "343920b9-05e7-5d95-8a4c-0bb717e552ab",
+    "verdict": "impersonation",
+    "score": 94.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "kilimaniglow_official_ke",
+      "display_name": "Kilimani Glow Official",
+      "url": "https://instagram.com/kilimaniglow_official_ke",
+      "avatar_url": "/fixtures/logos/kg_clone.jpg",
+      "follower_count": 96,
+      "post_count": 6,
+      "account_created_on": "2026-09-22",
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+      "business_name": "Kilimani Glow",
+      "slug": "kilimani-glow",
+      "logo_url": "/fixtures/logos/kilimani-glow.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kilimaniglow",
+          "url": "https://instagram.com/kilimaniglow"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kilimaniglow",
+          "url": "https://facebook.com/kilimaniglow"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "606060",
+        "account_name": "KILIMANI GLOW"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 100.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 0/64 · dHash distance 0/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'kilimaniglow_official_ke' is 'kilimaniglow' + affix 'official' 'ke'"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Asks for payment to number 0798 *** 222 (not registered to this business) · 1 payment number(s) confirmed in community scam reports"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 50.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'payment with order', 'no refunds'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 90.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "Account is 5 days old · 6 posts · 96 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Kilimani Glow's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Kilimani Glow."
+      },
+      {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+      },
+      {
+        "code": "COMMUNITY_REPORTED",
+        "severity": "high",
+        "text": "The payment number on this page has been reported by other customers.",
+        "text_sw": "Namba ya malipo kwenye ukurasa huu imeripotiwa na wateja wengine."
+      },
+      {
+        "code": "PAYMENT_MISMATCH",
+        "severity": "high",
+        "text": "Asks you to pay a number that is not registered to Kilimani Glow.",
+        "text_sw": "Inakuomba ulipe namba ambayo haijasajiliwa na Kilimani Glow."
+      },
+      {
+        "code": "NEW_ACCOUNT",
+        "severity": "high",
+        "text": "The account was created recently (Account is 5 days old · 6 posts · 96 followers).",
+        "text_sw": "Akaunti hii imefunguliwa hivi karibuni."
+      },
+      {
+        "code": "SCAM_LANGUAGE",
+        "severity": "medium",
+        "text": "Uses pressure phrases common in scams: 'payment with order', 'no refunds'.",
+        "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'payment with order', 'no refunds'."
+      }
+    ],
+    "hashes": {
+      "target_phash": "b560ca9fc26d1de0",
+      "reference_phash": "b560ca9fc26d1de0",
+      "hamming_distance": 0
+    },
+    "safe_action": {
+      "text": "Pay only via Paybill 606060 (KILIMANI GLOW) through @kilimaniglow.",
+      "text_sw": "Lipa tu kwa Paybill 606060 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
+    },
+    "threat_id": "cec84533-a81d-535e-a6c3-0504a8e87ba3",
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "kg-blatant",
+      "kind": "blatant",
+      "rules": [
+        "O2",
+        "O3"
+      ]
+    }
+  },
+  {
+    "scan_id": "c409b804-b836-5aba-94b0-ee13c3d73fd3",
+    "verdict": "impersonation",
+    "score": 90.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "kilimanigl0w",
+      "display_name": "Kilimani Glow",
+      "url": "https://instagram.com/kilimanigl0w",
+      "avatar_url": "/fixtures/logos/kg_subtle.webp",
+      "follower_count": 410,
+      "post_count": 11,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+      "business_name": "Kilimani Glow",
+      "slug": "kilimani-glow",
+      "logo_url": "/fixtures/logos/kilimani-glow.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kilimaniglow",
+          "url": "https://instagram.com/kilimaniglow"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kilimaniglow",
+          "url": "https://facebook.com/kilimaniglow"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "606060",
+        "account_name": "KILIMANI GLOW"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 75.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 14/64 · dHash distance 9/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'kilimanigl0w' imitates 'kilimaniglow' (look-alike characters)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Asks for payment to personal number 0798 *** 555 (not registered to this business)"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 65.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'pochi la biashara', 'leo tu'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 60.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "11 posts · 410 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+      },
+      {
+        "code": "POCHI_REQUEST",
+        "severity": "high",
+        "text": "Asks for payment to a personal number, not Kilimani Glow's official payment channel.",
+        "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Kilimani Glow."
+      },
+      {
+        "code": "LOGO_COPY",
+        "severity": "medium",
+        "text": "Uses a logo 75% similar to Kilimani Glow's.",
+        "text_sw": "Inatumia nembo inayofanana 75% na ya Kilimani Glow."
+      },
+      {
+        "code": "SCAM_LANGUAGE",
+        "severity": "medium",
+        "text": "Uses pressure phrases common in scams: 'pochi la biashara', 'leo tu'.",
+        "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pochi la biashara', 'leo tu'."
+      },
+      {
+        "code": "LOW_ACTIVITY",
+        "severity": "medium",
+        "text": "Very little activity for an established business (11 posts · 410 followers).",
+        "text_sw": "Shughuli chache sana kwa biashara inayojulikana."
+      }
+    ],
+    "hashes": {
+      "target_phash": "a560c797c21f9cc9",
+      "reference_phash": "b560ca9fc26d1de0",
+      "hamming_distance": 14
+    },
+    "safe_action": {
+      "text": "Pay only via Paybill 606060 (KILIMANI GLOW) through @kilimaniglow.",
+      "text_sw": "Lipa tu kwa Paybill 606060 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
+    },
+    "threat_id": "78c07538-1c36-5213-ac72-894f7b004699",
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "kg-subtle",
+      "kind": "subtle",
+      "rules": [
+        "O2"
+      ]
+    }
+  },
+  {
+    "scan_id": "9e0cbc72-7f6e-5f82-9529-31cb32dd34cb",
+    "verdict": "no_match",
+    "score": 15.78,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "kilimanibeauty",
+      "display_name": "Kilimani Beauty Bar",
+      "url": "https://instagram.com/kilimanibeauty",
+      "avatar_url": "/fixtures/logos/kilimanibeauty.webp",
+      "follower_count": 2210,
+      "post_count": 188,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": null,
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 0.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 44/64 · dHash distance 43/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 34.13,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'kilimanibeauty' resembles 'nairobisneakervault' (34% similar)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 25.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Till/Paybill 303909 is not registered to this business"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 0.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "No scam phrases found"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "188 posts · 2210 followers"
+      }
+    ],
+    "reasons": [],
+    "hashes": {
+      "target_phash": "ec8c9393646c9e93",
+      "reference_phash": "b560ca9fc26d1de0",
+      "hamming_distance": 28
+    },
+    "safe_action": null,
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "kg-competitor",
+      "kind": "competitor",
+      "rules": [
+        "G1"
+      ]
+    }
+  },
+  {
+    "scan_id": "102e74c3-981c-525a-aafa-6a55eea85264",
+    "verdict": "official",
+    "score": 0.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "kilimaniglow",
+      "display_name": "Kilimani Glow",
+      "url": "https://instagram.com/kilimaniglow",
+      "avatar_url": "/fixtures/logos/kilimani-glow.webp",
+      "follower_count": null,
+      "post_count": null,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+      "business_name": "Kilimani Glow",
+      "slug": "kilimani-glow",
+      "logo_url": "/fixtures/logos/kilimani-glow.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kilimaniglow",
+          "url": "https://instagram.com/kilimaniglow"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kilimaniglow",
+          "url": "https://facebook.com/kilimaniglow"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "606060",
+        "account_name": "KILIMANI GLOW"
+      }
+    },
+    "dimensions": [],
+    "reasons": [],
+    "hashes": null,
+    "safe_action": {
+      "text": "Pay only via Paybill 606060 (KILIMANI GLOW) through @kilimaniglow.",
+      "text_sw": "Lipa tu kwa Paybill 606060 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
+    },
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "kg-official",
+      "kind": "official",
+      "rules": [
+        "O1"
+      ]
+    }
+  },
+  {
+    "scan_id": "3596fb6c-4507-5364-999d-0f19d796b82b",
+    "verdict": "impersonation",
+    "score": 95.5,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "pwanithreads_official_ke",
+      "display_name": "Pwani Threads Official",
+      "url": "https://instagram.com/pwanithreads_official_ke",
+      "avatar_url": "/fixtures/logos/pt_clone.jpg",
+      "follower_count": 150,
+      "post_count": 7,
+      "account_created_on": "2026-09-20",
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "58035f06-936b-503e-911c-39094d25078b",
+      "business_name": "Pwani Threads",
+      "slug": "pwani-threads",
+      "logo_url": "/fixtures/logos/pwani-threads.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "pwanithreads",
+          "url": "https://instagram.com/pwanithreads"
+        },
+        {
+          "platform": "facebook",
+          "handle": "pwanithreads",
+          "url": "https://facebook.com/pwanithreads"
+        }
+      ],
+      "payment": {
+        "type": "pochi",
+        "number": "+254700000333",
+        "account_name": "PWANI THREADS"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 100.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 2/64 · dHash distance 1/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'pwanithreads_official_ke' is 'pwanithreads' + affix 'official' 'ke'"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Asks for payment to number 0798 *** 333 (not registered to this business)"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 65.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'deposit required', 'limited stock'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 90.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "Account is 7 days old · 7 posts · 150 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Pwani Threads's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Pwani Threads."
+      },
+      {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Pwani Threads's official account @pwanithreads.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Pwani Threads, @pwanithreads."
+      },
+      {
+        "code": "PAYMENT_MISMATCH",
+        "severity": "high",
+        "text": "Asks you to pay a number that is not registered to Pwani Threads.",
+        "text_sw": "Inakuomba ulipe namba ambayo haijasajiliwa na Pwani Threads."
+      },
+      {
+        "code": "NEW_ACCOUNT",
+        "severity": "high",
+        "text": "The account was created recently (Account is 7 days old · 7 posts · 150 followers).",
+        "text_sw": "Akaunti hii imefunguliwa hivi karibuni."
+      },
+      {
+        "code": "SCAM_LANGUAGE",
+        "severity": "medium",
+        "text": "Uses pressure phrases common in scams: 'deposit required', 'limited stock'.",
+        "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'deposit required', 'limited stock'."
+      }
+    ],
+    "hashes": {
+      "target_phash": "cb4e34b073cfc816",
+      "reference_phash": "cb4f34b063cfc816",
+      "hamming_distance": 2
+    },
+    "safe_action": {
+      "text": "Pay only via Pochi la Biashara 0700 000 333 (PWANI THREADS) through @pwanithreads.",
+      "text_sw": "Lipa tu kwa Pochi la Biashara 0700 000 333 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
+    },
+    "threat_id": "120bfc77-1bdb-5e0b-97ef-f2b80306e046",
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "pt-blatant",
+      "kind": "blatant",
+      "rules": [
+        "O2"
+      ]
+    }
+  },
+  {
+    "scan_id": "e0d8732d-225b-5a61-8581-a9c435724189",
+    "verdict": "impersonation",
+    "score": 90.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "pwanlthreads",
+      "display_name": "Pwani Threads",
+      "url": "https://instagram.com/pwanlthreads",
+      "avatar_url": "/fixtures/logos/pt_subtle.webp",
+      "follower_count": 380,
+      "post_count": 12,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "58035f06-936b-503e-911c-39094d25078b",
+      "business_name": "Pwani Threads",
+      "slug": "pwani-threads",
+      "logo_url": "/fixtures/logos/pwani-threads.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "pwanithreads",
+          "url": "https://instagram.com/pwanithreads"
+        },
+        {
+          "platform": "facebook",
+          "handle": "pwanithreads",
+          "url": "https://facebook.com/pwanithreads"
+        }
+      ],
+      "payment": {
+        "type": "pochi",
+        "number": "+254700000333",
+        "account_name": "PWANI THREADS"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 50.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 14/64 · dHash distance 16/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'pwanlthreads' imitates 'pwanithreads' (look-alike characters)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 100.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Asks for payment to personal number 0798 *** 666 (not registered to this business)"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 40.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "'tuma pesa'"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "12 posts · 380 followers"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Pwani Threads's official account @pwanithreads.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Pwani Threads, @pwanithreads."
+      },
+      {
+        "code": "POCHI_REQUEST",
+        "severity": "high",
+        "text": "Asks for payment to a personal number, not Pwani Threads's official payment channel.",
+        "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Pwani Threads."
+      },
+      {
+        "code": "SCAM_LANGUAGE",
+        "severity": "medium",
+        "text": "Uses pressure phrases common in scams: 'tuma pesa'.",
+        "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'tuma pesa'."
+      }
+    ],
+    "hashes": {
+      "target_phash": "c3473c3833ebda0c",
+      "reference_phash": "cb4f34b063cfc816",
+      "hamming_distance": 14
+    },
+    "safe_action": {
+      "text": "Pay only via Pochi la Biashara 0700 000 333 (PWANI THREADS) through @pwanithreads.",
+      "text_sw": "Lipa tu kwa Pochi la Biashara 0700 000 333 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
+    },
+    "threat_id": "49151e72-61e7-5ac4-bb1d-f53575fdb6d2",
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "pt-subtle",
+      "kind": "subtle",
+      "rules": [
+        "O2"
+      ]
+    }
+  },
+  {
+    "scan_id": "c06440e7-d0e6-5812-bb6c-faf5bc80556f",
+    "verdict": "no_match",
+    "score": 21.25,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "mombasa_fashion_house",
+      "display_name": "Mombasa Fashion House",
+      "url": "https://instagram.com/mombasa_fashion_house",
+      "avatar_url": "/fixtures/logos/mombasa_fashion_house.webp",
+      "follower_count": 3900,
+      "post_count": 260,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": null,
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 30.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 18/64 · dHash distance 32/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 20.01,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'mombasa_fashion_house' resembles 'nairobisneakervault' (20% similar)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 25.0,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "Till/Paybill 441207 is not registered to this business"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 0.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "No scam phrases found"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 10.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "260 posts · 3900 followers"
+      }
+    ],
+    "reasons": [],
+    "hashes": {
+      "target_phash": "84937b6d86937938",
+      "reference_phash": "c1913e6cc9d3353c",
+      "hamming_distance": 18
+    },
+    "safe_action": null,
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "pt-competitor",
+      "kind": "competitor",
+      "rules": [
+        "G1"
+      ]
+    }
+  },
+  {
+    "scan_id": "a932928c-cb7c-54c3-89f9-47e70337087a",
+    "verdict": "official",
+    "score": 0.0,
+    "confidence": 1.0,
+    "target": {
+      "platform": "instagram",
+      "handle": "pwanithreads",
+      "display_name": "Pwani Threads",
+      "url": "https://instagram.com/pwanithreads",
+      "avatar_url": "/fixtures/logos/pwani-threads.webp",
+      "follower_count": null,
+      "post_count": null,
+      "account_created_on": null,
+      "fetched_via": "seed"
+    },
+    "matched_merchant": {
+      "id": "58035f06-936b-503e-911c-39094d25078b",
+      "business_name": "Pwani Threads",
+      "slug": "pwani-threads",
+      "logo_url": "/fixtures/logos/pwani-threads.webp",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "pwanithreads",
+          "url": "https://instagram.com/pwanithreads"
+        },
+        {
+          "platform": "facebook",
+          "handle": "pwanithreads",
+          "url": "https://facebook.com/pwanithreads"
+        }
+      ],
+      "payment": {
+        "type": "pochi",
+        "number": "+254700000333",
+        "account_name": "PWANI THREADS"
+      }
+    },
+    "dimensions": [],
+    "reasons": [],
+    "hashes": null,
+    "safe_action": {
+      "text": "Pay only via Pochi la Biashara 0700 000 333 (PWANI THREADS) through @pwanithreads.",
+      "text_sw": "Lipa tu kwa Pochi la Biashara 0700 000 333 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
+    },
+    "threat_id": null,
+    "elapsed_ms": 1,
+    "_fixture": {
+      "key": "pt-official",
+      "kind": "official",
+      "rules": [
+        "O1"
+      ]
+    }
+  }
+]

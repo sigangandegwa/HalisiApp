@@ -1,45 +1,45 @@
-"""Root test fixtures (BACKEND.md section 12).
+"""Shared fixtures: DEMO_MODE settings, a seeded app + TestClient, API-key headers. No network anywhere."""
 
-Provides a ``client`` fixture backed by ``MemoryRepository`` seeded from
-``backend/app/ingestion/fixtures/``.  All API tests share this fixture so no
-test touches the network or Supabase.
-"""
-
-import os
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-# Force DEMO_MODE before any app module is imported so that the FastAPI
-# lifespan picks up MemoryRepository and never tries to reach Supabase.
-os.environ.setdefault("DEMO_MODE", "true")
+from app.core.config import Settings
+from app.main import create_app
 
-from app.core.repository import MemoryRepository  # noqa: E402
-from app.core.config import settings  # noqa: E402
-from app.main import app  # noqa: E402
-
-# Patch settings at module level so even if Settings was already constructed
-# it reflects demo_mode=True.
-settings.demo_mode = True
+API_KEY = "test-key-0123456789"
+AUTH = {"X-Halisi-Key": API_KEY}
 
 
-@pytest.fixture()
-def mem_repo() -> MemoryRepository:
-    """A fresh MemoryRepository loaded from the committed fixtures JSON files."""
-    return MemoryRepository()
+def make_settings(tmp_path: Path, **overrides: object) -> Settings:
+    """Isolated DEMO_MODE settings (ignores any backend/.env)."""
+    values: dict[str, object] = {
+        "demo_mode": True,
+        "api_key": API_KEY,
+        "rate_limit_enabled": False,
+        "media_dir": tmp_path / "media",
+        "cors_origins": "http://localhost:3000",
+        "llm_enabled": False,
+        "enable_clip": False,
+    }
+    values.update(overrides)
+    return Settings(_env_file=None, **values)  # type: ignore[call-arg]
 
 
-@pytest.fixture()
-def client(mem_repo: MemoryRepository) -> TestClient:
-    """Synchronous TestClient with MemoryRepository injected into app.state.
+@pytest.fixture
+def settings(tmp_path: Path) -> Settings:
+    return make_settings(tmp_path)
 
-    We set ``app.state.repo`` before the TestClient context manager starts so
-    the lifespan sees it and does not create a SupabaseRepository.  After
-    startup we overwrite it again with our fresh fixture-seeded instance in
-    case the lifespan re-created it.
-    """
-    app.state.repo = mem_repo
-    with TestClient(app, raise_server_exceptions=True) as c:
-        # Overwrite again in case the lifespan recreated it.
-        app.state.repo = mem_repo
-        yield c
+
+@pytest.fixture
+def client(settings: Settings) -> Iterator[TestClient]:
+    """Seeded DEMO_MODE app (MemoryRepository loaded through the real engine)."""
+    with TestClient(create_app(settings)) as test_client:
+        yield test_client
+
+
+@pytest.fixture
+def auth() -> dict[str, str]:
+    return dict(AUTH)

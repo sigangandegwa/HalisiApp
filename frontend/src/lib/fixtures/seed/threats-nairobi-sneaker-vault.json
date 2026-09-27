@@ -1,0 +1,36 @@
+[
+  {
+    "id": "c4938d51-9402-5300-988f-df90156e7d9b",
+    "platform": "instagram",
+    "target_handle": "nairobi_sneakervault_official_ke",
+    "target_url": "https://instagram.com/nairobi_sneakervault_official_ke",
+    "avatar_url": "/seed/nsv_blatant.png",
+    "composite_score": 99.0,
+    "verdict": "impersonation",
+    "status": "detected",
+    "first_seen_at": "2026-09-25T09:00:00Z",
+    "top_reason": {
+      "code": "LOGO_COPY",
+      "severity": "high",
+      "text": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+      "text_sw": "Inatumia nembo inayofanana 100% na ya Nairobi Sneaker Vault."
+    }
+  },
+  {
+    "id": "26d7872a-f4ba-546f-87bf-ee034e25f55f",
+    "platform": "instagram",
+    "target_handle": "nairobisneakervau1t",
+    "target_url": "https://instagram.com/nairobisneakervau1t",
+    "avatar_url": "/seed/nsv_subtle.png",
+    "composite_score": 90.0,
+    "verdict": "impersonation",
+    "status": "detected",
+    "first_seen_at": "2026-09-26T09:00:00Z",
+    "top_reason": {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault."
+    }
+  }
+]

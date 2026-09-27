@@ -1,0 +1,326 @@
+{
+  "f8d6ea05-c3b3-5994-8e22-56dcc11a1e44": {
+    "en": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Scam alert: fake Nairobi Sneaker Vault page",
+        "body": "Heads up: @nairobi_sneakervault_official_ke is not Nairobi Sneaker Vault. It uses our name and logo without permission. Don't send money to 0798 999 111. Our only official page is @nairobisneakervault. Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT). If you have already paid the fake page, report it to Safaricom and let us know through our official page.",
+        "whatsapp_share_url": "https://wa.me/?text=Scam%20alert%3A%20fake%20Nairobi%20Sneaker%20Vault%20page%0A%0AHeads%20up%3A%20%40nairobi_sneakervault_official_ke%20is%20not%20Nairobi%20Sneaker%20Vault.%20It%20uses%20our%20name%20and%20logo%20without%20permission.%20Don%27t%20send%20money%20to%200798%20999%20111.%20Our%20only%20official%20page%20is%20%40nairobisneakervault.%20Pay%20only%20via%20Buy%20Goods%20Till%20543210%20%28NAIROBI%20SNEAKER%20VAULT%29.%20If%20you%20have%20already%20paid%20the%20fake%20page%2C%20report%20it%20to%20Safaricom%20and%20let%20us%20know%20through%20our%20official%20page."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Nairobi Sneaker Vault, whose official Instagram account is @nairobisneakervault. The account @nairobi_sneakervault_official_ke (https://instagram.com/nairobi_sneakervault_official_ke) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 2/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 111, which is not our number. Halisi first recorded this account on 2026-09-27, with an impersonation score of 99/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Nairobi Sneaker Vault",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 111 is being used to collect payments from customers of Nairobi Sneaker Vault through a fake Instagram page, @nairobi_sneakervault_official_ke (https://instagram.com/nairobi_sneakervault_official_ke). Nairobi Sneaker Vault is paid only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT). We first recorded the fake page on 2026-09-27. Please investigate the number above.\n\nNairobi Sneaker Vault"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Nairobi Sneaker Vault on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Nairobi Sneaker Vault on Instagram. The account @nairobi_sneakervault_official_ke (https://instagram.com/nairobi_sneakervault_official_ke) copies our business name and logo and directs customers to pay 0798 999 111. Our official account is @nairobisneakervault. First recorded on 2026-09-27. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nNairobi Sneaker Vault"
+      }
+    },
+    "sw": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Tahadhari: ukurasa feki wa Nairobi Sneaker Vault",
+        "body": "Tahadhari kwa wateja wetu: @nairobi_sneakervault_official_ke si Nairobi Sneaker Vault. Ukurasa huo unatumia jina letu na nembo yetu bila ruhusa. Usitume pesa kwa 0798 999 111. Ukurasa wetu rasmi ni @nairobisneakervault pekee. Lipa tu kupitia Till 543210 (NAIROBI SNEAKER VAULT). Kama tayari umetuma pesa, piga ripoti kwa Safaricom na utujulishe kupitia ukurasa wetu rasmi.",
+        "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20feki%20wa%20Nairobi%20Sneaker%20Vault%0A%0ATahadhari%20kwa%20wateja%20wetu%3A%20%40nairobi_sneakervault_official_ke%20si%20Nairobi%20Sneaker%20Vault.%20Ukurasa%20huo%20unatumia%20jina%20letu%20na%20nembo%20yetu%20bila%20ruhusa.%20Usitume%20pesa%20kwa%200798%20999%20111.%20Ukurasa%20wetu%20rasmi%20ni%20%40nairobisneakervault%20pekee.%20Lipa%20tu%20kupitia%20Till%20543210%20%28NAIROBI%20SNEAKER%20VAULT%29.%20Kama%20tayari%20umetuma%20pesa%2C%20piga%20ripoti%20kwa%20Safaricom%20na%20utujulishe%20kupitia%20ukurasa%20wetu%20rasmi."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Nairobi Sneaker Vault, whose official Instagram account is @nairobisneakervault. The account @nairobi_sneakervault_official_ke (https://instagram.com/nairobi_sneakervault_official_ke) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 2/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 111, which is not our number. Halisi first recorded this account on 2026-09-27, with an impersonation score of 99/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Nairobi Sneaker Vault",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 111 is being used to collect payments from customers of Nairobi Sneaker Vault through a fake Instagram page, @nairobi_sneakervault_official_ke (https://instagram.com/nairobi_sneakervault_official_ke). Nairobi Sneaker Vault is paid only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT). We first recorded the fake page on 2026-09-27. Please investigate the number above.\n\nNairobi Sneaker Vault"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Nairobi Sneaker Vault on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Nairobi Sneaker Vault on Instagram. The account @nairobi_sneakervault_official_ke (https://instagram.com/nairobi_sneakervault_official_ke) copies our business name and logo and directs customers to pay 0798 999 111. Our official account is @nairobisneakervault. First recorded on 2026-09-27. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nNairobi Sneaker Vault"
+      }
+    }
+  },
+  "057c7e58-70d3-5b36-a3f0-801db1cc8e1f": {
+    "en": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Scam alert: fake Nairobi Sneaker Vault page",
+        "body": "Heads up: @nairobisneakervau1t is not Nairobi Sneaker Vault. It uses our name and logo without permission. Don't send money to 0798 999 444. Our only official page is @nairobisneakervault. Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT). If you have already paid the fake page, report it to Safaricom and let us know through our official page.",
+        "whatsapp_share_url": "https://wa.me/?text=Scam%20alert%3A%20fake%20Nairobi%20Sneaker%20Vault%20page%0A%0AHeads%20up%3A%20%40nairobisneakervau1t%20is%20not%20Nairobi%20Sneaker%20Vault.%20It%20uses%20our%20name%20and%20logo%20without%20permission.%20Don%27t%20send%20money%20to%200798%20999%20444.%20Our%20only%20official%20page%20is%20%40nairobisneakervault.%20Pay%20only%20via%20Buy%20Goods%20Till%20543210%20%28NAIROBI%20SNEAKER%20VAULT%29.%20If%20you%20have%20already%20paid%20the%20fake%20page%2C%20report%20it%20to%20Safaricom%20and%20let%20us%20know%20through%20our%20official%20page."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Nairobi Sneaker Vault, whose official Instagram account is @nairobisneakervault. The account @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 12/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 444, which is not our number. Halisi first recorded this account on 2026-09-26, with an impersonation score of 90/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Nairobi Sneaker Vault",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 444 is being used to collect payments from customers of Nairobi Sneaker Vault through a fake Instagram page, @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t). Nairobi Sneaker Vault is paid only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT). We first recorded the fake page on 2026-09-26. Please investigate the number above.\n\nNairobi Sneaker Vault"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Nairobi Sneaker Vault on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Nairobi Sneaker Vault on Instagram. The account @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t) copies our business name and logo and directs customers to pay 0798 999 444. Our official account is @nairobisneakervault. First recorded on 2026-09-26. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nNairobi Sneaker Vault"
+      }
+    },
+    "sw": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Tahadhari: ukurasa feki wa Nairobi Sneaker Vault",
+        "body": "Tahadhari kwa wateja wetu: @nairobisneakervau1t si Nairobi Sneaker Vault. Ukurasa huo unatumia jina letu na nembo yetu bila ruhusa. Usitume pesa kwa 0798 999 444. Ukurasa wetu rasmi ni @nairobisneakervault pekee. Lipa tu kupitia Till 543210 (NAIROBI SNEAKER VAULT). Kama tayari umetuma pesa, piga ripoti kwa Safaricom na utujulishe kupitia ukurasa wetu rasmi.",
+        "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20feki%20wa%20Nairobi%20Sneaker%20Vault%0A%0ATahadhari%20kwa%20wateja%20wetu%3A%20%40nairobisneakervau1t%20si%20Nairobi%20Sneaker%20Vault.%20Ukurasa%20huo%20unatumia%20jina%20letu%20na%20nembo%20yetu%20bila%20ruhusa.%20Usitume%20pesa%20kwa%200798%20999%20444.%20Ukurasa%20wetu%20rasmi%20ni%20%40nairobisneakervault%20pekee.%20Lipa%20tu%20kupitia%20Till%20543210%20%28NAIROBI%20SNEAKER%20VAULT%29.%20Kama%20tayari%20umetuma%20pesa%2C%20piga%20ripoti%20kwa%20Safaricom%20na%20utujulishe%20kupitia%20ukurasa%20wetu%20rasmi."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Nairobi Sneaker Vault, whose official Instagram account is @nairobisneakervault. The account @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 12/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 444, which is not our number. Halisi first recorded this account on 2026-09-26, with an impersonation score of 90/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Nairobi Sneaker Vault",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 444 is being used to collect payments from customers of Nairobi Sneaker Vault through a fake Instagram page, @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t). Nairobi Sneaker Vault is paid only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT). We first recorded the fake page on 2026-09-26. Please investigate the number above.\n\nNairobi Sneaker Vault"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Nairobi Sneaker Vault on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Nairobi Sneaker Vault on Instagram. The account @nairobisneakervau1t (https://instagram.com/nairobisneakervau1t) copies our business name and logo and directs customers to pay 0798 999 444. Our official account is @nairobisneakervault. First recorded on 2026-09-26. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nNairobi Sneaker Vault"
+      }
+    }
+  },
+  "cec84533-a81d-535e-a6c3-0504a8e87ba3": {
+    "en": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Scam alert: fake Kilimani Glow page",
+        "body": "Heads up: @kilimaniglow_official_ke is not Kilimani Glow. It uses our name and logo without permission. Don't send money to 0798 999 222. Our only official page is @kilimaniglow. Pay only via Paybill 606060 (KILIMANI GLOW). If you have already paid the fake page, report it to Safaricom and let us know through our official page.",
+        "whatsapp_share_url": "https://wa.me/?text=Scam%20alert%3A%20fake%20Kilimani%20Glow%20page%0A%0AHeads%20up%3A%20%40kilimaniglow_official_ke%20is%20not%20Kilimani%20Glow.%20It%20uses%20our%20name%20and%20logo%20without%20permission.%20Don%27t%20send%20money%20to%200798%20999%20222.%20Our%20only%20official%20page%20is%20%40kilimaniglow.%20Pay%20only%20via%20Paybill%20606060%20%28KILIMANI%20GLOW%29.%20If%20you%20have%20already%20paid%20the%20fake%20page%2C%20report%20it%20to%20Safaricom%20and%20let%20us%20know%20through%20our%20official%20page."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Kilimani Glow, whose official Instagram account is @kilimaniglow. The account @kilimaniglow_official_ke (https://instagram.com/kilimaniglow_official_ke) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 0/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 222, which is not our number. Halisi first recorded this account on 2026-09-25, with an impersonation score of 94/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Kilimani Glow",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 222 is being used to collect payments from customers of Kilimani Glow through a fake Instagram page, @kilimaniglow_official_ke (https://instagram.com/kilimaniglow_official_ke). Kilimani Glow is paid only via Paybill 606060 (KILIMANI GLOW). We first recorded the fake page on 2026-09-25. Please investigate the number above.\n\nKilimani Glow"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Kilimani Glow on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Kilimani Glow on Instagram. The account @kilimaniglow_official_ke (https://instagram.com/kilimaniglow_official_ke) copies our business name and logo and directs customers to pay 0798 999 222. Our official account is @kilimaniglow. First recorded on 2026-09-25. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nKilimani Glow"
+      }
+    },
+    "sw": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Tahadhari: ukurasa feki wa Kilimani Glow",
+        "body": "Tahadhari kwa wateja wetu: @kilimaniglow_official_ke si Kilimani Glow. Ukurasa huo unatumia jina letu na nembo yetu bila ruhusa. Usitume pesa kwa 0798 999 222. Ukurasa wetu rasmi ni @kilimaniglow pekee. Lipa tu kupitia Paybill 606060 (KILIMANI GLOW). Kama tayari umetuma pesa, piga ripoti kwa Safaricom na utujulishe kupitia ukurasa wetu rasmi.",
+        "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20feki%20wa%20Kilimani%20Glow%0A%0ATahadhari%20kwa%20wateja%20wetu%3A%20%40kilimaniglow_official_ke%20si%20Kilimani%20Glow.%20Ukurasa%20huo%20unatumia%20jina%20letu%20na%20nembo%20yetu%20bila%20ruhusa.%20Usitume%20pesa%20kwa%200798%20999%20222.%20Ukurasa%20wetu%20rasmi%20ni%20%40kilimaniglow%20pekee.%20Lipa%20tu%20kupitia%20Paybill%20606060%20%28KILIMANI%20GLOW%29.%20Kama%20tayari%20umetuma%20pesa%2C%20piga%20ripoti%20kwa%20Safaricom%20na%20utujulishe%20kupitia%20ukurasa%20wetu%20rasmi."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Kilimani Glow, whose official Instagram account is @kilimaniglow. The account @kilimaniglow_official_ke (https://instagram.com/kilimaniglow_official_ke) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 0/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 222, which is not our number. Halisi first recorded this account on 2026-09-25, with an impersonation score of 94/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Kilimani Glow",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 222 is being used to collect payments from customers of Kilimani Glow through a fake Instagram page, @kilimaniglow_official_ke (https://instagram.com/kilimaniglow_official_ke). Kilimani Glow is paid only via Paybill 606060 (KILIMANI GLOW). We first recorded the fake page on 2026-09-25. Please investigate the number above.\n\nKilimani Glow"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Kilimani Glow on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Kilimani Glow on Instagram. The account @kilimaniglow_official_ke (https://instagram.com/kilimaniglow_official_ke) copies our business name and logo and directs customers to pay 0798 999 222. Our official account is @kilimaniglow. First recorded on 2026-09-25. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nKilimani Glow"
+      }
+    }
+  },
+  "78c07538-1c36-5213-ac72-894f7b004699": {
+    "en": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Scam alert: fake Kilimani Glow page",
+        "body": "Heads up: @kilimanigl0w is not Kilimani Glow. It uses our name and logo without permission. Don't send money to 0798 999 555. Our only official page is @kilimaniglow. Pay only via Paybill 606060 (KILIMANI GLOW). If you have already paid the fake page, report it to Safaricom and let us know through our official page.",
+        "whatsapp_share_url": "https://wa.me/?text=Scam%20alert%3A%20fake%20Kilimani%20Glow%20page%0A%0AHeads%20up%3A%20%40kilimanigl0w%20is%20not%20Kilimani%20Glow.%20It%20uses%20our%20name%20and%20logo%20without%20permission.%20Don%27t%20send%20money%20to%200798%20999%20555.%20Our%20only%20official%20page%20is%20%40kilimaniglow.%20Pay%20only%20via%20Paybill%20606060%20%28KILIMANI%20GLOW%29.%20If%20you%20have%20already%20paid%20the%20fake%20page%2C%20report%20it%20to%20Safaricom%20and%20let%20us%20know%20through%20our%20official%20page."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Kilimani Glow, whose official Instagram account is @kilimaniglow. The account @kilimanigl0w (https://instagram.com/kilimanigl0w) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 14/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 555, which is not our number. Halisi first recorded this account on 2026-09-27, with an impersonation score of 90/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Kilimani Glow",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 555 is being used to collect payments from customers of Kilimani Glow through a fake Instagram page, @kilimanigl0w (https://instagram.com/kilimanigl0w). Kilimani Glow is paid only via Paybill 606060 (KILIMANI GLOW). We first recorded the fake page on 2026-09-27. Please investigate the number above.\n\nKilimani Glow"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Kilimani Glow on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Kilimani Glow on Instagram. The account @kilimanigl0w (https://instagram.com/kilimanigl0w) copies our business name and logo and directs customers to pay 0798 999 555. Our official account is @kilimaniglow. First recorded on 2026-09-27. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nKilimani Glow"
+      }
+    },
+    "sw": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Tahadhari: ukurasa feki wa Kilimani Glow",
+        "body": "Tahadhari kwa wateja wetu: @kilimanigl0w si Kilimani Glow. Ukurasa huo unatumia jina letu na nembo yetu bila ruhusa. Usitume pesa kwa 0798 999 555. Ukurasa wetu rasmi ni @kilimaniglow pekee. Lipa tu kupitia Paybill 606060 (KILIMANI GLOW). Kama tayari umetuma pesa, piga ripoti kwa Safaricom na utujulishe kupitia ukurasa wetu rasmi.",
+        "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20feki%20wa%20Kilimani%20Glow%0A%0ATahadhari%20kwa%20wateja%20wetu%3A%20%40kilimanigl0w%20si%20Kilimani%20Glow.%20Ukurasa%20huo%20unatumia%20jina%20letu%20na%20nembo%20yetu%20bila%20ruhusa.%20Usitume%20pesa%20kwa%200798%20999%20555.%20Ukurasa%20wetu%20rasmi%20ni%20%40kilimaniglow%20pekee.%20Lipa%20tu%20kupitia%20Paybill%20606060%20%28KILIMANI%20GLOW%29.%20Kama%20tayari%20umetuma%20pesa%2C%20piga%20ripoti%20kwa%20Safaricom%20na%20utujulishe%20kupitia%20ukurasa%20wetu%20rasmi."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Kilimani Glow, whose official Instagram account is @kilimaniglow. The account @kilimanigl0w (https://instagram.com/kilimanigl0w) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 14/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 555, which is not our number. Halisi first recorded this account on 2026-09-27, with an impersonation score of 90/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Kilimani Glow",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 555 is being used to collect payments from customers of Kilimani Glow through a fake Instagram page, @kilimanigl0w (https://instagram.com/kilimanigl0w). Kilimani Glow is paid only via Paybill 606060 (KILIMANI GLOW). We first recorded the fake page on 2026-09-27. Please investigate the number above.\n\nKilimani Glow"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Kilimani Glow on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Kilimani Glow on Instagram. The account @kilimanigl0w (https://instagram.com/kilimanigl0w) copies our business name and logo and directs customers to pay 0798 999 555. Our official account is @kilimaniglow. First recorded on 2026-09-27. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nKilimani Glow"
+      }
+    }
+  },
+  "120bfc77-1bdb-5e0b-97ef-f2b80306e046": {
+    "en": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Scam alert: fake Pwani Threads page",
+        "body": "Heads up: @pwanithreads_official_ke is not Pwani Threads. It uses our name and logo without permission. Don't send money to 0798 999 333. Our only official page is @pwanithreads. Pay only via Pochi la Biashara 0700 000 333 (PWANI THREADS). If you have already paid the fake page, report it to Safaricom and let us know through our official page.",
+        "whatsapp_share_url": "https://wa.me/?text=Scam%20alert%3A%20fake%20Pwani%20Threads%20page%0A%0AHeads%20up%3A%20%40pwanithreads_official_ke%20is%20not%20Pwani%20Threads.%20It%20uses%20our%20name%20and%20logo%20without%20permission.%20Don%27t%20send%20money%20to%200798%20999%20333.%20Our%20only%20official%20page%20is%20%40pwanithreads.%20Pay%20only%20via%20Pochi%20la%20Biashara%200700%20000%20333%20%28PWANI%20THREADS%29.%20If%20you%20have%20already%20paid%20the%20fake%20page%2C%20report%20it%20to%20Safaricom%20and%20let%20us%20know%20through%20our%20official%20page."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Pwani Threads, whose official Instagram account is @pwanithreads. The account @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 2/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 333, which is not our number. Halisi first recorded this account on 2026-09-21, with an impersonation score of 96/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Pwani Threads",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 333 is being used to collect payments from customers of Pwani Threads through a fake Instagram page, @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke). Pwani Threads is paid only via Pochi la Biashara 0700 000 333 (PWANI THREADS). We first recorded the fake page on 2026-09-21. Please investigate the number above.\n\nPwani Threads"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Pwani Threads on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Pwani Threads on Instagram. The account @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke) copies our business name and logo and directs customers to pay 0798 999 333. Our official account is @pwanithreads. First recorded on 2026-09-21. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nPwani Threads"
+      }
+    },
+    "sw": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Tahadhari: ukurasa feki wa Pwani Threads",
+        "body": "Tahadhari kwa wateja wetu: @pwanithreads_official_ke si Pwani Threads. Ukurasa huo unatumia jina letu na nembo yetu bila ruhusa. Usitume pesa kwa 0798 999 333. Ukurasa wetu rasmi ni @pwanithreads pekee. Lipa tu kupitia Pochi la Biashara 0700 000 333 (PWANI THREADS). Kama tayari umetuma pesa, piga ripoti kwa Safaricom na utujulishe kupitia ukurasa wetu rasmi.",
+        "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20feki%20wa%20Pwani%20Threads%0A%0ATahadhari%20kwa%20wateja%20wetu%3A%20%40pwanithreads_official_ke%20si%20Pwani%20Threads.%20Ukurasa%20huo%20unatumia%20jina%20letu%20na%20nembo%20yetu%20bila%20ruhusa.%20Usitume%20pesa%20kwa%200798%20999%20333.%20Ukurasa%20wetu%20rasmi%20ni%20%40pwanithreads%20pekee.%20Lipa%20tu%20kupitia%20Pochi%20la%20Biashara%200700%20000%20333%20%28PWANI%20THREADS%29.%20Kama%20tayari%20umetuma%20pesa%2C%20piga%20ripoti%20kwa%20Safaricom%20na%20utujulishe%20kupitia%20ukurasa%20wetu%20rasmi."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Pwani Threads, whose official Instagram account is @pwanithreads. The account @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 2/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 333, which is not our number. Halisi first recorded this account on 2026-09-21, with an impersonation score of 96/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Pwani Threads",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 333 is being used to collect payments from customers of Pwani Threads through a fake Instagram page, @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke). Pwani Threads is paid only via Pochi la Biashara 0700 000 333 (PWANI THREADS). We first recorded the fake page on 2026-09-21. Please investigate the number above.\n\nPwani Threads"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Pwani Threads on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Pwani Threads on Instagram. The account @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke) copies our business name and logo and directs customers to pay 0798 999 333. Our official account is @pwanithreads. First recorded on 2026-09-21. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nPwani Threads"
+      }
+    }
+  },
+  "49151e72-61e7-5ac4-bb1d-f53575fdb6d2": {
+    "en": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Scam alert: fake Pwani Threads page",
+        "body": "Heads up: @pwanlthreads is not Pwani Threads. It uses our name and logo without permission. Don't send money to 0798 999 666. Our only official page is @pwanithreads. Pay only via Pochi la Biashara 0700 000 333 (PWANI THREADS). If you have already paid the fake page, report it to Safaricom and let us know through our official page.",
+        "whatsapp_share_url": "https://wa.me/?text=Scam%20alert%3A%20fake%20Pwani%20Threads%20page%0A%0AHeads%20up%3A%20%40pwanlthreads%20is%20not%20Pwani%20Threads.%20It%20uses%20our%20name%20and%20logo%20without%20permission.%20Don%27t%20send%20money%20to%200798%20999%20666.%20Our%20only%20official%20page%20is%20%40pwanithreads.%20Pay%20only%20via%20Pochi%20la%20Biashara%200700%20000%20333%20%28PWANI%20THREADS%29.%20If%20you%20have%20already%20paid%20the%20fake%20page%2C%20report%20it%20to%20Safaricom%20and%20let%20us%20know%20through%20our%20official%20page."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Pwani Threads, whose official Instagram account is @pwanithreads. The account @pwanlthreads (https://instagram.com/pwanlthreads) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 14/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 666, which is not our number. Halisi first recorded this account on 2026-09-27, with an impersonation score of 90/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Pwani Threads",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 666 is being used to collect payments from customers of Pwani Threads through a fake Instagram page, @pwanlthreads (https://instagram.com/pwanlthreads). Pwani Threads is paid only via Pochi la Biashara 0700 000 333 (PWANI THREADS). We first recorded the fake page on 2026-09-27. Please investigate the number above.\n\nPwani Threads"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Pwani Threads on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Pwani Threads on Instagram. The account @pwanlthreads (https://instagram.com/pwanlthreads) copies our business name and logo and directs customers to pay 0798 999 666. Our official account is @pwanithreads. First recorded on 2026-09-27. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nPwani Threads"
+      }
+    },
+    "sw": {
+      "generator": "template",
+      "model": null,
+      "prompt_ids": [],
+      "consumer_warning": {
+        "title": "Tahadhari: ukurasa feki wa Pwani Threads",
+        "body": "Tahadhari kwa wateja wetu: @pwanlthreads si Pwani Threads. Ukurasa huo unatumia jina letu na nembo yetu bila ruhusa. Usitume pesa kwa 0798 999 666. Ukurasa wetu rasmi ni @pwanithreads pekee. Lipa tu kupitia Pochi la Biashara 0700 000 333 (PWANI THREADS). Kama tayari umetuma pesa, piga ripoti kwa Safaricom na utujulishe kupitia ukurasa wetu rasmi.",
+        "whatsapp_share_url": "https://wa.me/?text=Tahadhari%3A%20ukurasa%20feki%20wa%20Pwani%20Threads%0A%0ATahadhari%20kwa%20wateja%20wetu%3A%20%40pwanlthreads%20si%20Pwani%20Threads.%20Ukurasa%20huo%20unatumia%20jina%20letu%20na%20nembo%20yetu%20bila%20ruhusa.%20Usitume%20pesa%20kwa%200798%20999%20666.%20Ukurasa%20wetu%20rasmi%20ni%20%40pwanithreads%20pekee.%20Lipa%20tu%20kupitia%20Pochi%20la%20Biashara%200700%20000%20333%20%28PWANI%20THREADS%29.%20Kama%20tayari%20umetuma%20pesa%2C%20piga%20ripoti%20kwa%20Safaricom%20na%20utujulishe%20kupitia%20ukurasa%20wetu%20rasmi."
+      },
+      "platform_takedown": {
+        "platform": "instagram",
+        "report_url": "https://help.instagram.com/contact/636276399721841",
+        "body": "I am the owner of Pwani Threads, whose official Instagram account is @pwanithreads. The account @pwanlthreads (https://instagram.com/pwanlthreads) is impersonating my business: it uses our business name, its profile picture is a copy of our logo (perceptual-hash distance 14/64); name and handle score 100/100; payment details score 100/100. It asks our customers to send payment to 0798 999 666, which is not our number. Halisi first recorded this account on 2026-09-27, with an impersonation score of 90/100. Please remove the account."
+      },
+      "safaricom_report": {
+        "channel": "email",
+        "to": "",
+        "subject": "Fraud report: number used to impersonate Pwani Threads",
+        "body": "To the Safaricom fraud team,\n\nThe number 0798 999 666 is being used to collect payments from customers of Pwani Threads through a fake Instagram page, @pwanlthreads (https://instagram.com/pwanlthreads). Pwani Threads is paid only via Pochi la Biashara 0700 000 333 (PWANI THREADS). We first recorded the fake page on 2026-09-27. Please investigate the number above.\n\nPwani Threads"
+      },
+      "kecirt_report": {
+        "to": "",
+        "subject": "Incident report: impersonation of Pwani Threads on Instagram",
+        "body": "To the National KE-CIRT/CC,\n\nWe are reporting the impersonation of Pwani Threads on Instagram. The account @pwanlthreads (https://instagram.com/pwanlthreads) copies our business name and logo and directs customers to pay 0798 999 666. Our official account is @pwanithreads. First recorded on 2026-09-27. This may be an offence under the Computer Misuse and Cybercrimes Act, 2018. Evidence (screenshots, hashes and scores) is available on request.\n\nPwani Threads"
+      }
+    }
+  }
+}

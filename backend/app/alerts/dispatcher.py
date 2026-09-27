@@ -1,91 +1,107 @@
-"""Alert dispatcher: writes merchant_alerts rows after upsert_threat.
+"""In-app alert dispatcher (TSK-012, docs/BACKEND.md section 8.1). No Telegram, no SMS.
 
-Runs in FastAPI BackgroundTasks — pure DB work, no external calls.
-Works identically with SupabaseRepository and MemoryRepository (DEMO_MODE).
+Pure DB work, so it behaves identically on the MemoryRepository (DEMO_MODE) and Supabase.
+
+Rules:
+* threat created with composite >= threshold                       -> ``new_threat``
+* existing threat's score rose by >= 10, or crossed the threshold   -> ``score_increase``
+* threat moved to ``resolved``                                       -> ``resolved``
+* de-duplication: at most one alert per threat per ``ALERT_DEDUP_HOURS`` unless the score rose
+* ``false_positive`` threats never alert
+* title/body never contain phone numbers (notifications can show on lock screens)
 """
-from datetime import UTC, datetime, timedelta
 
-from app.core.config import settings
-from app.core.repository import Repository
-from app.schemas.alert import AlertCreate
+import re
+import uuid
+from datetime import datetime, timedelta
+from uuid import UUID
+
+from app.core.repository import Repository, utcnow
+from app.schemas.alert import AlertCreate, AlertRecord
 from app.schemas.threat import ThreatRecord
 
+SCORE_RISE = 10.0
+_PHONE_LIKE = re.compile(r"\+?\d[\d\s*-]{6,}\d")
 
-async def dispatch_alert(
+
+def _top_reason_text(threat: ThreatRecord) -> str:
+    """Plain-language body: the top reason, with anything number-like removed."""
+    text = str(threat.reasons[0].get("text", "")) if threat.reasons else ""
+    text = _PHONE_LIKE.sub("a number", text).strip()
+    return text or f"A page is imitating your business (score {threat.composite_score:.0f})."
+
+
+def decide_kind(before: ThreatRecord | None, after: ThreatRecord, threshold: float) -> str | None:
+    """Which alert (if any) a threat upsert should produce."""
+    if after.status == "false_positive":
+        return None
+    if before is None:
+        return "new_threat" if after.composite_score >= threshold else None
+    if before.status == "false_positive":
+        return None
+    rose = after.composite_score - before.composite_score >= SCORE_RISE
+    crossed = before.composite_score < threshold <= after.composite_score
+    return "score_increase" if (rose or crossed) and after.composite_score >= threshold else None
+
+
+async def dispatch_threat_alert(
     repo: Repository,
-    previous_threat: ThreatRecord | None,
-    current_threat: ThreatRecord,
-) -> None:
-    """Dispatch an in-app alert row when a notable threat event occurs.
-
-    Trigger conditions (§8.1):
-    - Threat is newly created with composite ≥ THREAT_THRESHOLD → ``new_threat``
-    - Existing threat's score rises ≥ 10 or crosses the threshold → ``score_increase``
-    - Threat transitions to ``resolved`` → ``resolved``
-
-    De-duplication: at most one alert per threat per ALERT_DEDUP_HOURS (default 6),
-    unless the score rose (score_increase bypasses the window).
-    """
-    threat_threshold: float = float(settings.threat_threshold)
-    dedup_hours: int = getattr(settings, "alert_dedup_hours", 6)
-
-    kind: str | None = None
-    title: str = ""
-
-    if (
-        current_threat.status == "resolved"
-        and (previous_threat is None or previous_threat.status != "resolved")
-    ):
-        # Threat just became resolved.
-        kind = "resolved"
-        title = f"Threat resolved: @{current_threat.target_handle}"
-    elif previous_threat is None:
-        # Brand-new threat — fire if it clears the threshold.
-        if current_threat.composite_score >= threat_threshold:
-            kind = "new_threat"
-            title = f"Impersonator detected: @{current_threat.target_handle}"
-    else:
-        # Existing threat: check for meaningful score movement.
-        crossed = (
-            previous_threat.composite_score < threat_threshold
-            and current_threat.composite_score >= threat_threshold
-        )
-        rose = current_threat.composite_score >= previous_threat.composite_score + 10
-        if crossed or rose:
-            kind = "score_increase"
-            title = (
-                f"Score rose to {current_threat.composite_score}:"
-                f" @{current_threat.target_handle}"
-            )
-
-    if not kind:
-        return
-
-    # De-duplication: skip if a recent alert for this threat exists,
-    # UNLESS the score actually rose (score_increase always fires).
-    if kind != "score_increase":
-        last_alert = await repo.last_alert_for_threat(current_threat.id)
-        if last_alert:
-            now = datetime.now(UTC)
-            # Normalise stored timestamp to aware if necessary.
-            last_ts = last_alert.created_at
-            if last_ts.tzinfo is None:
-                last_ts = last_ts.replace(tzinfo=UTC)
-            if now - last_ts < timedelta(hours=dedup_hours):
-                return
-
-    # Body: top reason's plain-text (no phone numbers — lock-screen safe).
-    body = "A new threat has been detected."
-    if current_threat.reasons:
-        top_reason = current_threat.reasons[0]
-        body = top_reason.get("text", body)
-
-    alert = AlertCreate(
-        merchant_id=current_threat.merchant_id,
-        threat_id=current_threat.id,
-        kind=kind,
-        title=title,
-        body=body,
-        score=current_threat.composite_score,
+    before: ThreatRecord | None,
+    after: ThreatRecord,
+    *,
+    threshold: float,
+    dedup_hours: float,
+    now: datetime | None = None,
+) -> AlertRecord | None:
+    """Write at most one ``merchant_alerts`` row for a threat upsert. Returns the alert or None."""
+    kind = decide_kind(before, after, threshold)
+    if kind is None:
+        return None
+    now = now or utcnow()
+    last = await repo.last_alert_for_threat(after.id)
+    if kind == "new_threat" and last is not None and now - last.created_at < timedelta(hours=dedup_hours):
+        return None
+    handle = f"@{after.target_handle}"
+    title = (
+        f"Impersonator detected: {handle}"
+        if kind == "new_threat"
+        else f"Score rose to {after.composite_score:.0f}: {handle}"
     )
-    await repo.insert_alert(alert)
+    return await repo.insert_alert(
+        AlertCreate(
+            id=alert_id_for(after.id, kind, now),
+            merchant_id=after.merchant_id,
+            threat_id=after.id,
+            kind=kind,  # type: ignore[arg-type]
+            title=title[:200],
+            body=_top_reason_text(after)[:500],
+            score=after.composite_score,
+            created_at=now,
+        )
+    )
+
+
+async def dispatch_resolved_alert(
+    repo: Repository, before: ThreatRecord, after: ThreatRecord, *, now: datetime | None = None
+) -> AlertRecord | None:
+    """``resolved`` alert when a threat moves into ``resolved``."""
+    if before.status == "resolved" or after.status != "resolved":
+        return None
+    now = now or utcnow()
+    return await repo.insert_alert(
+        AlertCreate(
+            id=alert_id_for(after.id, "resolved", now),
+            merchant_id=after.merchant_id,
+            threat_id=after.id,
+            kind="resolved",
+            title=f"Resolved: @{after.target_handle}"[:200],
+            body="This page has been marked as resolved.",
+            score=after.composite_score,
+            created_at=now,
+        )
+    )
+
+
+def alert_id_for(threat_id: UUID, kind: str, at: datetime) -> UUID:
+    """Deterministic alert id (same threat + kind + time -> same row), so re-seeding is idempotent."""
+    return uuid.uuid5(threat_id, f"{kind}:{at.isoformat()}")

@@ -1,0 +1,140 @@
+{
+  "scan_id": "bc02b7c4-98b9-574e-94d7-e86d7ba9a3a1",
+  "verdict": "impersonation",
+  "score": 99.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "pwanithreads_official_ke",
+    "display_name": "Pwani Threads Official",
+    "url": "https://instagram.com/pwanithreads_official_ke",
+    "avatar_url": "/seed/pt_blatant.png",
+    "follower_count": 90,
+    "post_count": 4,
+    "account_created_on": "2026-09-16",
+    "fetched_via": "seed"
+  },
+  "matched_merchant": {
+    "id": "22d3547a-f603-5b6e-a6af-c8d78ffb2ce3",
+    "business_name": "Pwani Threads",
+    "slug": "pwani-threads",
+    "logo_url": "/seed/pt_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "pwanithreads",
+        "url": "https://instagram.com/pwanithreads"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "pwanithreads",
+        "url": "https://tiktok.com/@pwanithreads"
+      }
+    ],
+    "payment": {
+      "type": "pochi",
+      "number": "+254700111222",
+      "account_name": "PWANI THREADS"
+    }
+  },
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 100.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 4/64 · dHash distance 3/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'pwanithreads_official_ke' is 'pwanithreads' + affix 'official' 'ke'"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Asks for payment to personal number 0799 *** 222 (not registered to this business)"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 100.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "'pay before delivery', 'send money to', 'limited stock'"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 90.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "Account is 8 days old · 4 posts · 90 followers"
+    }
+  ],
+  "reasons": [
+    {
+      "code": "LOGO_COPY",
+      "severity": "high",
+      "text": "Uses a logo 100% similar to Pwani Threads's.",
+      "text_sw": "Inatumia nembo inayofanana 100% na ya Pwani Threads."
+    },
+    {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Pwani Threads's official account @pwanithreads.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Pwani Threads, @pwanithreads."
+    },
+    {
+      "code": "POCHI_REQUEST",
+      "severity": "high",
+      "text": "Asks for payment to a personal number, not Pwani Threads's official payment channel.",
+      "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Pwani Threads."
+    },
+    {
+      "code": "SCAM_LANGUAGE",
+      "severity": "high",
+      "text": "Uses pressure phrases common in scams: 'pay before delivery', 'send money to', 'limited stock'.",
+      "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pay before delivery', 'send money to', 'limited stock'."
+    },
+    {
+      "code": "NEW_ACCOUNT",
+      "severity": "high",
+      "text": "The account was created recently (Account is 8 days old · 4 posts · 90 followers).",
+      "text_sw": "Akaunti hii imefunguliwa hivi karibuni."
+    }
+  ],
+  "hashes": {
+    "target_phash": "f007f20f4afa28f8",
+    "reference_phash": "f007f2074afc29f8",
+    "hamming_distance": 4
+  },
+  "safe_action": {
+    "text": "Pay only via Pochi la Biashara 0700 111 222 (PWANI THREADS) through @pwanithreads.",
+    "text_sw": "Lipa tu kwa Pochi la Biashara 0700 111 222 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
+  },
+  "threat_id": "aee7afbd-7d25-5114-a2f1-5e47b5b2dc11",
+  "elapsed_ms": 1,
+  "status": "detected",
+  "status_history": [
+    {
+      "status": "detected",
+      "at": "2026-09-24T09:00:00Z"
+    }
+  ],
+  "extracted_phones": [
+    "+254799111222"
+  ],
+  "extracted_tills": [],
+  "playbooks_generated": [],
+  "first_seen_at": "2026-09-24T09:00:00Z",
+  "last_checked_at": "2026-09-24T09:00:00Z",
+  "resolved_at": null
+}

@@ -1,0 +1,134 @@
+{
+  "scan_id": "6c888bb3-7b05-5203-8dce-7deb7d75cada",
+  "verdict": "impersonation",
+  "score": 90.0,
+  "confidence": 0.9,
+  "target": {
+    "platform": "instagram",
+    "handle": "kiiimaniglow",
+    "display_name": "Kilimani Glow",
+    "url": "https://instagram.com/kiiimaniglow",
+    "avatar_url": "/seed/kg_subtle.png",
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "seed"
+  },
+  "matched_merchant": {
+    "id": "760e3dc7-886b-55d1-b96c-a400ed66d0f2",
+    "business_name": "Kilimani Glow",
+    "slug": "kilimani-glow",
+    "logo_url": "/seed/kg_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "kilimaniglow",
+        "url": "https://instagram.com/kilimaniglow"
+      },
+      {
+        "platform": "facebook",
+        "handle": "kilimaniglow",
+        "url": "https://facebook.com/kilimaniglow"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "400200",
+      "account_name": "KILIMANI GLOW"
+    }
+  },
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 60.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 28/64 · dHash distance 12/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'kiiimaniglow' imitates 'kilimaniglow' (look-alike characters)"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Asks for payment to personal number 0745 *** 700 (not registered to this business)"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 50.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "'pochi la biashara', 'order now'"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 0.0,
+      "weight": 0.1,
+      "available": false,
+      "evidence": "No data"
+    }
+  ],
+  "reasons": [
+    {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+    },
+    {
+      "code": "POCHI_REQUEST",
+      "severity": "high",
+      "text": "Asks for payment to a personal number, not Kilimani Glow's official payment channel.",
+      "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Kilimani Glow."
+    },
+    {
+      "code": "LOGO_COPY",
+      "severity": "medium",
+      "text": "Uses a logo 60% similar to Kilimani Glow's.",
+      "text_sw": "Inatumia nembo inayofanana 60% na ya Kilimani Glow."
+    },
+    {
+      "code": "SCAM_LANGUAGE",
+      "severity": "medium",
+      "text": "Uses pressure phrases common in scams: 'pochi la biashara', 'order now'.",
+      "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pochi la biashara', 'order now'."
+    }
+  ],
+  "hashes": {
+    "target_phash": "8f878f8f0ff08486",
+    "reference_phash": "9d6a1d6a1de2e262",
+    "hamming_distance": 28
+  },
+  "safe_action": {
+    "text": "Pay only via Paybill 400200 (KILIMANI GLOW) through @kilimaniglow.",
+    "text_sw": "Lipa tu kwa Paybill 400200 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
+  },
+  "threat_id": "848f0795-3077-53c1-8cd9-8d9df8609e3a",
+  "elapsed_ms": 1,
+  "status": "detected",
+  "status_history": [
+    {
+      "status": "detected",
+      "at": "2026-09-26T09:00:00Z"
+    }
+  ],
+  "extracted_phones": [
+    "+254745600700"
+  ],
+  "extracted_tills": [],
+  "playbooks_generated": [],
+  "first_seen_at": "2026-09-26T09:00:00Z",
+  "last_checked_at": "2026-09-26T09:00:00Z",
+  "resolved_at": null
+}

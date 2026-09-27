@@ -1,0 +1,9 @@
+Tahadhari: @{{ target_handle }} si ukurasa wa {{ merchant_name }}.
+{% if phones_local %}
+Usitume pesa kwa {{ phones_local | join(" au ") }}.
+{% endif %}
+{% if extracted_tills %}
+Usilipe Till/Paybill {{ extracted_tills | join(" au ") }}.
+{% endif %}
+{{ safe_action_sw }}
+Tafadhali ripoti ukurasa huo bandia na uwatumie marafiki na familia ujumbe huu.

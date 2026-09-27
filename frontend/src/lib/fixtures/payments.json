@@ -1,0 +1,236 @@
+[
+  {
+    "kind": "till",
+    "normalized": "543210",
+    "display": "543210",
+    "status": "official",
+    "merchant": {
+      "id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "category": "Sneakers & streetwear",
+      "location": "Nairobi CBD",
+      "established_on": "2019-03-01",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      },
+      "verified_since": "2026-09-01"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254700000111",
+    "display": "0700 000 111",
+    "status": "official",
+    "merchant": {
+      "id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/fixtures/logos/nairobi-sneaker-vault.webp",
+      "category": "Sneakers & streetwear",
+      "location": "Nairobi CBD",
+      "established_on": "2019-03-01",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      },
+      "verified_since": "2026-09-01"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  {
+    "kind": "paybill",
+    "normalized": "606060",
+    "display": "606060",
+    "status": "official",
+    "merchant": {
+      "id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+      "business_name": "Kilimani Glow",
+      "slug": "kilimani-glow",
+      "logo_url": "/fixtures/logos/kilimani-glow.webp",
+      "category": "Beauty & skincare",
+      "location": "Kilimani, Nairobi",
+      "established_on": "2021-06-15",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kilimaniglow",
+          "url": "https://instagram.com/kilimaniglow"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kilimaniglow",
+          "url": "https://facebook.com/kilimaniglow"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "606060",
+        "account_name": "KILIMANI GLOW"
+      },
+      "verified_since": "2026-09-03"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254700000222",
+    "display": "0700 000 222",
+    "status": "official",
+    "merchant": {
+      "id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+      "business_name": "Kilimani Glow",
+      "slug": "kilimani-glow",
+      "logo_url": "/fixtures/logos/kilimani-glow.webp",
+      "category": "Beauty & skincare",
+      "location": "Kilimani, Nairobi",
+      "established_on": "2021-06-15",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kilimaniglow",
+          "url": "https://instagram.com/kilimaniglow"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kilimaniglow",
+          "url": "https://facebook.com/kilimaniglow"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "606060",
+        "account_name": "KILIMANI GLOW"
+      },
+      "verified_since": "2026-09-03"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254700000333",
+    "display": "0700 000 333",
+    "status": "official",
+    "merchant": {
+      "id": "58035f06-936b-503e-911c-39094d25078b",
+      "business_name": "Pwani Threads",
+      "slug": "pwani-threads",
+      "logo_url": "/fixtures/logos/pwani-threads.webp",
+      "category": "Coastal fashion",
+      "location": "Mombasa",
+      "established_on": "2020-11-02",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "pwanithreads",
+          "url": "https://instagram.com/pwanithreads"
+        },
+        {
+          "platform": "facebook",
+          "handle": "pwanithreads",
+          "url": "https://facebook.com/pwanithreads"
+        }
+      ],
+      "payment": {
+        "type": "pochi",
+        "number": "+254700000333",
+        "account_name": "PWANI THREADS"
+      },
+      "verified_since": "2026-09-05"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254798999111",
+    "display": "0798 *** 111",
+    "status": "reported",
+    "merchant": null,
+    "report_count": 3,
+    "linked_threats": 1
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254798999222",
+    "display": "0798 *** 222",
+    "status": "reported",
+    "merchant": null,
+    "report_count": 2,
+    "linked_threats": 1
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254798999333",
+    "display": "0798 *** 333",
+    "status": "unknown",
+    "merchant": null,
+    "report_count": 0,
+    "linked_threats": 1
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254798999444",
+    "display": "0798 *** 444",
+    "status": "unknown",
+    "merchant": null,
+    "report_count": 0,
+    "linked_threats": 1
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254798999555",
+    "display": "0798 *** 555",
+    "status": "unknown",
+    "merchant": null,
+    "report_count": 0,
+    "linked_threats": 1
+  },
+  {
+    "kind": "phone",
+    "normalized": "+254798999666",
+    "display": "0798 *** 666",
+    "status": "unknown",
+    "merchant": null,
+    "report_count": 0,
+    "linked_threats": 1
+  }
+]

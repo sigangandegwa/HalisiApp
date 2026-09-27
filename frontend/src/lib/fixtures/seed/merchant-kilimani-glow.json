@@ -1,0 +1,28 @@
+{
+  "id": "760e3dc7-886b-55d1-b96c-a400ed66d0f2",
+  "business_name": "Kilimani Glow",
+  "slug": "kilimani-glow",
+  "logo_url": "/seed/kg_logo.png",
+  "category": "Beauty & skincare",
+  "location": "Kilimani, Nairobi",
+  "established_on": "2022-06-15",
+  "is_verified": true,
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "kilimaniglow",
+      "url": "https://instagram.com/kilimaniglow"
+    },
+    {
+      "platform": "facebook",
+      "handle": "kilimaniglow",
+      "url": "https://facebook.com/kilimaniglow"
+    }
+  ],
+  "payment": {
+    "type": "paybill",
+    "number": "400200",
+    "account_name": "KILIMANI GLOW"
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

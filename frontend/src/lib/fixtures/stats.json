@@ -1,0 +1,65 @@
+{
+  "global": {
+    "pages_scanned": 13,
+    "threats_detected": 6,
+    "impersonations_blocked_7d": 6,
+    "merchants_protected": 3,
+    "median_detection_ms": 1,
+    "top_platforms": [
+      {
+        "platform": "instagram",
+        "count": 6
+      }
+    ]
+  },
+  "merchants": {
+    "432ea21d-fcd0-57a7-bbc2-5f61d034526e": {
+      "pages_scanned": 4,
+      "threats_detected": 2,
+      "impersonations_blocked_7d": 2,
+      "merchants_protected": 1,
+      "median_detection_ms": 1,
+      "top_platforms": [
+        {
+          "platform": "instagram",
+          "count": 2
+        }
+      ],
+      "active_threats": 2,
+      "resolved": 0,
+      "customers_warned_estimate": null
+    },
+    "857b5fe5-7830-522e-bc5f-2684aad61d0e": {
+      "pages_scanned": 3,
+      "threats_detected": 2,
+      "impersonations_blocked_7d": 2,
+      "merchants_protected": 1,
+      "median_detection_ms": 1,
+      "top_platforms": [
+        {
+          "platform": "instagram",
+          "count": 2
+        }
+      ],
+      "active_threats": 2,
+      "resolved": 0,
+      "customers_warned_estimate": null
+    },
+    "58035f06-936b-503e-911c-39094d25078b": {
+      "pages_scanned": 3,
+      "threats_detected": 2,
+      "impersonations_blocked_7d": 2,
+      "merchants_protected": 1,
+      "median_detection_ms": 1,
+      "top_platforms": [
+        {
+          "platform": "instagram",
+          "count": 2
+        }
+      ],
+      "active_threats": 1,
+      "resolved": 1,
+      "customers_warned_estimate": null
+    }
+  }
+}

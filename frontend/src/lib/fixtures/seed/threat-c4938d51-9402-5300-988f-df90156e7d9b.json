@@ -1,0 +1,146 @@
+{
+  "scan_id": "39f2cbbc-c488-5b51-ad1b-3f51a8cb6b1d",
+  "verdict": "impersonation",
+  "score": 99.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "nairobi_sneakervault_official_ke",
+    "display_name": "Nairobi Sneaker Vault Official",
+    "url": "https://instagram.com/nairobi_sneakervault_official_ke",
+    "avatar_url": "/seed/nsv_blatant.png",
+    "follower_count": 212,
+    "post_count": 9,
+    "account_created_on": "2026-09-17",
+    "fetched_via": "seed"
+  },
+  "matched_merchant": {
+    "id": "190bec2a-588a-54e5-8590-c237c6239a4a",
+    "business_name": "Nairobi Sneaker Vault",
+    "slug": "nairobi-sneaker-vault",
+    "logo_url": "/seed/nsv_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "nairobisneakervault",
+        "url": "https://instagram.com/nairobisneakervault"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "nairobisneakervault",
+        "url": "https://tiktok.com/@nairobisneakervault"
+      }
+    ],
+    "payment": {
+      "type": "till",
+      "number": "543210",
+      "account_name": "NAIROBI SNEAKER VAULT"
+    }
+  },
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 100.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 4/64 · dHash distance 4/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'nairobi_sneakervault_official_ke' is 'nairobisneakervault' + affix 'official' 'ke'"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 100.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Asks for payment to personal number 0798 *** 111 (not registered to this business) · 1 payment number(s) confirmed in community scam reports"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 100.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "'pay before delivery', 'lipa kwanza', 'send money to', 'offer ends today'"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 90.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "Account is 8 days old · 9 posts · 212 followers"
+    }
+  ],
+  "reasons": [
+    {
+      "code": "LOGO_COPY",
+      "severity": "high",
+      "text": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+      "text_sw": "Inatumia nembo inayofanana 100% na ya Nairobi Sneaker Vault."
+    },
+    {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault."
+    },
+    {
+      "code": "COMMUNITY_REPORTED",
+      "severity": "high",
+      "text": "The payment number on this page has been reported by other customers.",
+      "text_sw": "Namba ya malipo kwenye ukurasa huu imeripotiwa na wateja wengine."
+    },
+    {
+      "code": "POCHI_REQUEST",
+      "severity": "high",
+      "text": "Asks for payment to a personal number, not Nairobi Sneaker Vault's official payment channel.",
+      "text_sw": "Inaomba malipo kwa namba ya binafsi, si njia rasmi ya malipo ya Nairobi Sneaker Vault."
+    },
+    {
+      "code": "SCAM_LANGUAGE",
+      "severity": "high",
+      "text": "Uses pressure phrases common in scams: 'pay before delivery', 'lipa kwanza', 'send money to', 'offer ends today'.",
+      "text_sw": "Inatumia maneno ya shinikizo yanayotumiwa na matapeli: 'pay before delivery', 'lipa kwanza', 'send money to', 'offer ends today'."
+    },
+    {
+      "code": "NEW_ACCOUNT",
+      "severity": "high",
+      "text": "The account was created recently (Account is 8 days old · 9 posts · 212 followers).",
+      "text_sw": "Akaunti hii imefunguliwa hivi karibuni."
+    }
+  ],
+  "hashes": {
+    "target_phash": "bd3dd062cccd9183",
+    "reference_phash": "bd3cd0e2c4cd91c3",
+    "hamming_distance": 4
+  },
+  "safe_action": {
+    "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+    "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+  },
+  "threat_id": "c4938d51-9402-5300-988f-df90156e7d9b",
+  "elapsed_ms": 1,
+  "status": "detected",
+  "status_history": [
+    {
+      "status": "detected",
+      "at": "2026-09-25T09:00:00Z"
+    }
+  ],
+  "extracted_phones": [
+    "+254798999111"
+  ],
+  "extracted_tills": [],
+  "playbooks_generated": [],
+  "first_seen_at": "2026-09-25T09:00:00Z",
+  "last_checked_at": "2026-09-25T09:00:00Z",
+  "resolved_at": null
+}

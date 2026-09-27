@@ -1,0 +1,36 @@
+[
+  {
+    "id": "7d1975e3-848c-5ae4-b1c3-ca43aa489f34",
+    "platform": "instagram",
+    "target_handle": "kilimaniglow_official_ke",
+    "target_url": "https://instagram.com/kilimaniglow_official_ke",
+    "avatar_url": "/seed/kg_blatant.png",
+    "composite_score": 96.0,
+    "verdict": "impersonation",
+    "status": "detected",
+    "first_seen_at": "2026-09-25T09:00:00Z",
+    "top_reason": {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+    }
+  },
+  {
+    "id": "848f0795-3077-53c1-8cd9-8d9df8609e3a",
+    "platform": "instagram",
+    "target_handle": "kiiimaniglow",
+    "target_url": "https://instagram.com/kiiimaniglow",
+    "avatar_url": "/seed/kg_subtle.png",
+    "composite_score": 90.0,
+    "verdict": "impersonation",
+    "status": "detected",
+    "first_seen_at": "2026-09-26T09:00:00Z",
+    "top_reason": {
+      "code": "HANDLE_LOOKALIKE",
+      "severity": "high",
+      "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+      "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+    }
+  }
+]

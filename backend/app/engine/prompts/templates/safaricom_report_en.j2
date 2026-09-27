@@ -1,0 +1,19 @@
+Dear Safaricom fraud team,
+
+I am reporting M-Pesa payment details used by a fake social-media page that impersonates my business, {{ merchant_name }}.
+
+{% if phones_local %}
+Receiving number(s) on the fake page: {{ phones_local | join(", ") }}
+{% endif %}
+{% if extracted_tills %}
+Till/Paybill on the fake page: {{ extracted_tills | join(", ") }}
+{% endif %}
+Fake page: @{{ target_handle }} on {{ target_platform }} ({{ target_url }}), first seen {{ first_seen_on }}.
+Our official payment channel: {{ safe_action_en }}
+
+How customers are misled:
+{% for reason in reasons_en %}
+- {{ reason }}
+{% endfor %}
+
+Please investigate the payment details above. Scam SMS can also be forwarded to {{ sms_note }}.

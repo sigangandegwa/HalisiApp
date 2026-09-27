@@ -1,0 +1,49 @@
+{
+  "scan_id": "f483deaf-868c-555f-8332-4003c7fdbdea",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "pwanithreads",
+    "display_name": null,
+    "url": "https://instagram.com/pwanithreads",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "22d3547a-f603-5b6e-a6af-c8d78ffb2ce3",
+    "business_name": "Pwani Threads",
+    "slug": "pwani-threads",
+    "logo_url": "/seed/pt_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "pwanithreads",
+        "url": "https://instagram.com/pwanithreads"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "pwanithreads",
+        "url": "https://tiktok.com/@pwanithreads"
+      }
+    ],
+    "payment": {
+      "type": "pochi",
+      "number": "+254700111222",
+      "account_name": "PWANI THREADS"
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Pay only via Pochi la Biashara 0700 111 222 (PWANI THREADS) through @pwanithreads.",
+    "text_sw": "Lipa tu kwa Pochi la Biashara 0700 111 222 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

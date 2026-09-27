@@ -1,0 +1,65 @@
+{
+  "scan_id": "ff4343d7-761f-59e4-969b-b480d4a5ecfe",
+  "verdict": "no_match",
+  "score": 14.68,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "kilimanibeautybar",
+    "display_name": "Kilimani Beauty Bar",
+    "url": "https://instagram.com/kilimanibeautybar",
+    "avatar_url": "/seed/kg_competitor.png",
+    "follower_count": 8900,
+    "post_count": 620,
+    "account_created_on": null,
+    "fetched_via": "seed"
+  },
+  "matched_merchant": null,
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 0.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 32/64 · dHash distance 33/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 29.73,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'kilimanibeautybar' resembles 'nairobisneakervault' (30% similar)"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 25.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Till/Paybill 667788 is not registered to this business"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 0.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "No scam phrases found"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 10.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "620 posts · 8900 followers"
+    }
+  ],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": null,
+  "threat_id": null,
+  "elapsed_ms": 1
+}
