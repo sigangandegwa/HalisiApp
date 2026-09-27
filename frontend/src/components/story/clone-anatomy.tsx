@@ -127,7 +127,7 @@ function ProfileCard({ p, logo, annotate = true }: { p: number; logo: string | n
         style={{ opacity: stamp ? 1 : 0, transform: `scale(${stamp ? 1 : 1.15}) rotate(${stamp ? -4 : -9}deg)` }}
         aria-hidden="true"
       >
-        <Stamp word="FEKI." color="var(--color-feki)" size="md" misregister rotate={0} />
+        <Stamp word={t("verdict.impersonation.word")} color="var(--color-feki)" size="md" misregister rotate={0} />
       </div>
     </div>
   );
@@ -177,7 +177,25 @@ export function CloneAnatomy({ logoUrl }: { logoUrl: string | null }) {
             }
           },
         });
-        kill = () => st.kill();
+
+        // The checker above this section changes height when a result appears (or the manual
+        // fallback opens), which shifts this section's scroll offset after ScrollTrigger has
+        // already cached it. Without a refresh, the pin fires at the old (now wrong) offset and
+        // the fixed "stage" overlaps the checker's result while the user scrolls. Any layout
+        // change anywhere on the page (not just the checker) needs the same fix, so this watches
+        // the whole document body rather than coupling to one component.
+        let raf = 0;
+        const ro = new ResizeObserver(() => {
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+        });
+        ro.observe(document.body);
+
+        kill = () => {
+          cancelAnimationFrame(raf);
+          ro.disconnect();
+          st.kill();
+        };
       },
       { rootMargin: "100% 0px" },
     );

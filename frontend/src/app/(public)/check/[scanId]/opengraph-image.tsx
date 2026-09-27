@@ -9,11 +9,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const WORD: Record<Verdict, { word: string; color: string; sub: string }> = {
-  impersonation: { word: "FEKI.", color: FEKI, sub: en["verdict.impersonation.sub"] },
-  official: { word: "HALISI.", color: HALISI, sub: en["verdict.official.sub"] },
-  suspicious: { word: "TAHADHARI.", color: CAUTION_INK, sub: en["verdict.suspicious.sub"] },
-  no_match: { word: "HAIJULIKANI.", color: INK, sub: en["verdict.no_match.sub"] },
-  error: { word: "HITILAFU.", color: INK, sub: en["verdict.error.sub"] },
+  impersonation: { word: en["verdict.impersonation.word"], color: FEKI, sub: en["verdict.impersonation.sub"] },
+  official: { word: en["verdict.official.word"], color: HALISI, sub: en["verdict.official.sub"] },
+  suspicious: { word: en["verdict.suspicious.word"], color: CAUTION_INK, sub: en["verdict.suspicious.sub"] },
+  no_match: { word: en["verdict.no_match.word"], color: INK, sub: en["verdict.no_match.sub"] },
+  error: { word: en["verdict.error.word"], color: INK, sub: en["verdict.error.sub"] },
 };
 
 /** WhatsApp / social preview (FRONTEND.md section 6.2): the stamp does the viral work. */

@@ -178,6 +178,7 @@ export const sw = {
 
   "footer.tagline": "Linda wateja wako. Linda jina lako.",
   "footer.taglineSub": "Protect your customers. Protect your name.",
+  "footer.taglineLang": "sw",
   "footer.credit": "Imetengenezwa na Chiromo Tech Club, Chuo Kikuu cha Nairobi.",
   "footer.privacy": "Halisi huhifadhi rekodi ya kurasa zilizokaguliwa na matokeo yake ili matokeo yaweze kushirikiwa. Hatukuulizi wewe ni nani. Namba za simu za watu wengine hufichwa kwenye kurasa za umma.",
   "footer.demo": "Biashara zote katika onyesho hili ni za kubuni.",
@@ -253,4 +254,18 @@ export const sw = {
   "error.title": "Kuna hitilafu upande wetu.",
   "error.body": "Kiungo chako hakikukaguliwa. Hakuna kilichohifadhiwa.",
   "error.retry": "Jaribu tena",
+
+  "login.eyebrow": "Kuingia kwa wafanyabiashara",
+  "login.title": "Karibu tena.",
+  "login.sub": "Weka nenosiri lako la Halisi ili kufungua dashibodi yako.",
+  "login.label": "Nenosiri",
+  "login.placeholder": "Weka nenosiri lako",
+  "login.submit": "Ingia",
+  "login.submitting": "Inakagua",
+  "login.error.empty": "Weka nenosiri lako.",
+  "login.error.invalid": "Nenosiri hilo si sahihi.",
+  "login.error.rate": "Majaribio mengi mno. Subiri dakika moja kisha jaribu tena.",
+  "login.error.notConfigured": "Kuingia kwa wafanyabiashara bado hakujawekwa kwa mfumo huu.",
+  "login.error.generic": "Hitilafu imetokea. Tafadhali jaribu tena.",
+  "login.back": "Rudi kwenye kikagua",
 } as const satisfies Record<MessageKey, string>;

@@ -57,15 +57,15 @@ export const en = {
   "scan.report": "Forensic report",
   "scan.scan": "Scan",
 
-  "verdict.official.word": "HALISI.",
+  "verdict.official.word": "AUTHENTIC.",
   "verdict.official.sub": "Official page",
-  "verdict.impersonation.word": "FEKI.",
+  "verdict.impersonation.word": "FAKE.",
   "verdict.impersonation.sub": "Impersonator detected",
-  "verdict.suspicious.word": "TAHADHARI.",
+  "verdict.suspicious.word": "CAUTION.",
   "verdict.suspicious.sub": "Proceed with caution",
-  "verdict.no_match.word": "HAIJULIKANI.",
+  "verdict.no_match.word": "UNVERIFIED.",
   "verdict.no_match.sub": "Not a Halisi-verified page",
-  "verdict.error.word": "HITILAFU.",
+  "verdict.error.word": "ERROR.",
   "verdict.error.sub": "Check failed",
 
   "line.official": "This is the official page of {business}.",
@@ -174,8 +174,9 @@ export const en = {
   "how.3.title": "Take down",
   "how.3.body": "A report kit for Instagram, Safaricom and KE-CIRT/CC, with the evidence already attached.",
 
-  "footer.tagline": "Linda wateja wako. Linda jina lako.",
-  "footer.taglineSub": "Protect your customers. Protect your name.",
+  "footer.tagline": "Protect your customers. Protect your name.",
+  "footer.taglineSub": "",
+  "footer.taglineLang": "en",
   "footer.credit": "Built by Chiromo Tech Club, University of Nairobi.",
   "footer.privacy": "Halisi keeps a record of the pages checked and their results so results can be shared. We don’t ask who you are. Third-party phone numbers are masked on public pages.",
   "footer.demo": "All businesses in this demo are fictional.",
@@ -251,6 +252,20 @@ export const en = {
   "error.title": "Something broke on our side.",
   "error.body": "Your link wasn’t checked. Nothing was saved.",
   "error.retry": "Try again",
+
+  "login.eyebrow": "Merchant login",
+  "login.title": "Welcome back.",
+  "login.sub": "Enter your Halisi passcode to open your dashboard.",
+  "login.label": "Passcode",
+  "login.placeholder": "Enter your passcode",
+  "login.submit": "Log in",
+  "login.submitting": "Checking",
+  "login.error.empty": "Enter your passcode.",
+  "login.error.invalid": "That passcode isn’t right.",
+  "login.error.rate": "Too many attempts. Wait a minute and try again.",
+  "login.error.notConfigured": "Merchant login isn’t configured for this deployment yet.",
+  "login.error.generic": "Something went wrong. Please try again.",
+  "login.back": "Back to the checker",
 } as const;
 
 export type MessageKey = keyof typeof en;

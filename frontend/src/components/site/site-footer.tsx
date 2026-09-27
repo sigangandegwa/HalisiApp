@@ -10,10 +10,10 @@ export function SiteFooter({ t }: { t: T }) {
       <Microprint className="py-1.5" />
       <div className="page-grid gap-y-10 pt-14 pb-10 md:pt-20">
         <div className="col-span-12 md:col-span-7">
-          <p className="type-display-m max-w-[16ch] italic" style={{ fontVariationSettings: '"SOFT" 100' }} lang="sw">
+          <p className="type-display-m max-w-[16ch] italic" style={{ fontVariationSettings: '"SOFT" 100' }} lang={t("footer.taglineLang")}>
             {t("footer.tagline")}
           </p>
-          <p className="mt-3 text-fg-2">{t("footer.taglineSub")}</p>
+          {t("footer.taglineSub") ? <p className="mt-3 text-fg-2">{t("footer.taglineSub")}</p> : null}
         </div>
         <div className="col-span-12 grid gap-4 text-small text-fg-2 md:col-span-4 md:col-start-9">
           <p className="measure">{t("footer.privacy")}</p>
