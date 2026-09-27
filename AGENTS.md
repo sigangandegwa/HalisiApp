@@ -52,7 +52,7 @@ conflicts
 | TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
 | TSK-015 | P0 | Engine | **Hasher v2**: calibrated similarity, alpha/EXIF/square normalisation, dHash, no I/O in engine | Collins | `[ ] Pending` | 002 |
 | TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[x] Done` | 002 |
-| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[ ] Pending` | 002 |
+| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[/] In Progress` | 002 |
 | TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[ ] Pending` | 015, 016, 021 |
 | TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[ ] Pending` | 002 |
 | TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[ ] Pending` | 002, 008 |
@@ -108,7 +108,7 @@ conflicts
 | TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
 | TSK-015 | P0 | Engine | **Hasher v2**: calibrated similarity, alpha/EXIF/square normalisation, dHash, no I/O in engine | Collins | `[x] Done` | 002 |
 | TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[ ] Pending` | 002 |
-| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[ ] Pending` | 002 |
+| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[/] In Progress` | 002 |
 | TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[ ] Pending` | 015, 016, 021 |
 | TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[ ] Pending` | 002 |
 | TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[ ] Pending` | 002, 008 |
@@ -271,6 +271,8 @@ halisi/
 | 2026-09-27 13:45 | Claude Code / Collins | UPDATE | `AGENTS.md`, `README.md` | 3-person team, redistributed Dennis's tasks, new sprint board, real file-status map, review findings |
 | 2026-09-27 16:30 | Claude Code / Collins | CREATE / UPDATE / DELETE | `backend/app/engine/{imaging,constants,hasher}.py`, `backend/tests/engine/*`, `backend/pyproject.toml`; deleted `test_hash.py` | TSK-015 hasher v2: image limits, EXIF, alpha→white, square pad; pHash+dHash with calibrated 4→24-bit curve; CLIP combine; 58 offline tests + 3 strict xfails documenting that hashes miss crops |
 | 2026-09-27 17:10 | Claude Code / Collins | UPDATE | `database/schema.sql` (v2.1), `backend/.env.example`, `backend/requirements.txt`, `AGENTS.md`, `README.md`, `docs/{BACKEND,FRONTEND,data-flow,tech-stack,DEVELOPMENT,BREV_ENGINE_SETUP}.md` | Scope change: no Telegram, no SMS, no M-Pesa API. Alerts are in-app only: `merchant_alerts` table + `/alerts` poll + mark-read (TSK-012 repurposed), bell/drawer/toast/service-worker notifications (new TSK-037). TSK-013 and TSK-030 dropped; `africastalking` removed |
+| 2026-09-27 14:38 | Gemini 3.1 Pro (High) / Geoffrey | UPDATE | `backend/app/engine/matcher.py`, `backend/tests/engine/test_matcher.py` | Implemented TSK-016 Matcher v2 with normalisation, homoglyphs, and language scoring. Added and passed golden tests |
+| 2026-09-27 14:58 | Gemini 3.1 Pro (High) / Geoffrey | CREATE | `backend/app/ingestion/extractors.py`, `backend/tests/engine/test_payment.py` | Implemented TSK-021 payment extractors (phones, tills, paybills, pochi). Added 12 passing tests |
 
 ---
 
