@@ -6,14 +6,24 @@ interface AlertContextType {
   isOpen: boolean;
   setOpen: (v: boolean) => void;
   merchantId: string;
+  /** The logged-in merchant's slug, for the one public endpoint that's keyed by slug (GET /merchants/{slug}). */
+  merchantSlug: string;
 }
 
 const AlertContext = createContext<AlertContextType | null>(null);
 
-export function AlertProvider({ children, merchantId }: { children: ReactNode; merchantId: string }) {
+export function AlertProvider({
+  children,
+  merchantId,
+  merchantSlug,
+}: {
+  children: ReactNode;
+  merchantId: string;
+  merchantSlug: string;
+}) {
   const [isOpen, setOpen] = useState(false);
   return (
-    <AlertContext.Provider value={{ isOpen, setOpen, merchantId }}>
+    <AlertContext.Provider value={{ isOpen, setOpen, merchantId, merchantSlug }}>
       {children}
     </AlertContext.Provider>
   );

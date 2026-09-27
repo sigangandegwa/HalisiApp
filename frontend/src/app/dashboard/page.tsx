@@ -11,7 +11,7 @@ import { paymentParts } from "@/lib/format";
 import { Seal } from "@/components/brand/seal";
 
 export default function DashboardPage() {
-  const { merchantId } = useAlertDrawer();
+  const { merchantId, merchantSlug } = useAlertDrawer();
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: qk.stats(merchantId),
@@ -20,8 +20,8 @@ export default function DashboardPage() {
   });
 
   const { data: merchant } = useQuery({
-    queryKey: qk.merchant(merchantId), // Wait, merchant lookup requires slug in api.ts, not id. But since we need the merchant, we'll fetch with a known slug for demo.
-    queryFn: () => api.getMerchant("nairobi-sneaker-vault"), 
+    queryKey: qk.merchant(merchantSlug),
+    queryFn: () => api.getMerchant(merchantSlug),
   });
 
   const { data: threats, isLoading: threatsLoading } = useQuery({

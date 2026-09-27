@@ -18,7 +18,7 @@ import { formatDateTime } from "@/lib/format";
 export default function ThreatDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const { merchantId } = useAlertDrawer();
+  const { merchantId, merchantSlug } = useAlertDrawer();
   const queryClient = useQueryClient();
 
   const { data: threat, isLoading: threatLoading } = useQuery({
@@ -27,8 +27,8 @@ export default function ThreatDetailPage() {
   });
 
   const { data: merchant } = useQuery({
-    queryKey: qk.merchant(merchantId), 
-    queryFn: () => api.getMerchant("nairobi-sneaker-vault"), // Mock
+    queryKey: qk.merchant(merchantSlug),
+    queryFn: () => api.getMerchant(merchantSlug),
   });
 
   const updateStatus = useMutation({

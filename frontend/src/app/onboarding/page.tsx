@@ -4,14 +4,16 @@ import { useState } from "react";
 import { api } from "@/lib/api";
 import { HashGrid } from "@/components/checker/hash-grid";
 import { Certificate } from "@/components/certificate/certificate";
-import type { MerchantCreate } from "@/lib/schemas";
+import type { MerchantCreate, MpesaType } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
+import { useI18n } from "@/lib/i18n/provider";
 
 export default function OnboardingPage() {
+  const { t } = useI18n();
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<MerchantCreate>>({
     handles: [],
@@ -33,14 +35,21 @@ export default function OnboardingPage() {
       <div className="max-w-2xl mx-auto space-y-12 py-12 flex flex-col items-center">
          <h1 className="type-display-l text-fg text-center">Verification Complete</h1>
          <p className="type-lede text-fg-2 text-center max-w-md">Your business is now protected. Your customers can verify you instantly.</p>
-         
+
          <div className="w-full">
-            <Certificate merchant={merchant} url={`https://halisi.app/v/${merchant.slug}`} t={(k: any) => k} />
+            <Certificate merchant={merchant} url={`https://halisi.app/v/${merchant.slug}`} t={t} />
          </div>
-         
-         <Link href="/dashboard/badge" className="mt-8 bg-fg text-bg hover:bg-fg/90 px-8 py-3 rounded-pill type-caption transition-colors">
-            Get your badge
-         </Link>
+
+         {/* Registering just signed you in (the proxy grants a session for the merchant it created,
+             src/app/api/halisi/[...path]/route.ts), so the dashboard is already yours to open. */}
+         <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+           <Link href="/dashboard" className="bg-fg text-bg hover:bg-fg/90 px-8 py-3 rounded-pill type-caption transition-colors">
+              Go to your dashboard
+           </Link>
+           <Link href="/dashboard/badge" className="border border-line-strong text-fg hover:border-fg px-8 py-3 rounded-pill type-caption transition-colors">
+              Get your badge
+           </Link>
+         </div>
       </div>
     );
   }
@@ -100,7 +109,7 @@ export default function OnboardingPage() {
              <label className="type-caption text-fg-2 block mb-2">M-Pesa Type</label>
              <select 
                value={data.mpesa_type} 
-               onChange={e => setData({...data, mpesa_type: e.target.value as any})}
+               onChange={e => setData({...data, mpesa_type: e.target.value as MpesaType})}
                className="w-full bg-bg border border-line rounded-doc p-2 outline-none focus-visible:ring-2 focus-visible:ring-fg"
              >
                <option value="none">None</option>
