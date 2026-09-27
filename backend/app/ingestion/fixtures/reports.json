@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ecb4c4fb-8da6-43cb-9514-9ca1a1a3c56f",
+    "threat_id": "d9ead694-b848-439a-ade3-a9a89bbeefcc",
+    "reported_phone": "+254711111111",
+    "status": "confirmed",
+    "created_at": "2026-09-27T15:19:26.355337"
+  },
+  {
+    "id": "1e6a6575-1c65-47dd-9ceb-fd65a5c4fcfc",
+    "threat_id": "32c05321-826d-42a7-a064-d30ab4ddb7d7",
+    "reported_phone": "+254733333333",
+    "status": "confirmed",
+    "created_at": "2026-09-27T15:19:26.355346"
+  },
+  {
+    "id": "c19d3537-d3b2-4294-b68a-2860f720fb55",
+    "threat_id": "1e1e8891-7a0b-49bf-801d-1083d68a7795",
+    "reported_phone": "+254755555555",
+    "status": "pending",
+    "created_at": "2026-09-27T15:19:26.355357"
+  },
+  {
+    "id": "acbc24e9-65af-4633-a97b-064232856df4",
+    "threat_id": "d9ead694-b848-439a-ade3-a9a89bbeefcc",
+    "reported_phone": "+254711111111",
+    "status": "pending",
+    "created_at": "2026-09-27T15:19:26.355362"
+  },
+  {
+    "id": "78ff9960-6368-4bff-93a3-a75de17bd71a",
+    "threat_id": "32c05321-826d-42a7-a064-d30ab4ddb7d7",
+    "reported_phone": "+254733333333",
+    "status": "pending",
+    "created_at": "2026-09-27T15:19:26.355369"
+  }
+]
