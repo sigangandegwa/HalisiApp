@@ -405,10 +405,18 @@ Scoring (Collins, `engine/payment.py`):
 | :-- | :-- |
 | No phone/till found | `None` (unavailable) |
 | Only numbers/tills registered to the resembled merchant | 0 |
-| Unregistered phone/till found, and resemblance ≥ 60 | **100** |
-| Unregistered phone/till found, resemblance < 60 | 60 |
-| Pochi / "send money" phrasing next to an unregistered number | 100 |
+| Unregistered **personal phone**, page closely resembles the merchant | **100** |
+| Unregistered personal phone, not a close resemblance | 60 |
+| Unregistered **till/paybill**, close resemblance | 50 |
+| Unregistered till/paybill, not a close resemblance | 25 |
+| Pochi / "send money" phrasing with an unregistered number | 100 |
 | Number appears in a `confirmed` community report | 100 (and see override O3) |
+
+**Why tills score lower than phones (PAYMENT v2):** a Buy Goods till or Paybill needs a registered business behind it, while "Send Money" to a personal line or Pochi does not, and clone scams overwhelmingly collect through personal lines. Without this split, an honest competitor with a similar name and its own till read as a payment hijack.
+
+**"Close resemblance"** is decided by the scorer (`_closely_resembles`): visual ≥ 60, **or** identity ≥ 60, **except** when the avatar is clearly a different logo (visual ≤ `LOGO_CONTRADICTS` = 20). Then identity must be ≥ 90. A mismatching logo is counter-evidence. Without it, `nairobi_bakery` (identity ~78 from the matcher's prefix bias) listing its own order number read as "suspicious" against Nairobi Sneaker Vault.
+
+There is **no M-Pesa API**: "registered" means the merchant's self-declared phones and M-Pesa number in Halisi. Evidence strings mask third-party numbers (`0798 *** 111`).
 
 ### 6.6 Language signal (`engine/matcher.py`)
 
@@ -428,39 +436,44 @@ v1's flat `matches * 33.33` also caps at 99.99 instead of 100. Use explicit weig
 
 - account age when known: < 30 days → 90, < 90 → 60, < 365 → 30, else 10
 - `post_count < 12` → 60; `follower_count < 300` while resemblance ≥ 80 → 70
-- Halisi `first_seen_at` less than 7 days ago for a page resembling a merchant established over a year ago → 50
 
-Score = max of the available sub-signals, or `None` if none are available.
+Score = the max of the sub-signals that fired. If account data is known but nothing is unusual, the score is 10, so an established account is evidence rather than "unknown". `None` only when no account data is known at all.
+
+*(ACCOUNT v2 removed the v1 "Halisi first-seen < 7 days" signal. On a first check it's always true, so it only double-counted resemblance.)*
 
 ### 6.8 Composite scorer (`engine/scorer.py`), TSK-008
+
+**Implemented (TSK-008).** Entry point for the API: `score_against_all(target, merchants, ctx) -> ScoreResult`. Inputs are plain dataclasses (`TargetProfile`, `MerchantProfile`, `OfficialHandle`, `ScoringContext` in `engine/scorer.py`). The API layer builds them from repository records and passes `THREAT_THRESHOLD` / `SUSPICIOUS_THRESHOLD` from settings via `ScoringContext`.
 
 ```python
 WEIGHTS = {"visual": 0.30, "identity": 0.25, "payment": 0.25, "language": 0.10, "account": 0.10}
 
-def score_target(target: TargetFeatures, merchant: MerchantFeatures, ctx: ScoringContext) -> ScoreResult:
-    # O1 official short-circuit: exact normalised handle on same platform in merchant_handles
-    #    -> verdict "official", score 0 (checked BEFORE scoring, in the API layer, across all merchants)
-    dims = {k: fn(...) for k, fn in DIMENSIONS}               # each: float 0-100 or None
-    available = {k: v for k, v in dims.items() if v is not None}
-    wsum = sum(WEIGHTS[k] for k in available)
-    composite = sum(WEIGHTS[k] * v for k, v in available.items()) / wsum    # renormalise over available
-    confidence = round(wsum, 2)                                              # share of evidence we had
-    resemblance = max(dims["visual"] or 0, dims["identity"] or 0)
+# O1 official short-circuit (find_official): the EXACT handle on the same platform.
+#    Only lowercase, strip '@' and trailing '/'. Never strip '.' or '_': on Instagram
+#    "nairobi.sneaker.vault" is a different account from "nairobisneakervault".
+dims = visual, identity, payment, language, account      # each 0-100 or None
+composite = sum(w*v for available) / sum(w for available) # renormalised; confidence = sum(w for available)
+resemblance = max(visual, identity)
 
-    if resemblance < 50:  composite = min(composite, 39)                     # G1 resemblance gate
-    if resemblance >= 80 and dims["payment"] == 100: composite = max(composite, 90)   # O2 payment hijack
-    if ctx.confirmed_report_hit: composite = max(composite, 85)             # O3 community-confirmed
-    verdict = tier(composite)                                                # >=70 impersonation, >=40 suspicious, else no_match
-    if verdict == "impersonation" and confidence < 0.5: verdict = "suspicious"   # O4 thin evidence
-    return ScoreResult(composite=round(composite, 2), confidence=confidence, verdict=verdict,
-                       dimensions=..., reasons=build_reasons(dims, merchant, target))
+G1  resemblance < 50                                       -> cap 39
+O2  (visual >= 80 or identity >= 90) and payment == 100
+    from an unregistered phone / Pochi / reported number  -> floor 90
+O3  confirmed-report hit and resemblance >= 50             -> floor 85
+tier: >= 70 impersonation, >= 40 suspicious, else no_match
+O4  impersonation with confidence < 0.5                    -> suspicious
 ```
 
-In the API layer, score the target against **every** merchant and keep the highest composite. `ScoreResult` must be JSON-serialisable and identical to the `CheckResult` subset in section 5.2.
+Notes:
+
+- O2 needs a **strong** single signal (a copied logo or a near-identical handle). With resemblance ≥ 80 alone, the matcher's 88 for the competitor `nairobisneakerhub` would have floored an honest shop at 90.
+- O3 only applies when the page resembles the merchant. A reported number on an unrelated page still produces a `COMMUNITY_REPORTED` reason, but it isn't attributed to a merchant.
+- Language is `0.0` (available) when the bio has text but no scam phrases; `None` only when there is no bio.
+- `no_match` results have `merchant = None` and keep only `SCAM_LANGUAGE` and `COMMUNITY_REPORTED` reasons.
+- Serialise with `result.dimensions_payload()` / `result.reasons_payload()` (section 5.2 shapes; unavailable → `score 0.0, available false, evidence "No data"`). `safe_action(merchant, platform)` returns the EN/SW "pay only via …" line. `result.visual` carries the hash distances for the `hashes` block.
 
 Weights and thresholds live in `engine/constants.py` and are overridable via env (`THREAT_THRESHOLD`, `SUSPICIOUS_THRESHOLD`). Any change is logged in AGENTS.md section 7 (heuristics registry).
 
-Reasons: each dimension ≥ 60 emits a `Reason(code, severity, text, text_sw)`. Codes: `LOGO_COPY`, `HANDLE_LOOKALIKE`, `PAYMENT_MISMATCH`, `POCHI_REQUEST`, `SCAM_LANGUAGE`, `NEW_ACCOUNT`, `LOW_ACTIVITY`, `COMMUNITY_REPORTED`. Keep the text short, concrete, and free of jargon for consumers.
+Reasons: each dimension ≥ 60 (language ≥ 40: one strong phrase is worth telling the user) emits a `Reason(code, severity, text, text_sw)`; severity is `high` at ≥ 85. Codes: `LOGO_COPY`, `HANDLE_LOOKALIKE`, `PAYMENT_MISMATCH`, `POCHI_REQUEST`, `SCAM_LANGUAGE`, `NEW_ACCOUNT`, `LOW_ACTIVITY`, `COMMUNITY_REPORTED`. Keep the text short, concrete, and free of jargon for consumers.
 
 Required scorer tests: the seeded blatant clone ≥ 90 → `impersonation`; the subtle clone ≥ 70; the competitor with a similar name < 40 → `no_match`; the official handle → `official`; logo-only evidence (all other signals `None`) gives confidence 0.30 and at most `suspicious`.
 
@@ -612,9 +625,9 @@ Each card: owner · priority · depends on. **Done** means the code is merged, t
 
 **TSK-016 Matcher v2**: Geoffrey · P0 · 002. Implements sections 6.4 and 6.6. *Done:* the golden table passes; root test scripts are deleted.
 
-**TSK-021 Extractors + payment score**: Geoffrey (extractors), Collins (score) · P0. Implements section 6.5. *Done:* `test_payment.py` passes, with at least 12 real-world Kenyan formats.
+**TSK-021 Extractors + payment score**: Geoffrey (extractors), Collins (score) · P0. Implements section 6.5. *Done:* `test_payment.py` passes, with at least 12 real-world Kenyan formats. **Payment-score half done 2026-09-27** (`engine/payment.py`: `payment_score`, `canonical_phone`, `canonical_till`, `mask_phone`). Extractors still to do: `ingestion/extractors.py` must return a `PaymentEvidence(phones, tills, pochi_phrasing)`, and can reuse `canonical_phone` / `canonical_till`.
 
-**TSK-008 Scorer**: Collins · P0 · 015, 016, 021. Implements section 6.8. *Done:* the required scorer tests pass; `ScoreResult` serialises to the section 5.2 shape.
+**TSK-008 Scorer**: Collins · P0 · 015, 016, 021. Implements section 6.8. *Done:* the required scorer tests pass; `ScoreResult` serialises to the section 5.2 shape. **Done 2026-09-27**: all 5 required cases plus false-positive regressions (similar-named competitor, `nairobi_bakery` with its own number, dotted official-handle variant).
 
 **TSK-007 Mock seeder**: Geoffrey · P0 · 002. Implements section 7.3. *Done:* `--target memory` and `--target supabase` both work and are idempotent; fixtures are exported to the frontend.
 
