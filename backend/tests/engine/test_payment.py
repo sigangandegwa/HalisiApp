@@ -1,9 +1,11 @@
-<<<<<<< HEAD
 import pytest
 from app.ingestion.extractors import extract_payment_signals
 
 @pytest.mark.parametrize("text, expected", [
-    ("Call us on 0712345678", {"phones": ["+254712345678"], "tills": [], "paybills": [], "has_pochi": False}),
+    ("Call us on 0712 345 678", {"phones": ["+254712345678"], "tills": [], "paybills": [], "has_pochi": False}),
+    ("+254-712-345678", {"phones": ["+254712345678"], "tills": [], "paybills": [], "has_pochi": False}),
+    ("0112345678", {"phones": ["+254112345678"], "tills": [], "paybills": [], "has_pochi": False}),
+    ("Till No. 543210", {"phones": [], "tills": ["543210"], "paybills": [], "has_pochi": False}),
     ("WhatsApp +254 712 345 678", {"phones": ["+254712345678"], "tills": [], "paybills": [], "has_pochi": False}),
     ("wa.me/254712345678", {"phones": ["+254712345678"], "tills": [], "paybills": [], "has_pochi": False}),
     ("Till no 123456", {"phones": [], "tills": ["123456"], "paybills": [], "has_pochi": False}),
@@ -22,7 +24,6 @@ def test_payment_extractors(text, expected):
     assert sorted(res["tills"]) == sorted(expected["tills"])
     assert sorted(res["paybills"]) == sorted(expected["paybills"])
     assert res["has_pochi"] == expected["has_pochi"]
-=======
 """Tests for app.engine.payment (payment-score half of TSK-021)."""
 
 import pytest
@@ -132,4 +133,3 @@ def test_evidence_never_contains_a_full_third_party_number():
     assert result.unregistered_phones == ("+254798999111",)          # de-duplicated
     assert "798999111" not in result.evidence
     assert "0798 *** 111" in result.evidence
->>>>>>> main
