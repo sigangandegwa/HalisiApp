@@ -90,17 +90,12 @@ def has_valid_api_key(request: Request) -> bool:
 
 
 def client_ip(request: Request) -> str:
-    """Rate-limit key. Behind ngrok the tunnel connects from loopback, so ``X-Forwarded-For`` (first hop)
-    is trusted only when ``TRUST_FORWARDED_FOR`` is on **and** the peer is a loopback address."""
+    """Rate-limit key. Trust ``X-Forwarded-For`` (first hop) when ``TRUST_FORWARDED_FOR`` is on."""
     peer = request.client.host if request.client else "unknown"
     settings = getattr(request.app.state, "settings", None)
     if settings is not None and settings.trust_forwarded_for:
-        try:
-            loopback = ipaddress.ip_address(peer).is_loopback
-        except ValueError:
-            loopback = False
         forwarded = request.headers.get("x-forwarded-for", "")
-        if loopback and forwarded:
+        if forwarded:
             return forwarded.split(",")[0].strip()
     return peer
 

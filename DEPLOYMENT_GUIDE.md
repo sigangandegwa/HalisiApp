@@ -1,6 +1,6 @@
-# Comprehensive Halisi Deployment Guide
+# Comprehensive Halisi Deployment Guide (Cloud Web Version)
 
-This guide provides end-to-end instructions for deploying the Halisi MVP, including setting up the Supabase database, deploying the backend on an NVIDIA Brev GPU instance, and launching the frontend on Vercel.
+This guide provides end-to-end instructions for deploying the Halisi MVP. This architecture is optimized for a standard cloud web deployment (Render + Vercel), bypassing the need for a dedicated GPU instance or fragile ngrok tunnels.
 
 ---
 
@@ -19,42 +19,37 @@ This guide provides end-to-end instructions for deploying the Halisi MVP, includ
 
 ---
 
-## Phase 2: Engine & Backend Setup (NVIDIA Brev)
+## Phase 2: Engine & Backend Setup (Render Web Service)
 
-The backend runs entirely on an NVIDIA Brev GPU instance to utilize CLIP embeddings and expose the FastAPI endpoints.
+We deploy the FastAPI backend to a cloud PaaS like [Render.com](https://render.com/) or [Railway](https://railway.app/). 
 
-1. **Provision Instance**: On [brev.dev](https://brev.dev/), create a new instance named `halisi-engine`. A T4 or L4 GPU (≥ 16 GB VRAM) is sufficient if using hosted NIM for the LLM.
-2. **Connect**: Install the Brev CLI locally, then SSH into the instance:
-   ```bash
-   brev shell halisi-engine
-   ```
-3. **Install Dependencies**:
-   ```bash
-   sudo apt-get update && sudo apt-get install -y git tmux build-essential libjpeg-dev zlib1g-dev
-   curl -LsSf https://astral.sh/uv/install.sh | sh && source ~/.bashrc
-   ```
-4. **Clone & Setup Environment**:
-   ```bash
-   git clone https://github.com/chiromo-tech-club/halisi.git ~/halisi
-   cd ~/halisi/backend
-   uv venv --python 3.12
-   source .venv/bin/activate
-   uv pip install -r requirements.txt -r requirements-ml.txt
-   ```
-5. **Configure Environment Variables**:
-   ```bash
-   cp .env.example .env && chmod 600 .env && nano .env
-   ```
-   Set the following variables:
+**Note on ML Models:** The CLIP image embeddings model (`clip-ViT-B-32`) is incredibly small and will run on the standard CPU provided by Render. While a GPU computes an image in ~15ms and a CPU takes ~200ms, removing the `ngrok` tunnel overhead actually *reduces* the overall network latency significantly, making this the best option for the MVP.
+
+1. **Create Web Service**: In Render, create a new "Web Service" linked to your GitHub repository.
+2. **Build Configuration**:
+   - **Root Directory**: `backend` (Optional, depending on your setup)
+   - **Environment**: Python 3.12
+   - **Build Command**: 
+     ```bash
+     pip install -r requirements.txt -r requirements-ml.txt
+     ```
+   - **Start Command**:
+     ```bash
+     uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+     ```
+3. **Environment Variables**:
+   In the Render dashboard, set the following environment variables:
    - `APP_ENV=production`
    - `DEMO_MODE=false`
    - `API_KEY=<a_secure_random_string>`
-   - `CORS_ORIGINS=https://<your-vercel-app>.vercel.app,http://localhost:3000`
-   - `SUPABASE_URL` & `SUPABASE_SERVICE_ROLE_KEY`
-   - `ENABLE_CLIP=true` and `ENGINE_DEVICE=cuda`
-   - `LLM_API_KEY=<your_nvidia_build_key>`
-6. **Set Up Systemd Services**:
-   Create `halisi-api.service` to keep the FastAPI server running on `127.0.0.1:8080`, and `halisi-tunnel.service` using `ngrok` (with your ngrok authtoken and static domain) to securely expose port 8080. Start and enable both services. (See `docs/BREV_ENGINE_SETUP.md` for exact systemd configs).
+   - `CORS_ORIGINS=https://<your-vercel-app>.vercel.app`
+   - `SUPABASE_URL`: <from Phase 1>
+   - `SUPABASE_SERVICE_ROLE_KEY`: <from Phase 1>
+   - `ENABLE_CLIP=true`
+   - `ENGINE_DEVICE=cpu`
+   - `LLM_ENABLED=true`
+   - `LLM_API_KEY=<your_nvidia_build_key>` (Your NVIDIA NIM API key)
+4. **Deploy**: Render will build and deploy your service, providing a stable and secure URL (e.g., `https://halisi-api.onrender.com`).
 
 ---
 
@@ -62,17 +57,17 @@ The backend runs entirely on an NVIDIA Brev GPU instance to utilize CLIP embeddi
 
 1. **Create Vercel Project**: Import your GitHub repository into a new Vercel project.
 2. **Configure Environment Variables**: In the Vercel project settings, add the following variables:
-   - `HALISI_API_URL`: Your ngrok static domain (e.g., `https://<your-name>.ngrok-free.app`)
-   - `HALISI_API_KEY`: The exact same secure random string used in your Brev `.env`
+   - `HALISI_API_URL`: Your new Render backend URL (e.g., `https://halisi-api.onrender.com`)
+   - `HALISI_API_KEY`: The exact same secure random string used in your Render `.env`
    - `DASHBOARD_PASSCODE`: A secure passcode for accessing the merchant dashboard
    - `SESSION_SECRET`: A 32-character random string used for session encryption
-   - `DEMO_FALLBACK=false`: Ensure the app routes to your live backend.
+   - `DEMO_FALLBACK=false`
 3. **Deploy**: Trigger a deployment. Vercel will automatically run `npm run build`, outputting the compiled Next.js App Router application.
 
 ---
 
 ## Phase 4: Verification & Demo Day Checks
 
-- **Health Check**: Visit `https://<your-ngrok-domain>/health`. It should report `"db": "ok"` and `"clip": "cuda"`.
-- **E2E Test**: Run a manual check through your Vercel frontend. Make sure the resulting in-app alert successfully triggers on your mobile device.
-- **Failover Preparedness**: If Brev goes down, be prepared to spin up the backend locally (`uvicorn app.main:app --port 8080`) with `ENABLE_CLIP=false` and run the ngrok tunnel from your laptop to keep the same URL alive.
+- **Health Check**: Visit `https://halisi-api.onrender.com/health`. It should report `"db": "ok"` and `"clip": "cpu"`.
+- **E2E Test**: Run a manual check through your Vercel frontend. Make sure the resulting in-app alert successfully triggers.
+- **Failover Preparedness**: If the cloud deployment faces issues on demo day, remember you can always run the backend locally with `DEMO_MODE=false ENABLE_CLIP=false` and use ngrok to point the Vercel app to your laptop.
