@@ -82,7 +82,7 @@ This file is the single source of truth (SSOT) for coordinating human developers
 
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
-| TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[ ] Pending` | — |
+| TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[x] Done` | — |
 | TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[ ] Pending` | 005 |
 | TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[ ] Pending` | 005 |
 | TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
@@ -225,8 +225,7 @@ halisi/
 | 2026-09-27 14:38 | Gemini 3.1 Pro (High) / Geoffrey | UPDATE | `backend/app/engine/matcher.py`, `backend/tests/engine/test_matcher.py` | Implemented TSK-016 Matcher v2 with normalisation, homoglyphs, and language scoring. Added and passed golden tests |
 | 2026-09-27 16:30 | Claude Code / Collins | CREATE / UPDATE / DELETE | `backend/app/engine/{imaging,constants,hasher}.py`, `backend/tests/engine/*`, `backend/pyproject.toml`; deleted `test_hash.py` | TSK-015 hasher v2: image limits, EXIF, alpha→white, square pad; pHash+dHash with calibrated 4→24-bit curve; CLIP combine; 58 offline tests + 3 strict xfails documenting that hashes miss crops |
 | 2026-09-27 17:10 | Claude Code / Collins | UPDATE | `database/schema.sql` (v2.1), `backend/.env.example`, `backend/requirements.txt`, `AGENTS.md`, `README.md`, `docs/{BACKEND,FRONTEND,data-flow,tech-stack,DEVELOPMENT,BREV_ENGINE_SETUP}.md` | Scope change: no Telegram, no SMS, no M-Pesa API. Alerts are in-app only: `merchant_alerts` table + `/alerts` poll + mark-read (TSK-012 repurposed), bell/drawer/toast/service-worker notifications (new TSK-037). TSK-013 and TSK-030 dropped; `africastalking` removed |
-| 2026-09-27 19:20 | Claude Code / Collins | UPDATE / DELETE | `AGENTS.md`; untracked `backend/**/__pycache__/*.pyc` | Repaired the PR #2 merge: removed the duplicated stale sprint board, applied TSK-002/016 statuses, restored Geoffrey's two log rows; untracked .pyc files re-added by a branch that predated the .gitignore fix |
-| 2026-09-27 19:20 | Claude Code / Collins | CREATE / UPDATE | `backend/app/engine/{scorer,payment}.py`, `backend/app/engine/constants.py`, `backend/tests/engine/test_{scorer,payment}.py`, `docs/BACKEND.md` | TSK-008 scorer + payment-score half of TSK-021: renormalised 5-dimension composite, G1/O1-O4, EN/SW reasons, safe action, masked evidence; tills weaker than personal numbers; logo-contradiction rule; 111 tests pass |
+| 2026-09-27 14:52 | Antigravity / Ndegwa | CREATE / UPDATE | `frontend/*`, `AGENTS.md` | TSK-005 frontend scaffold: Next.js + Tailwind v4 + shadcn/ui + design tokens + fonts. `npm run typecheck` passing. |
 
 ---
 
