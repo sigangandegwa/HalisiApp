@@ -51,23 +51,54 @@ This file serves as the single source of truth (SSOT) for coordinating human dev
 
 ### Current Sprint Board
 
-| Task ID | Priority | Module | Description | Owner | Status | Dependencies |
-| :---- | :---: | :---- | :---- | :---- | :---: | :---- |
-| **TSK-001** | **P0** | Database | Deploy Supabase SQL schema (`merchants`, `threats`, `remediation_logs`) | Collins | `[x] Done` | None |
-| **TSK-002** | **P0** | Backend Core | Initialize FastAPI monorepo scaffolding with Pydantic v2 schemas | Collins | `[x] Done` | TSK-001 |
-| **TSK-003** | **P0** | AI Engine | Implement perceptual hash calculation (`hasher.py`) with `imagehash` | Dennis | `[x] Done` | TSK-002 |
-| **TSK-004** | **P0** | AI Engine | Implement `rapidfuzz` Jaro-Winkler string similarity & Kenyan scam tokens | Dennis | `[x] Done` | TSK-002 |
-| **TSK-005** | **P0** | Frontend | Scaffold Next.js 14 App Router with Tailwind CSS and shadcn/ui | Ndegwa | `[ ] Pending` | None |
-| **TSK-006** | **P1** | Ingestion | Build Playwright OpenGraph public scraper (`page_scraper.py`) | Geoffrey | `[ ] Pending` | TSK-002 |
-| **TSK-007** | **P1** | Ingestion | Create realistic mock dataset generator (`mock_seeder.py`) for demo | Geoffrey | `[ ] Pending` | TSK-002 |
-| **TSK-008** | **P1** | AI Engine | Build composite scoring algorithm (`scorer.py`) with 5 weighted dimensions | Collins | `[ ] Pending` | TSK-003, TSK-004 |
-| **TSK-009** | **P1** | Remediation | Implement AI remediation playbooks (Consumer, Platform, Safaricom) | Collins | `[ ] Pending` | TSK-008 |
-| **TSK-010** | **P1** | Frontend | Implement Public Link Checker landing page with instant risk badge | Ndegwa | `[ ] Pending` | TSK-005, TSK-008 |
-| **TSK-011** | **P1** | Frontend | Build Merchant Dashboard with active threat feed & forensic radar | Ndegwa | `[ ] Pending` | TSK-005, TSK-009 |
-| **TSK-012** | **P1** | Alerts | Implement Telegram Bot alert dispatcher (`telegram_bot.py`) | Collins / Geoffrey | `[ ] Pending` | TSK-008 |
-| **TSK-013** | **P2** | Alerts | Integrate Africa's Talking SMS sandbox gateway (`africas_talking.py`) | Geoffrey | `[ ] Pending` | TSK-008 |
-| **TSK-014** | **P2** | QA / Demo | End-to-end integration test with live clone simulator for judges | All | `[ ] Pending` | TSK-010, TSK-011 |
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[ ] Pending` | — |
+| TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` | 001 |
+| TSK-003 | P0 | Engine | pHash prototype (`hasher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 015) | 002 |
+| TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
+| TSK-015 | P0 | Engine | **Hasher v2**: calibrated similarity, alpha/EXIF/square normalisation, dHash, no I/O in engine | Collins | `[ ] Pending` | 002 |
+| TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[ ] Pending` | 002 |
+| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[ ] Pending` | 002 |
+| TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[ ] Pending` | 015, 016, 021 |
+| TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[ ] Pending` | 002 |
+| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[ ] Pending` | 002, 008 |
+| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[ ] Pending` | 018 |
+| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[ ] Pending` | 018 |
+| TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | 015 |
+| TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | 008 |
+| TSK-012 | P1 | Alerts | Telegram alerts (HTML mode, photo, button, de-dup) + chat linking | Geoffrey | `[ ] Pending` | 018 |
+| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[ ] Pending` | 018 |
+| TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[ ] Pending` | 008 |
+| TSK-013 | P2 | Alerts | Africa's Talking SMS (sandbox simulator) | Geoffrey | `[ ] Pending` | 018 |
+| TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
+| TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[ ] Pending` | 006 |
+| TSK-030 | P2 | Alerts | Consumer Telegram checker bot (forward a link or number, get a verdict) | Geoffrey | `[ ] Pending` | 012, 022 |
+| TSK-036 | P2 | Alerts | USSD "check a till" menu via Africa's Talking (feature phones) | Geoffrey | `[ ] Pending` | 022 |
 
+### Frontend
+
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[ ] Pending` | — |
+| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[ ] Pending` | 005 |
+| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[ ] Pending` | 005 |
+| TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
+| TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
+| TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
+| TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[ ] Pending` | 020 |
+| TSK-011 | P1 | Merchant | Dashboard: KPIs + live threat feed with handle diffs | Ndegwa | `[ ] Pending` | 033 |
+| TSK-025 | P1 | Merchant | Threat detail Evidence Board + playbook tabs | Ndegwa | `[ ] Pending` | 011 |
+| TSK-026 | P1 | Merchant | Onboarding wizard with logo fingerprint grid | Ndegwa | `[ ] Pending` | 033 |
+| TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[ ] Pending` | 010, 031 |
+| TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[ ] Pending` | 010 |
+
+### Integration & demo
+
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-014 | P1 | QA / Demo | End-to-end test: public check → threat → Telegram → playbook; failover drill | All (lead: Geoffrey) | `[ ] Pending` | 010, 011, 012, 017 |
+| TSK-035 | P1 | Pitch | 3-minute script, sourced problem statistic, Q&A prep, screen-recording backup | Collins | `[ ] Pending` | 014 |
 
 *Legend: `[ ] Pending` | `[/] In Progress` | `[x] Done` | `[!] Blocked`*
 
@@ -194,28 +225,44 @@ halisi/
 | 2026-09-24 03:38 | Antigravity / Agent | CREATE | `README.md`, `LICENSE.md` | Created animated project README and open-source MIT license |
 | 2026-09-25 00:20 | Antigravity / Agent | CREATE | `backend/app/engine/hasher.py`, `test_hash.py` | Implemented TSK-003 perceptual hashing and unit tests. Fixed team roles for Dennis and Collins |
 | 2026-09-25 00:26 | Antigravity / Agent | CREATE | `backend/app/engine/matcher.py`, `test_matcher.py` | Implemented TSK-004 Jaro-Winkler string similarity and Kenyan scam token logic |
+| 2026-09-26 21:00 | Claude Code / Collins | UPDATE | `.gitignore`, `skills-lock.json` | Installed `elite-product-studio` and `top-design` agent skills for UI/UX and design review work |
+| 2026-09-27 13:45 | Claude Code / Collins | MOVE | `tech-stack.md`, `data-flow.md`, `DEVELOPMENT.md` → `docs/` | Matched the documented repo layout |
+| 2026-09-27 13:45 | Claude Code / Collins | UPDATE | `docs/tech-stack.md`, `docs/data-flow.md`, `docs/DEVELOPMENT.md` | v0.2: Brev + NIM, pgvector over ChromaDB, 5-dimension resemblance/malice model, single 70 threshold, removed stale duplicated code, new build order and demo script |
+| 2026-09-27 13:45 | Claude Code / Collins | CREATE | `docs/BACKEND.md`, `docs/FRONTEND.md`, `docs/BREV_ENGINE_SETUP.md` | Detailed agent guides: frozen API contract, engine specs, security, design system, Brev deployment, failover |
+| 2026-09-27 13:45 | Claude Code / Collins | UPDATE | `database/schema.sql` | Schema v2: merchant_handles, sub-scores, confidence, pgvector, scans, community_reports, RLS, RPC |
+| 2026-09-27 13:45 | Claude Code / Collins | CREATE / DELETE | `backend/requirements*.txt`, `backend/.env.example`; deleted root `requirements.txt` | Replaced the UTF-16 `pip freeze` with curated UTF-8 core/ml/dev files; env template |
+| 2026-09-27 13:45 | Claude Code / Collins | UPDATE / DELETE | `.gitignore`; untracked `__pycache__/*.pyc`; deleted `build_monorepo.py` | Fixed the `/_pycache_` typo (pyc files were committed); removed the one-shot scaffold that would overwrite files if re-run |
+| 2026-09-27 13:45 | Claude Code / Collins | UPDATE | `AGENTS.md`, `README.md` | 3-person team, redistributed Dennis's tasks, new sprint board, real file-status map, review findings |
+| 2026-09-27 13:47 | Gemini 3.1 Pro (High) / Geoffrey | CREATE / UPDATE | `backend/app/core/*`, `backend/app/schemas/*`, `backend/app/api/v1/router.py`, `backend/pyproject.toml` | Scaffolded backend core and v2 schemas, completed TSK-002 |
 
 ---
 
-## 7\. Prompt & Heuristic Registry
+## 7. Prompt & Heuristic Registry
 
-### Prompt 1: Social Media Warning Copy (`PROMPT_CONSUMER_DEFENSE_V1`)
+### 7.1 LLM prompts (location: `backend/app/engine/prompts/`)
 
-- **Location**: `backend/app/engine/remediation.py`  
-- **Purpose**: Generates high-urgency, clear consumer warnings for Instagram Stories and WhatsApp statuses.  
-- **Key Constraints**: Must mention the scam handle, warn against sending deposits, state the authentic M-Pesa Buy Goods Till, and avoid ambiguous language.
+All prompts receive only a **facts block** built from the DB. Scraped text appears only as quoted data. Output is JSON, validated so that every phone number, till and handle in the output must appear in the facts. On failure the deterministic template is used. Model default: `meta/llama-3.1-8b-instruct` via NVIDIA NIM.
 
-### Prompt 2: Meta Brand Rights Takedown Notice (`PROMPT_META_TAKEDOWN_V1`)
+| ID | Status | Purpose | Key constraints |
+| :-- | :-- | :-- | :-- |
+| `PROMPT_CONSUMER_DEFENSE_V1` | Retired | Story/WhatsApp warning | — |
+| `PROMPT_CONSUMER_DEFENSE_V2` | Planned (TSK-009) | Customer warning, **EN + SW** | Name the fake handle, the real handle and the real Till/Paybill; "don't send money to {number}"; ≤ 700 chars; calm, no ALL-CAPS paragraphs; natural Kenyan Swahili |
+| `PROMPT_META_TAKEDOWN_V1` | Retired | Meta Brand Rights claim | Replaced: the Brand Rights Protection portal needs enrolment |
+| `PROMPT_PLATFORM_TAKEDOWN_V2` | Planned (TSK-009) | Text for the public Instagram/Facebook/TikTok impersonation report forms | Cite the **actual** hash distance and scores, first-seen date and official handle; no invented percentages (v1 hard-coded "96%") |
+| `PROMPT_SAFARICOM_ESCALATION_V1` | Retired | Safaricom fraud email | — |
+| `PROMPT_SAFARICOM_REPORT_V2` | Planned (TSK-009) | Report of the receiving number/till used to defraud customers | Receiving number/till, impersonated merchant + official till, victim path; channel addresses from `constants.py` (verified and dated) |
+| `PROMPT_KECIRT_REPORT_V1` | Planned (TSK-009) | Incident report to National KE-CIRT/CC | Computer Misuse and Cybercrimes Act 2018 framing; factual; contact verified before the demo |
 
-- **Location**: `backend/app/engine/remediation.py`  
-- **Purpose**: Generates a formal copyright/impersonation claim for Meta's enforcement portal.  
-- **Key Constraints**: Must cite side-by-side logo similarity, account creation age disparity, and evidence of financial fraud.
+### 7.2 Scoring heuristics (location: `backend/app/engine/constants.py`)
 
-### Prompt 3: Safaricom Fraud Escalation Report (`PROMPT_SAFARICOM_ESCALATION_V1`)
-
-- **Location**: `backend/app/engine/remediation.py`  
-- **Purpose**: Generates a formal inquiry to `fraud@safaricom.co.ke` and the 333 SMS desk.  
-- **Key Constraints**: Highlights illicit collection of mobile money, recipient phone number/till, and links to the impersonated brand.
+| ID | Version | Value | Notes |
+| :-- | :-- | :-- | :-- |
+| `WEIGHTS` | v2 | visual .30 · identity .25 · payment .25 · language .10 · account .10 | v1 (docs only): visual .25, lexical .20, temporal .25, payment .20, engagement .10. Temporal was cut because account age is rarely observable |
+| `THRESHOLDS` | v2 | impersonation ≥ 70 · suspicious ≥ 40 | v1 was inconsistent (75 in data-flow, 80 in README) |
+| `HASH_SIMILARITY` | v2 (uncalibrated) | 100 at ≤ 4 bits, 0 at ≥ 24 | v1: `100 − d/64·100` scored unrelated images ~50 %. Calibrate in TSK-017 |
+| `CLIP_SIMILARITY` | v1 (uncalibrated) | 100 at cosine ≥ 0.93, 0 at ≤ 0.80 | Calibrate in TSK-017 |
+| `OVERRIDES` | v1 | G1 resemblance < 50 → cap 39 · O2 resemblance ≥ 80 + payment 100 → floor 90 · O3 confirmed report → floor 85 · O4 confidence < 0.5 → max suspicious | BACKEND.md section 6.8 |
+| `SCAM_TOKENS` | v2 | Weighted 40/25/10 EN + SW + Sheng | v1: 10 English tokens, flat 33.33 each |
 
 ---
 
