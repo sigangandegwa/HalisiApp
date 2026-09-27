@@ -64,8 +64,8 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[/] In Progress` (payment score done; extractors merged; `PaymentEvidence` adapter pending) | `[x] Done` |
 | TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[x] Done` | 015, 016, 021 |
 | TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[/] In Progress` (reopened: v1 hard-coded its scores; rework via the real engine) | `[x] Done` (reworked: scores from the real engine) |
-| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[ ] Pending` | `[x] Done` |
-| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[ ] Pending` | `[x] Done` (DNS-rebinding pinning is a follow-up) |
+| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[x] Done` | `[x] Done` |
+| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[x] Done` | `[x] Done` (DNS-rebinding pinning is a follow-up) |
 | TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[x] Done` | `[/] In Progress` (code + respx tests done; live fetch from Brev untested) |
 | TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | `[/] In Progress` (`embeddings.py` done with a fake model; Brev deploy + calibration pending) |
 | TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | `[/] In Progress` (LLM + validator + EN/SW templates done; real NIM run and verified contacts pending) |
