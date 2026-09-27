@@ -20,6 +20,5 @@ numpy==2.5.3
 supabase>=2.7
 beautifulsoup4>=4.12
 openai>=1.40           # OpenAI-compatible client for NVIDIA NIM (hosted or self-hosted)
-africastalking>=1.2.8
 slowapi>=0.1.9         # rate limiting for the public checker
 Jinja2==3.1.6

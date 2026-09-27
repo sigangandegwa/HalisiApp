@@ -22,7 +22,7 @@
 - **Python 3.12** via [uv](https://docs.astral.sh/uv/) (`uv` downloads the right Python for you)
 - **Node.js 20 or 22 LTS** + npm
 - Git, and on Windows: **WSL** for the Brev CLI
-- Accounts: Supabase, NVIDIA (build.nvidia.com API key + Brev), ngrok (static domain), Telegram (@BotFather), Africa's Talking sandbox, Vercel. Details are in BREV_ENGINE_SETUP.md section 2.
+- Accounts: Supabase, NVIDIA (build.nvidia.com API key + Brev), ngrok (static domain), Vercel. Details are in BREV_ENGINE_SETUP.md section 2.
 
 ---
 
@@ -89,23 +89,23 @@ Phase 1: Detection brain
   Ndegwa:   TSK-010 landing + checker + Forensic Verdict (on fixtures)
 
 Phase 2: Product loop
-  Geoffrey: TSK-012 Telegram · TSK-022 reports + pay lookup · TSK-019 security · TSK-006 scraper
+  Geoffrey: TSK-012 in-app alerts backend · TSK-022 reports + pay lookup · TSK-019 security · TSK-006 scraper
   Collins:  TSK-009 remediation (NIM + templates) · TSK-017 CLIP on GPU + calibration
-  Ndegwa:   TSK-011 dashboard → TSK-025 threat detail · TSK-023 share page · TSK-034 pay/report
+  Ndegwa:   TSK-011 dashboard → TSK-037 in-app alerts → TSK-025 threat detail · TSK-023 share page · TSK-034 pay/report
 
 Phase 3: Wow + polish
   Ndegwa:   TSK-027 simulator stage · TSK-024 certificate/badge (Collins designs) · TSK-032 SW copy · TSK-026 onboarding
   Collins:  TSK-035 pitch + script · design QA pass (FRONTEND.md section 16)
   Geoffrey: TSK-014 end-to-end test · failover drill (BREV_ENGINE_SETUP.md section 12)
 
-Phase 4 (only if everything above is solid): P2 cards: TSK-013, 028, 029, 030, 036
+Phase 4 (only if everything above is solid): P2 cards: TSK-028, 029, 036
 ```
 
 **Integration checkpoints** (the whole team, 15 minutes each):
 
 1. End of phase 0: the frontend renders a fixture `CheckResult`, and the backend `/health` works in demo mode.
 2. End of phase 1: a real `/check` against the seeded blatant clone returns ≥ 90 through the Next.js proxy.
-3. End of phase 2: seeded clone → Telegram alert on a phone → dashboard → playbook copied.
+3. End of phase 2: seeded clone → in-app alert (browser notification on an Android phone) → dashboard → playbook copied.
 4. End of phase 3: full rehearsal on the projector with the failover drill.
 
 ---
@@ -126,7 +126,7 @@ Rules: fictional merchants only. Every number on screen comes from the live engi
 
 **1:50–2:40 Live: the merchant's side (Collins drives)**
 
-1. `/simulator`: preset 2 (subtle clone: homoglyph handle, recoloured logo, Pochi request) → Launch → scores live → **the Telegram alert buzzes on the presenter's phone** (hold it up).
+1. `/simulator`: preset 2 (subtle clone: homoglyph handle, recoloured logo, Pochi request) → Launch → scores live → **the Halisi alert buzzes on the presenter's phone** (an Android phone with the dashboard open and alerts enabled; hold it up).
 2. Open the threat → drag the compare slider, toggle Difference → open Playbooks → the Swahili customer warning, drafted by **Llama 3.1 on NVIDIA NIM** and grounded in the evidence → Copy → Share to WhatsApp. Then show the Instagram report kit and the Safaricom draft.
 
 **2:40–3:00 Close (Collins)**
@@ -155,7 +155,7 @@ Backups: the 60-second screen recording, and the offline mode (BREV_ENGINE_SETUP
 - [ ] Supabase schema v2 deployed and seeded
 - [ ] Brev instance up; `/health` shows `clip: cuda`; ngrok static domain live
 - [ ] Vercel deployed with `HALISI_API_URL`, `HALISI_API_KEY`, `DASHBOARD_PASSCODE`, `SESSION_SECRET`
-- [ ] Telegram bot linked to the demo merchant; the alert arrives on the presenter's phone
+- [ ] Presenter's Android phone logged in to `/dashboard` with alerts enabled; a test clone triggers the notification
 - [ ] All 4 verdicts demo correctly from the example chips
 - [ ] Failover drill done (Brev → laptop → offline)
 - [ ] Swahili copy reviewed by a fluent speaker

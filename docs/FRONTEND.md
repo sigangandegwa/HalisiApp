@@ -111,13 +111,14 @@ frontend/src/
 │   ├── not-found.tsx  error.tsx
 │   └── globals.css                   # tokens (@theme), base styles
 ├── middleware.ts                     # protects (merchant) routes + merchant API paths
+│   (public/sw.js at the project root: notificationclick handler only, section 6.10)
 ├── components/
 │   ├── brand/      wordmark.tsx  seal.tsx  guilloche.tsx  microprint.tsx  stamp.tsx
 │   ├── checker/    checker-input.tsx  example-chips.tsx  scan-sequence.tsx  hash-grid.tsx
 │   │               evidence-bars.tsx  verdict-stamp.tsx  safe-action-card.tsx  manual-fallback.tsx
 │   ├── story/      clone-anatomy.tsx  (GSAP pinned section)
 │   ├── merchant/   kpi-tile.tsx  threat-row.tsx  handle-diff.tsx  score-radar.tsx  compare-slider.tsx
-│   │               playbook-tabs.tsx  status-stepper.tsx  timeline.tsx
+│   │               playbook-tabs.tsx  status-stepper.tsx  timeline.tsx  alert-bell.tsx  alert-drawer.tsx
 │   ├── simulator/  clone-controls.tsx  fake-profile-card.tsx  phone-alert.tsx
 │   └── ui/         (shadcn, restyled)
 ├── lib/
@@ -216,7 +217,7 @@ Only animate `transform`, `opacity`, `clip-path` and `filter` (the stamp only). 
 | `/report` | Paper | Report a scam page or number | TSK-034 |
 | `/v/[slug]` | Paper | Halisi Verified certificate (QR target) | TSK-024 |
 | `/login` | Night | Passcode login (MVP) | TSK-033 |
-| `/dashboard` | Night | KPIs + live threat feed | TSK-011 |
+| `/dashboard` | Night | KPIs + live threat feed + alert bell/drawer (all merchant pages) | TSK-011, TSK-037 |
 | `/dashboard/threats/[id]` | Night | Evidence board + playbooks | TSK-025 |
 | `/dashboard/onboarding` | Night | Register merchant (3-step wizard) | TSK-026 |
 | `/dashboard/badge` | Night | Download QR badge / story sticker | TSK-024 |
@@ -240,7 +241,7 @@ Top nav (Paper): wordmark *Halisi* (Fraunces italic), `Check a page`, `Check a t
 3. **"Anatomy of a clone"**: pinned scroll story, desktop (GSAP ScrollTrigger, 5 beats = 5 dimensions). A generic social-profile card (not Instagram's UI or logo; trademark-neutral) assembles itself as you scroll: (1) the logo is copied (visual), (2) the handle mutates `nairobisneakervault → nairobi_sneakervault_official_ke` letter by letter (identity), (3) the bio types "Lipa kwanza. Pay before delivery." (language), (4) a phone number replaces the till (payment), (5) the "Joined 8 days ago" badge appears (account). At each beat, a Halisi annotation line draws to the element with the dimension name and weight. Mobile: no pin, five stacked cards with IntersectionObserver reveals.
 4. **Proof band.** Live numbers from `/stats` (pages scanned, impersonations caught, businesses protected), in Geist Mono with a single count-up on first view. **No invented market statistics.** Any problem statistic in the copy must have a named, linked source (for example a Communications Authority of Kenya or Central Bank of Kenya report), or be cut.
 5. **For businesses.** Left: "Get Halisi Verified. Give your customers one place to confirm it's really you." Right: a live-rendered certificate preview (section 6.4) tilting on pointer move (±4°, desktop only). CTA: `Protect my business` → `/login`.
-6. **How protection works.** Three steps, laid out horizontally on desktop: *Detect* (alert on Telegram in seconds) → *Warn* (AI-drafted customer warning in English and Swahili) → *Take down* (a report kit for Instagram, Safaricom and KE-CIRT/CC). Each step has a small, real UI crop, not an illustration.
+6. **How protection works.** Three steps, laid out horizontally on desktop: *Detect* (a live alert in your Halisi dashboard within seconds) → *Warn* (AI-drafted customer warning in English and Swahili) → *Take down* (a report kit for Instagram, Safaricom and KE-CIRT/CC). Each step has a small, real UI crop, not an illustration.
 7. **Footer.** Microprint rule, the tagline "Linda wateja wako. Linda jina lako." (*Protect your customers. Protect your name.*), Chiromo Tech Club credit, and a privacy note.
 
 ### 6.2 Shareable result `/check/[scanId]` (TSK-023)
@@ -292,7 +293,7 @@ Built for a projector: 16:9, large type, high contrast, no scrolling.
 
 - Left third: `clone-controls.tsx`. Pick a merchant; toggles for handle style (suffix / homoglyph / underscore), logo (exact / recolor / crop / jpeg), payment (phone / Pochi / none), and scam bio on/off. Big button: **Launch clone**.
 - Centre: `fake-profile-card.tsx` assembles the clone (same motion language as the landing story).
-- Right: the Forensic Verdict sequence runs on the real `/simulator/clone` result; then `phone-alert.tsx` slides in a phone-frame notification mirroring the real Telegram alert (which fires at the same time on the presenter's phone).
+- Right: the Forensic Verdict sequence runs on the real `/simulator/clone` result; then `phone-alert.tsx` slides in a phone-frame notification that mirrors the real in-app alert. The same alert fires as a browser notification on the presenter's phone, which has the dashboard open (section 6.10).
 - Presenter keys: `1` `2` `3` load presets (blatant / subtle / competitor), `R` resets, `F` toggles fullscreen.
 
 ### 6.9 Error, 404, loading
@@ -300,6 +301,24 @@ Built for a projector: 16:9, large type, high contrast, no scrolling.
 - 404: large Display XL "**FEKI.**" stamp over "This page isn't halisi." Link home. It's an on-brand joke.
 - Error boundary: "Something broke on our side. Your link wasn't checked." plus `Try again`.
 - API unreachable with `DEMO_FALLBACK`: silently serve fixtures and show a small "Offline demo data" chip in the corner (be honest on stage).
+
+### 6.10 In-app alerts (TSK-037), Night Desk
+
+**No Telegram or SMS** (scope decision 2026-09-27). Alerts live inside Halisi, backed by `GET /merchants/{id}/alerts` (BACKEND.md section 8.2).
+
+- **`useAlerts(merchantId)`**: TanStack Query polling every 5 s with the `since` cursor (the previous `server_time`). Mounted once in the `(merchant)` layout, so alerts arrive on every merchant page, including the simulator.
+- **Bell** (`alert-bell.tsx`) in the Night Desk top bar: unread count in Geist Mono inside a vermilion pill. On a new alert it pulses once (scale 1 → 1.15 → 1, `ease.stamp`, 420 ms). No loops, no shaking.
+- **Drawer** (`alert-drawer.tsx`, shadcn Sheet from the right): newest first, each row showing the severity rail, avatar, handle diff, score and time ago. Clicking a row opens the threat and marks it read. There's a `Mark all read` action. Empty state: "No alerts. Halisi is watching."
+- **Toast** (sonner, restyled as a small document card with a vermilion rail): title + body + `Open` button, 8 s, one at a time (queue the rest). `aria-live="polite"`.
+- **Tab title + favicon badge:** `(2) Halisi · Dashboard`, and the favicon swaps to a vermilion-dot variant while unread > 0.
+- **Browser notifications (opt-in):**
+  - Ask only after an explicit click on `Enable alerts on this device` (in the drawer and on `/dashboard`). Never prompt on page load.
+  - Show them through the **service worker**: `navigator.serviceWorker.ready` → `registration.showNotification(title, { body, tag: threat_id, icon, data: { url } })`. `new Notification()` throws on Android Chrome, so the service worker is required.
+  - `public/sw.js` does only one thing: handle `notificationclick` (focus or open `data.url`). No caching, no offline logic.
+  - Notify only when `document.visibilityState !== "visible"`. When the tab is visible, the toast is enough.
+  - iOS Safari only allows web notifications for sites added to the Home Screen (iOS 16.4+). For the demo, use an **Android** phone, or rely on the toast.
+  - Background tabs throttle timers, so alerts can arrive up to about a minute late when the tab is hidden. Keep the dashboard visible on the presenter's phone.
+- **Stage moment:** the presenter's phone is logged in to `/dashboard` with alerts enabled. When the simulator launches a clone on the projector, the phone buzzes with the real notification, and `phone-alert.tsx` on the projector mirrors the same alert.
 
 ---
 
@@ -348,7 +367,7 @@ Reduced motion: skip steps 0–1900 and render the final layout with a 160 ms op
 ### 9.1 Server proxy `app/api/halisi/[...path]/route.ts` (TSK-033)
 
 - Forwards to `${HALISI_API_URL}/api/v1/<path>` with the method, JSON/multipart body and query. It adds `X-Halisi-Key`, `ngrok-skip-browser-warning: 1`, and `X-Forwarded-For` (client IP), and uses `AbortSignal.timeout(10_000)`.
-- **Path allowlist.** Public: `check`, `check/*`, `verify/payment`, `merchants/<slug>` (GET), `reports` (POST), `stats` (GET). Merchant-only (requires a valid session cookie; enforced in both the route and `middleware.ts`): `merchants` (POST), `merchants/*/threats`, `threats/*`, `simulator/*`. Anything else returns 404. The proxy holds the API key, so without the allowlist anyone could use it as an open door.
+- **Path allowlist.** Public: `check`, `check/*`, `verify/payment`, `merchants/<slug>` (GET), `reports` (POST), `stats` (GET). Merchant-only (requires a valid session cookie; enforced in both the route and `middleware.ts`): `merchants` (POST), `merchants/*/threats`, `merchants/*/alerts`, `merchants/*/alerts/read`, `threats/*`, `simulator/*`. Anything else returns 404. The proxy holds the API key, so without the allowlist anyone could use it as an open door.
 - On a network error or 5xx, with `DEMO_FALLBACK=true`: return the matching fixture (by path and input) with the header `x-halisi-fixture: 1`. The UI shows the "Offline demo data" chip.
 - Session: `/api/session` POST compares `DASHBOARD_PASSCODE` (constant-time) and sets an httpOnly, Secure, SameSite=Lax cookie signed with `SESSION_SECRET` (use `jose` for a JWT, 12 h expiry). Supabase Auth is P2.
 
@@ -447,11 +466,13 @@ Third-party phone numbers on public pages are always masked (`0798 *** 111`). Fu
 
 **TSK-011 Dashboard** · Ndegwa · P1 · 033. Section 6.5. *Done:* a newly seeded threat appears within 5 s with the slide-in and pulse; empty state designed.
 
+**TSK-037 In-app alerts** · Ndegwa · P1 · 011, backend TSK-012. Section 6.10. *Done:* on fixtures and on the live API, a new alert updates the bell, shows one toast, updates the tab title, and (with permission) shows a service-worker notification on Android Chrome that opens the threat when tapped; mark-read clears the badge; no permission prompt without a click.
+
 **TSK-025 Threat detail + playbooks** · Ndegwa · P1 · 011. Section 6.6. *Done:* compare slider, hash grid, radar and playbook copy/share all work; status updates persist.
 
 **TSK-026 Onboarding** · Ndegwa · P1 · 033. Section 6.7. *Done:* creates a merchant through the API and shows its fingerprint grid.
 
-**TSK-027 Simulator stage** · Ndegwa · P1 · 010, backend TSK-031. Section 6.8. *Done:* presets 1–3 run end to end on a projector at 1920×1080, and the Telegram alert arrives on a real phone.
+**TSK-027 Simulator stage** · Ndegwa · P1 · 010, backend TSK-031. Section 6.8. *Done:* presets 1–3 run end to end on a projector at 1920×1080, and the in-app alert arrives as a browser notification on a real Android phone.
 
 **TSK-032 EN/SW i18n** · Ndegwa · P1 · 010. Section 10. *Done:* every public string toggles; a Swahili speaker has reviewed the copy.
 

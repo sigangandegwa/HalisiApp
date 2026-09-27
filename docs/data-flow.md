@@ -55,7 +55,7 @@
    ≥ 70 IMPERSONATION  │  40–69 SUSPICIOUS  │  < 40 NO MATCH (never "safe")
             │
             ▼
- threat upsert → Telegram/SMS alert → merchant dashboard → AI remediation playbooks (human sends)
+ threat upsert → in-app alert (bell, toast, phone notification) → merchant dashboard → AI remediation playbooks (human sends)
 ```
 
 ---
@@ -72,7 +72,7 @@
 
 - **2a Public Link Checker**: the customer pastes an Instagram, Facebook, TikTok or X link, or an `@handle`.
 - **2b Pay check**: the customer types a till or phone number (or a `wa.me/` link is detected). The API answers from the merchant registry and community reports: `official` / `reported` / `unknown`.
-- **2c Other channels**: community scam reports, the simulator (demo), and (P2) scheduled re-checks and the Telegram consumer bot.
+- **2c Other channels**: community scam reports, the simulator (demo), and (P2) scheduled re-checks.
 
 Target acquisition is tiered because Instagram and Facebook often block unauthenticated or datacenter requests:
 
@@ -104,9 +104,11 @@ Verdicts: `official` · `impersonation` (≥ 70) · `suspicious` (40–69) · `n
 When a threat is created, or crosses 70, a background task:
 
 1. upserts `threats` (unique per merchant + platform + handle),
-2. sends a Telegram alert (photo, score, top reasons, "Open in Halisi" button), de-duplicated per 6 h,
-3. optionally sends an SMS via Africa's Talking,
-4. makes the threat appear in the dashboard live feed (polling, 5 s).
+2. writes an **in-app alert** (`merchant_alerts`), de-duplicated per 6 h unless the score rises,
+3. the dashboard polls every 5 s: the bell count, a toast, and (if the merchant enabled it) a browser notification through the service worker,
+4. the threat appears at the top of the live feed.
+
+No Telegram, no SMS, no M-Pesa API: all alerting stays inside Halisi (scope decision 2026-09-27).
 
 ---
 
