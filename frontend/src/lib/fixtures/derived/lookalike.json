@@ -1,0 +1,103 @@
+[
+  {
+    "scan_id": "57ba613c-8cc5-5ed5-9fe5-62db6115094f",
+    "verdict": "suspicious",
+    "score": 56.14,
+    "confidence": 0.65,
+    "target": {
+      "platform": "instagram",
+      "handle": "sneakervault_resale_ke",
+      "display_name": "Sneaker Vault Resale KE",
+      "url": "https://instagram.com/sneakervault_resale_ke",
+      "avatar_url": null,
+      "follower_count": null,
+      "post_count": null,
+      "account_created_on": null,
+      "fetched_via": "manual"
+    },
+    "matched_merchant": {
+      "id": "190bec2a-588a-54e5-8590-c237c6239a4a",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/seed/nsv_logo.png",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      }
+    },
+    "dimensions": [
+      {
+        "key": "visual",
+        "label": "Logo match",
+        "score": 85.0,
+        "weight": 0.3,
+        "available": true,
+        "evidence": "pHash distance 8/64 · dHash distance 7/64"
+      },
+      {
+        "key": "identity",
+        "label": "Name & handle",
+        "score": 43.96,
+        "weight": 0.25,
+        "available": true,
+        "evidence": "'sneakervault_resale_ke' resembles 'nairobisneakervault' (44% similar)"
+      },
+      {
+        "key": "payment",
+        "label": "Payment details",
+        "score": 0.0,
+        "weight": 0.25,
+        "available": false,
+        "evidence": "No data"
+      },
+      {
+        "key": "language",
+        "label": "Scam language",
+        "score": 0.0,
+        "weight": 0.1,
+        "available": true,
+        "evidence": "No scam phrases found"
+      },
+      {
+        "key": "account",
+        "label": "Account signals",
+        "score": 0.0,
+        "weight": 0.1,
+        "available": false,
+        "evidence": "No data"
+      }
+    ],
+    "reasons": [
+      {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 85% similar to Nairobi Sneaker Vault's.",
+        "text_sw": "Inatumia nembo inayofanana 85% na ya Nairobi Sneaker Vault."
+      }
+    ],
+    "hashes": {
+      "target_phash": "bdb8d0e2cc4db107",
+      "reference_phash": "bd3cd0e2c4cd91c3",
+      "hamming_distance": 8
+    },
+    "safe_action": {
+      "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+      "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+    },
+    "threat_id": null,
+    "elapsed_ms": 1
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "scan_id": "fcbeccce-81c6-5d85-b466-21ead41b8513",
+  "verdict": "no_match",
+  "score": 19.06,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "nairobisneakerhub",
+    "display_name": "Nairobi Sneaker Hub",
+    "url": "https://instagram.com/nairobisneakerhub",
+    "avatar_url": "/seed/nsv_competitor.png",
+    "follower_count": 5400,
+    "post_count": 410,
+    "account_created_on": null,
+    "fetched_via": "seed"
+  },
+  "matched_merchant": null,
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 0.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 34/64 · dHash distance 32/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 43.23,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'nairobisneakerhub' resembles 'nairobisneakervault' (43% similar)"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 25.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Till/Paybill 889900 is not registered to this business"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 10.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "'delivery countrywide'"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 10.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "410 posts · 5400 followers"
+    }
+  ],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": null,
+  "threat_id": null,
+  "elapsed_ms": 1
+}

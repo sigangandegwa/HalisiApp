@@ -1,19 +1,61 @@
-import * as React from "react"
-import { Input as InputPrimitive } from "@base-ui/react/input"
-import { cn } from "cn"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+const fieldBase = [
+  "w-full min-w-0 border border-line-strong bg-bg-2 text-fg",
+  "transition-[border-color,background-color] duration-(--dur-ui) ease-quart",
+  "hover:border-[color-mix(in_oklab,var(--fg)_45%,transparent)]",
+  "focus-visible:border-fg focus-visible:bg-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fg focus-visible:ring-offset-0",
+  "aria-invalid:border-fake aria-invalid:ring-fake",
+  "disabled:cursor-not-allowed disabled:opacity-50",
+].join(" ");
+
+/** Document-style input: sharp corners, paper-2 well, ink hairline (FRONTEND.md 4.3). */
+export function Input({ className, mono, ...props }: React.ComponentProps<"input"> & { mono?: boolean }) {
   return (
-    <InputPrimitive
-      type={type}
+    <input
       data-slot="input"
-      className={cn(
-        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        className
-      )}
+      className={cn(fieldBase, "h-12 rounded-doc px-4 text-body", mono && "type-data tracking-[0.02em]", className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Input }
+export function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+  return <textarea data-slot="textarea" className={cn(fieldBase, "min-h-28 rounded-doc px-4 py-3 text-body leading-relaxed", className)} {...props} />;
+}
+
+/** Label + control + hint + inline error. Placeholder text is never the label. */
+export function Field({
+  label,
+  hint,
+  error,
+  htmlFor,
+  children,
+  className,
+}: {
+  label: string;
+  hint?: string;
+  error?: string | null;
+  htmlFor: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("grid gap-2", className)}>
+      <label htmlFor={htmlFor} className="type-caption text-fg-2">
+        {label}
+      </label>
+      {children}
+      {error ? (
+        <p id={`${htmlFor}-error`} role="alert" className="text-small text-fake">
+          {error}
+        </p>
+      ) : hint ? (
+        <p id={`${htmlFor}-hint`} className="text-small text-fg-3">
+          {hint}
+        </p>
+      ) : null}
+    </div>
+  );
+}

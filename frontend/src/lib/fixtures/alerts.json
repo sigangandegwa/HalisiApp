@@ -1,0 +1,198 @@
+[
+  {
+    "id": "9fc07fd6-87c9-5f66-bd8d-8adb614908d8",
+    "merchant_id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+    "threat_id": "f8d6ea05-c3b3-5994-8e22-56dcc11a1e44",
+    "kind": "new_threat",
+    "title": "Impersonator detected: @nairobi_sneakervault_official_ke",
+    "body": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+    "score": 99.0,
+    "created_at": "2026-09-27T11:48:09Z",
+    "read_at": null,
+    "threat": {
+      "id": "f8d6ea05-c3b3-5994-8e22-56dcc11a1e44",
+      "platform": "instagram",
+      "target_handle": "nairobi_sneakervault_official_ke",
+      "target_url": "https://instagram.com/nairobi_sneakervault_official_ke",
+      "avatar_url": "/fixtures/logos/nsv_clone.jpg",
+      "composite_score": 99.0,
+      "verdict": "impersonation",
+      "status": "detected",
+      "first_seen_at": "2026-09-27T11:48:05Z",
+      "top_reason": {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Nairobi Sneaker Vault."
+      }
+    }
+  },
+  {
+    "id": "dcada9a0-d817-5d3d-aacf-1941177ba815",
+    "merchant_id": "432ea21d-fcd0-57a7-bbc2-5f61d034526e",
+    "threat_id": "057c7e58-70d3-5b36-a3f0-801db1cc8e1f",
+    "kind": "new_threat",
+    "title": "Impersonator detected: @nairobisneakervau1t",
+    "body": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+    "score": 90.0,
+    "created_at": "2026-09-26T16:20:45Z",
+    "read_at": "2026-09-26T16:31:00Z",
+    "threat": {
+      "id": "057c7e58-70d3-5b36-a3f0-801db1cc8e1f",
+      "platform": "instagram",
+      "target_handle": "nairobisneakervau1t",
+      "target_url": "https://instagram.com/nairobisneakervau1t",
+      "avatar_url": "/fixtures/logos/nsv_subtle.webp",
+      "composite_score": 90.0,
+      "verdict": "impersonation",
+      "status": "advisory_sent",
+      "first_seen_at": "2026-09-26T16:20:41Z",
+      "top_reason": {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault."
+      }
+    }
+  },
+  {
+    "id": "44380c18-7900-5717-ad71-3f1306d3d870",
+    "merchant_id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+    "threat_id": "cec84533-a81d-535e-a6c3-0504a8e87ba3",
+    "kind": "new_threat",
+    "title": "Impersonator detected: @kilimaniglow_official_ke",
+    "body": "Uses a logo 100% similar to Kilimani Glow's.",
+    "score": 94.0,
+    "created_at": "2026-09-25T10:14:37Z",
+    "read_at": "2026-09-25T10:20:00Z",
+    "threat": {
+      "id": "cec84533-a81d-535e-a6c3-0504a8e87ba3",
+      "platform": "instagram",
+      "target_handle": "kilimaniglow_official_ke",
+      "target_url": "https://instagram.com/kilimaniglow_official_ke",
+      "avatar_url": "/fixtures/logos/kg_clone.jpg",
+      "composite_score": 94.0,
+      "verdict": "impersonation",
+      "status": "takedown_filed",
+      "first_seen_at": "2026-09-25T10:14:33Z",
+      "top_reason": {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Kilimani Glow's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Kilimani Glow."
+      }
+    }
+  },
+  {
+    "id": "71850503-ab04-5cb5-ae02-1f5df91b0c97",
+    "merchant_id": "857b5fe5-7830-522e-bc5f-2684aad61d0e",
+    "threat_id": "78c07538-1c36-5213-ac72-894f7b004699",
+    "kind": "new_threat",
+    "title": "Impersonator detected: @kilimanigl0w",
+    "body": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+    "score": 90.0,
+    "created_at": "2026-09-27T07:31:54Z",
+    "read_at": null,
+    "threat": {
+      "id": "78c07538-1c36-5213-ac72-894f7b004699",
+      "platform": "instagram",
+      "target_handle": "kilimanigl0w",
+      "target_url": "https://instagram.com/kilimanigl0w",
+      "avatar_url": "/fixtures/logos/kg_subtle.webp",
+      "composite_score": 90.0,
+      "verdict": "impersonation",
+      "status": "detected",
+      "first_seen_at": "2026-09-27T07:31:50Z",
+      "top_reason": {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Kilimani Glow's official account @kilimaniglow.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Kilimani Glow, @kilimaniglow."
+      }
+    }
+  },
+  {
+    "id": "ee0c3550-44de-5e39-be7a-2b62e5c577b2",
+    "merchant_id": "58035f06-936b-503e-911c-39094d25078b",
+    "threat_id": "120bfc77-1bdb-5e0b-97ef-f2b80306e046",
+    "kind": "new_threat",
+    "title": "Impersonator detected: @pwanithreads_official_ke",
+    "body": "Uses a logo 100% similar to Pwani Threads's.",
+    "score": 95.5,
+    "created_at": "2026-09-21T13:02:04Z",
+    "read_at": "2026-09-21T13:10:00Z",
+    "threat": {
+      "id": "120bfc77-1bdb-5e0b-97ef-f2b80306e046",
+      "platform": "instagram",
+      "target_handle": "pwanithreads_official_ke",
+      "target_url": "https://instagram.com/pwanithreads_official_ke",
+      "avatar_url": "/fixtures/logos/pt_clone.jpg",
+      "composite_score": 95.5,
+      "verdict": "impersonation",
+      "status": "resolved",
+      "first_seen_at": "2026-09-21T13:02:00Z",
+      "top_reason": {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Pwani Threads's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Pwani Threads."
+      }
+    }
+  },
+  {
+    "id": "4eea1f19-0995-522c-8f35-5cc27eea42a0",
+    "merchant_id": "58035f06-936b-503e-911c-39094d25078b",
+    "threat_id": "120bfc77-1bdb-5e0b-97ef-f2b80306e046",
+    "kind": "resolved",
+    "title": "Taken down: @pwanithreads_official_ke",
+    "body": "The impersonating page is no longer available.",
+    "score": 95.5,
+    "created_at": "2026-09-23T09:00:00Z",
+    "read_at": "2026-09-23T09:00:00Z",
+    "threat": {
+      "id": "120bfc77-1bdb-5e0b-97ef-f2b80306e046",
+      "platform": "instagram",
+      "target_handle": "pwanithreads_official_ke",
+      "target_url": "https://instagram.com/pwanithreads_official_ke",
+      "avatar_url": "/fixtures/logos/pt_clone.jpg",
+      "composite_score": 95.5,
+      "verdict": "impersonation",
+      "status": "resolved",
+      "first_seen_at": "2026-09-21T13:02:00Z",
+      "top_reason": {
+        "code": "LOGO_COPY",
+        "severity": "high",
+        "text": "Uses a logo 100% similar to Pwani Threads's.",
+        "text_sw": "Inatumia nembo inayofanana 100% na ya Pwani Threads."
+      }
+    }
+  },
+  {
+    "id": "037d1782-ac8a-5ef3-95e0-e0659c200993",
+    "merchant_id": "58035f06-936b-503e-911c-39094d25078b",
+    "threat_id": "49151e72-61e7-5ac4-bb1d-f53575fdb6d2",
+    "kind": "new_threat",
+    "title": "Impersonator detected: @pwanlthreads",
+    "body": "Its name imitates Pwani Threads's official account @pwanithreads.",
+    "score": 90.0,
+    "created_at": "2026-09-27T06:12:13Z",
+    "read_at": null,
+    "threat": {
+      "id": "49151e72-61e7-5ac4-bb1d-f53575fdb6d2",
+      "platform": "instagram",
+      "target_handle": "pwanlthreads",
+      "target_url": "https://instagram.com/pwanlthreads",
+      "avatar_url": "/fixtures/logos/pt_subtle.webp",
+      "composite_score": 90.0,
+      "verdict": "impersonation",
+      "status": "detected",
+      "first_seen_at": "2026-09-27T06:12:09Z",
+      "top_reason": {
+        "code": "HANDLE_LOOKALIKE",
+        "severity": "high",
+        "text": "Its name imitates Pwani Threads's official account @pwanithreads.",
+        "text_sw": "Jina lake linaiga akaunti rasmi ya Pwani Threads, @pwanithreads."
+      }
+    }
+  }
+]

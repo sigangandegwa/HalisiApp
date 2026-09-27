@@ -54,6 +54,26 @@ REASON_MIN_SCORE: Final = 60.0                  # a dimension at/above this emit
 LANGUAGE_REASON_MIN: Final = 40.0               # one strong scam phrase ("lipa kwanza") is worth a reason
 REASON_HIGH_SEVERITY: Final = 85.0
 
+# --- Remediation channels (remediation.py, TSK-009) -------------------------------------------
+# TODO(TSK-009, before the demo): verify every channel below from the organisation's own current
+# website, fill in the value, and set VERIFIED_ON to that date. Until then the playbooks show these
+# placeholders and `contacts_verified: false`, and the merchant must confirm the address before sending.
+# Do NOT guess addresses: a wrong fraud-report address wastes a victim's time.
+VERIFIED_ON: Final[str | None] = None
+SAFARICOM_REPORT_CHANNEL: Final = "email"
+SAFARICOM_REPORT_TO: Final = "<Safaricom fraud-reporting address: confirm on safaricom.co.ke before sending>"
+SAFARICOM_SMS_SHORTCODE_NOTE: Final = (
+    "<Safaricom scam-SMS forwarding short code: confirm on safaricom.co.ke (commonly cited as 333)>"
+)
+KECIRT_REPORT_TO: Final = "<National KE-CIRT/CC incident address: confirm on ke-cirt.go.ke before sending>"
+# Public help centres; link the exact impersonation form once verified.
+PLATFORM_REPORT_URLS: Final = {
+    "instagram": "https://help.instagram.com/",
+    "facebook": "https://www.facebook.com/help/",
+    "tiktok": "https://support.tiktok.com/",
+    "x": "https://help.x.com/",
+}
+
 # --- Account signal (scorer.py): ACCOUNT v2 ----------------------------------------------------
 ACCOUNT_AGE_SCORES: Final = ((30, 90.0), (90, 60.0), (365, 30.0))   # (max age in days, score); older -> 10
 ACCOUNT_AGE_OLD: Final = 10.0

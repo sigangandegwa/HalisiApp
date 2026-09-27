@@ -1,0 +1,146 @@
+{
+  "543210": {
+    "kind": "till",
+    "normalized": "543210",
+    "display": "543210",
+    "status": "official",
+    "merchant": {
+      "id": "190bec2a-588a-54e5-8590-c237c6239a4a",
+      "business_name": "Nairobi Sneaker Vault",
+      "slug": "nairobi-sneaker-vault",
+      "logo_url": "/seed/nsv_logo.png",
+      "category": "Sneakers",
+      "location": "Nairobi CBD",
+      "established_on": "2021-03-01",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "nairobisneakervault",
+          "url": "https://instagram.com/nairobisneakervault"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "nairobisneakervault",
+          "url": "https://tiktok.com/@nairobisneakervault"
+        }
+      ],
+      "payment": {
+        "type": "till",
+        "number": "543210",
+        "account_name": "NAIROBI SNEAKER VAULT"
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  "400200": {
+    "kind": "till",
+    "normalized": "400200",
+    "display": "400200",
+    "status": "official",
+    "merchant": {
+      "id": "760e3dc7-886b-55d1-b96c-a400ed66d0f2",
+      "business_name": "Kilimani Glow",
+      "slug": "kilimani-glow",
+      "logo_url": "/seed/kg_logo.png",
+      "category": "Beauty & skincare",
+      "location": "Kilimani, Nairobi",
+      "established_on": "2022-06-15",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kilimaniglow",
+          "url": "https://instagram.com/kilimaniglow"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kilimaniglow",
+          "url": "https://facebook.com/kilimaniglow"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "400200",
+        "account_name": "KILIMANI GLOW"
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  "+254700111222": {
+    "kind": "phone",
+    "normalized": "+254700111222",
+    "display": "0700 111 222",
+    "status": "official",
+    "merchant": {
+      "id": "22d3547a-f603-5b6e-a6af-c8d78ffb2ce3",
+      "business_name": "Pwani Threads",
+      "slug": "pwani-threads",
+      "logo_url": "/seed/pt_logo.png",
+      "category": "Fashion",
+      "location": "Mombasa",
+      "established_on": "2020-11-02",
+      "is_verified": true,
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "pwanithreads",
+          "url": "https://instagram.com/pwanithreads"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "pwanithreads",
+          "url": "https://tiktok.com/@pwanithreads"
+        }
+      ],
+      "payment": {
+        "type": "pochi",
+        "number": "+254700111222",
+        "account_name": "PWANI THREADS"
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  "+254798999111": {
+    "kind": "phone",
+    "normalized": "+254798999111",
+    "display": "0798 *** 111",
+    "status": "reported",
+    "merchant": null,
+    "report_count": 2,
+    "linked_threats": 1
+  },
+  "+254733000111": {
+    "kind": "phone",
+    "normalized": "+254733000111",
+    "display": "0733 *** 111",
+    "status": "reported",
+    "merchant": null,
+    "report_count": 2,
+    "linked_threats": 1
+  },
+  "+254799111222": {
+    "kind": "phone",
+    "normalized": "+254799111222",
+    "display": "0799 *** 222",
+    "status": "reported",
+    "merchant": null,
+    "report_count": 1,
+    "linked_threats": 1
+  },
+  "889900": {
+    "kind": "till",
+    "normalized": "889900",
+    "display": "889900",
+    "status": "unknown",
+    "merchant": null,
+    "report_count": 0,
+    "linked_threats": 0
+  }
+}

@@ -133,7 +133,7 @@ def test_logo_only_evidence_is_capped_at_suspicious():
 # --- false-positive regressions -------------------------------------------------------------------
 
 def test_unrelated_shop_sharing_a_city_prefix_with_its_own_number_is_no_match():
-    """Matcher prefix bias gives 'nairobi_bakery' ~78 identity vs 'nairobisneakervault'. A clearly
+    """Matcher v2 prefix bias gave 'nairobi_bakery' ~78 identity (v2.1: ~48). A clearly
     different logo must stop its personal order number from reading as a payment hijack."""
     bakery = TargetProfile(
         platform="instagram",

@@ -1,0 +1,49 @@
+{
+  "scan_id": "77eec408-df63-57de-8573-53896ce86927",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "kilimaniglow",
+    "display_name": null,
+    "url": "https://instagram.com/kilimaniglow",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "760e3dc7-886b-55d1-b96c-a400ed66d0f2",
+    "business_name": "Kilimani Glow",
+    "slug": "kilimani-glow",
+    "logo_url": "/seed/kg_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "kilimaniglow",
+        "url": "https://instagram.com/kilimaniglow"
+      },
+      {
+        "platform": "facebook",
+        "handle": "kilimaniglow",
+        "url": "https://facebook.com/kilimaniglow"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "400200",
+      "account_name": "KILIMANI GLOW"
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Pay only via Paybill 400200 (KILIMANI GLOW) through @kilimaniglow.",
+    "text_sw": "Lipa tu kwa Paybill 400200 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

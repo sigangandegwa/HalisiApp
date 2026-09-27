@@ -1,0 +1,9 @@
+Fake page alert: @{{ target_handle }} is not {{ merchant_name }}.
+{% if phones_local %}
+Don't send money to {{ phones_local | join(" or ") }}.
+{% endif %}
+{% if extracted_tills %}
+Don't pay Till/Paybill {{ extracted_tills | join(" or ") }}.
+{% endif %}
+{{ safe_action_en }}
+Please report the fake page and share this message with friends and family.

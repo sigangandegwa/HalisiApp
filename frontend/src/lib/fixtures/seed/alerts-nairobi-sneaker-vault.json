@@ -1,0 +1,60 @@
+{
+  "alerts": [
+    {
+      "id": "777b31b5-1e92-56bb-a31d-2ae68c0f2d4e",
+      "threat_id": "26d7872a-f4ba-546f-87bf-ee034e25f55f",
+      "kind": "new_threat",
+      "title": "Impersonator detected: @nairobisneakervau1t",
+      "body": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+      "score": 90.0,
+      "created_at": "2026-09-26T09:00:00Z",
+      "read_at": null,
+      "threat": {
+        "id": "26d7872a-f4ba-546f-87bf-ee034e25f55f",
+        "platform": "instagram",
+        "target_handle": "nairobisneakervau1t",
+        "target_url": "https://instagram.com/nairobisneakervau1t",
+        "avatar_url": "/seed/nsv_subtle.png",
+        "composite_score": 90.0,
+        "verdict": "impersonation",
+        "status": "detected",
+        "first_seen_at": "2026-09-26T09:00:00Z",
+        "top_reason": {
+          "code": "HANDLE_LOOKALIKE",
+          "severity": "high",
+          "text": "Its name imitates Nairobi Sneaker Vault's official account @nairobisneakervault.",
+          "text_sw": "Jina lake linaiga akaunti rasmi ya Nairobi Sneaker Vault, @nairobisneakervault."
+        }
+      }
+    },
+    {
+      "id": "3e5606dc-8777-574d-bf4e-0bd60878c961",
+      "threat_id": "c4938d51-9402-5300-988f-df90156e7d9b",
+      "kind": "new_threat",
+      "title": "Impersonator detected: @nairobi_sneakervault_official_ke",
+      "body": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+      "score": 99.0,
+      "created_at": "2026-09-25T09:00:00Z",
+      "read_at": null,
+      "threat": {
+        "id": "c4938d51-9402-5300-988f-df90156e7d9b",
+        "platform": "instagram",
+        "target_handle": "nairobi_sneakervault_official_ke",
+        "target_url": "https://instagram.com/nairobi_sneakervault_official_ke",
+        "avatar_url": "/seed/nsv_blatant.png",
+        "composite_score": 99.0,
+        "verdict": "impersonation",
+        "status": "detected",
+        "first_seen_at": "2026-09-25T09:00:00Z",
+        "top_reason": {
+          "code": "LOGO_COPY",
+          "severity": "high",
+          "text": "Uses a logo 100% similar to Nairobi Sneaker Vault's.",
+          "text_sw": "Inatumia nembo inayofanana 100% na ya Nairobi Sneaker Vault."
+        }
+      }
+    }
+  ],
+  "unread_count": 2,
+  "server_time": "2026-09-27T09:00:00Z"
+}

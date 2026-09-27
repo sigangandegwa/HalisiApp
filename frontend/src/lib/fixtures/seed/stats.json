@@ -1,0 +1,16 @@
+{
+  "pages_scanned": 12,
+  "threats_detected": 6,
+  "impersonations_blocked_7d": 6,
+  "merchants_protected": 3,
+  "median_detection_ms": 1,
+  "top_platforms": [
+    {
+      "platform": "instagram",
+      "count": 6
+    }
+  ],
+  "active_threats": null,
+  "resolved": null,
+  "customers_warned_estimate": null
+}

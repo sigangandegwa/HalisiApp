@@ -26,6 +26,9 @@ dist/
 next-env.d.ts
 .vercel/
 
+# Runtime uploads (created when the backend starts)
+backend/media/
+
 # Model & data caches
 .cache/
 *.safetensors

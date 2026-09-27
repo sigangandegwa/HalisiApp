@@ -1,155 +1,288 @@
+"""Identity (handle / name look-alike) and scam-language signals (TSK-016, docs/BACKEND.md 6.4 + 6.6).
+
+Pure functions: strings in, scores out. No network, no DB.
+
+MATCHER v2.1 (2026-09-27): Jaro-Winkler rewards a shared prefix, so every ``nairobi_*`` handle
+scored high against ``nairobisneakervault`` (``nairobi_bakery`` 77.7, the real competitor
+``nairobisneakerhub`` 88.4). v2.1 keeps the spec's three comparisons but:
+
+* lowers the Jaro-Winkler weight (``JW_WEIGHT``), and
+* compares the **distinctive remainder**: after removing the shared prefix and suffix, if both
+  sides still differ by more than a typo (``TYPO_MAX_EDITS``), the pair score is pulled towards
+  the similarity of those remainders. ``hub`` vs ``vault`` is a different brand; ``vualt`` vs
+  ``vault`` is a typo.
+* A target that is a strict truncation of the reference (``nairobi`` vs ``nairobisneakervault``)
+  gets plain edit similarity, without the prefix bonus.
+"""
+
 import re
 import unicodedata
+from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
+from typing import Protocol
+
 from rapidfuzz import fuzz
-from rapidfuzz.distance import JaroWinkler
-from typing import List, Optional, Tuple
+from rapidfuzz.distance import OSA, JaroWinkler, Levenshtein
 
-AFFIXES = {"official", "real", "original", "genuine", "the", "ke", "kenya", "254", "nairobi_official",
-           "shop", "store", "online", "deals", "offers", "hq", "team", "care", "support"}
+AFFIXES: frozenset[str] = frozenset(
+    {
+        "official",
+        "real",
+        "original",
+        "genuine",
+        "the",
+        "ke",
+        "kenya",
+        "254",
+        "nairobi_official",
+        "shop",
+        "store",
+        "online",
+        "deals",
+        "offers",
+        "hq",
+        "team",
+        "care",
+        "support",
+    }
+)
+HOMOGLYPHS: tuple[tuple[str, str], ...] = (
+    ("rn", "m"),
+    ("vv", "w"),
+    ("0", "o"),
+    ("1", "l"),
+    ("i", "l"),
+    ("|", "l"),
+    ("3", "e"),
+    ("5", "s"),
+    ("@", "a"),
+)
 
-HOMOGLYPHS = [("rn", "m"), ("vv", "w"), ("0", "o"), ("1", "l"), ("i", "l"), ("|", "l"), ("3", "e"), ("5", "s"), ("@", "a")]
+JW_WEIGHT = 0.3  # spec v2 used 0.5; lowered to damp the prefix bias
+REMAINDER_WEIGHT = 0.65  # share of the pair score taken from the distinctive remainder
+TYPO_MAX_EDITS = 2  # remainders within this OSA distance count as a typo, not a new word
+CONTAINMENT_SCORE = 95.0
+CONTAINMENT_MIN_LEN = 6
 
-LANGUAGE_TOKENS = [
-    (40, ["pay before delivery", "lipa kwanza", "lipa kabla", "pochi la biashara", "send money to", "tuma pesa", "deposit required", "pay via m-pesa before"]),
-    (25, ["payment with order", "no refunds", "non-refundable", "offer ends today", "leo tu", "whatsapp only", "dm for price", "limited stock"]),
-    (10, ["strictly delivery", "no physical shop", "inbox to order", "delivery countrywide", "order now"])
-]
+LANGUAGE_TOKENS: tuple[tuple[int, tuple[str, ...]], ...] = (
+    (
+        40,
+        (
+            "pay before delivery",
+            "lipa kwanza",
+            "lipa kabla",
+            "pochi la biashara",
+            "send money to",
+            "tuma pesa",
+            "deposit required",
+            "pay via m-pesa before",
+        ),
+    ),
+    (
+        25,
+        (
+            "payment with order",
+            "no refunds",
+            "non-refundable",
+            "offer ends today",
+            "leo tu",
+            "whatsapp only",
+            "dm for price",
+            "limited stock",
+        ),
+    ),
+    (10, ("strictly delivery", "no physical shop", "inbox to order", "delivery countrywide", "order now")),
+)
+_LANGUAGE_PATTERNS: tuple[tuple[int, str, re.Pattern[str]], ...] = tuple(
+    (weight, phrase, re.compile(r"(?<![\w])" + re.escape(phrase).replace(r"\ ", r"\s+") + r"(?![\w])"))
+    for weight, phrases in LANGUAGE_TOKENS
+    for phrase in phrases
+)
 
+_SEPARATORS = re.compile(r"[._\-\s]")
+_TOKEN_SPLIT = re.compile(r"[^a-z0-9@|]+")
+
+
+class _Handle(Protocol):
+    handle: str
+
+
+class MerchantLike(Protocol):
+    """Anything with official handles, a business name and aliases (e.g. ``scorer.MerchantProfile``)."""
+
+    official_handles: Sequence[_Handle]
+    business_name: str
+    aliases: Sequence[str]
+
+
+@dataclass(frozen=True, slots=True)
 class IdentityResult:
-    def __init__(self, score: float, evidence: str):
-        self.score = score
-        self.evidence = evidence
+    """Identity dimension: 0-100 look-alike score and a human-readable explanation."""
 
+    score: float
+    evidence: str
+
+
+@dataclass(frozen=True, slots=True)
 class LanguageResult:
-    def __init__(self, score: Optional[float], evidence: Optional[str]):
-        self.score = score
-        self.evidence = evidence
+    """Language dimension. ``score`` is None only when there is no text at all."""
 
-def normalize_handle(h: str) -> str:
-    if not h:
-        return ""
-    h = h.lower().lstrip('@').rstrip('/')
-    h = unicodedata.normalize('NFKC', h)
-    return re.sub(r'[\._\-\s]', '', h)
+    score: float | None
+    evidence: str | None
+    phrases: tuple[str, ...] = ()
 
-def fold_homoglyphs(s: str) -> str:
+
+# --- normalisation ------------------------------------------------------------------------------
+
+
+def _clean(value: str) -> str:
+    """NFKC, lowercase, strip '@' and trailing '/' and surrounding whitespace."""
+    return unicodedata.normalize("NFKC", value or "").strip().lower().lstrip("@").rstrip("/")
+
+
+def normalize_handle(handle: str) -> str:
+    """Lowercase, NFKC, strip '@' / trailing '/', and remove '.', '_', '-' and whitespace."""
+    return _SEPARATORS.sub("", _clean(handle))
+
+
+def fold_homoglyphs(value: str) -> str:
+    """Replace look-alike characters (``rn``->``m``, ``0``->``o``, ``1``/``i``->``l``...) in order."""
     for old, new in HOMOGLYPHS:
-        s = s.replace(old, new)
-    return s
+        value = value.replace(old, new)
+    return value
 
-def get_tokens(s: str) -> List[str]:
-    # Splitting by non-alphanumeric to get tokens
-    return [t for t in re.split(r'[^a-z0-9]', s) if t]
 
-def strip_affixes(tokens: List[str]) -> List[str]:
-    return [t for t in tokens if t not in AFFIXES]
+def tokens(value: str) -> list[str]:
+    """Split a raw handle or name into lowercase tokens on separators."""
+    return [t for t in _TOKEN_SPLIT.split(_clean(value)) if t]
 
-def compare_identity(target_folded: str, target_tokens: List[str], ref_str: str) -> Tuple[float, str]:
-    if not ref_str:
-        return 0.0, ""
-    
-    # Clean ref
-    ref_norm = normalize_handle(ref_str)
-    ref_folded = fold_homoglyphs(ref_norm)
-    ref_tokens = get_tokens(ref_norm)
-    ref_stripped = strip_affixes(ref_tokens)
-    
-    if not ref_folded:
-        return 0.0, ""
 
-    # a) 0.5*JaroWinkler + 0.5*fuzz.ratio on fold(normalize(x))
-    jw = JaroWinkler.similarity(ref_folded, target_folded) * 100
-    fr = fuzz.ratio(ref_folded, target_folded)
-    score_a = 0.5 * jw + 0.5 * fr
-    
-    # b) fuzz.token_set_ratio on affix-stripped tokens
-    target_stripped_str = " ".join(target_tokens)
-    ref_stripped_str = " ".join(ref_stripped)
-    score_b = fuzz.token_set_ratio(ref_stripped_str, target_stripped_str) if ref_stripped_str and target_stripped_str else 0.0
-    
-    # c) containment: 95 if fold(ref) in fold(target) and len(ref) >= 6
-    score_c = 95.0 if len(ref_folded) >= 6 and ref_folded in target_folded else 0.0
-    
-    max_score = max(score_a, score_b, score_c)
-    
-    evidence = ""
-    if max_score == score_a:
-        evidence = f"'{target_folded}' vs '{ref_folded}' (JW/Ratio)"
-    elif max_score == score_b:
-        evidence = f"Tokens '{target_stripped_str}' matches '{ref_stripped_str}'"
-    elif max_score == score_c:
-        evidence = f"'{target_folded}' contains '{ref_folded}'"
-        
-    return max_score, evidence
+def strip_affixes(parts: Iterable[str]) -> list[str]:
+    """Drop scam affixes (``official``, ``ke``, ``shop``...) from a token list."""
+    return [t for t in parts if t not in AFFIXES]
 
-def identity_score(target_handle: Optional[str], target_name: Optional[str], merchant) -> IdentityResult:
+
+# --- pair similarity ----------------------------------------------------------------------------
+
+
+def _common_prefix(a: str, b: str) -> int:
+    n = 0
+    for x, y in zip(a, b, strict=False):
+        if x != y:
+            break
+        n += 1
+    return n
+
+
+def distinctive_similarity(target: str, reference: str) -> float:
+    """0-100 similarity of two folded strings that discounts a shared, non-distinctive prefix/suffix.
+
+    * identical -> 100
+    * one side is the other plus/minus a block (truncation or insertion) -> plain edit ratio
+    * remainders differ by at most ``TYPO_MAX_EDITS`` (typo) -> blended JW + edit ratio
+    * otherwise -> pulled towards the Levenshtein similarity of the differing remainders
     """
-    merchant is expected to have:
-    - official_handles: list of objects with a 'handle' attribute
-    - business_name: string
-    - aliases: list of strings
+    if not target or not reference:
+        return 0.0
+    if target == reference:
+        return 100.0
+    ratio = fuzz.ratio(target, reference)
+    base = JW_WEIGHT * JaroWinkler.similarity(target, reference) * 100 + (1 - JW_WEIGHT) * ratio
+
+    p = _common_prefix(target, reference)
+    s = _common_prefix(target[p:][::-1], reference[p:][::-1])
+    rem_t, rem_r = target[p : len(target) - s], reference[p : len(reference) - s]
+    if not rem_t or not rem_r:
+        return ratio
+    if OSA.distance(rem_t, rem_r) <= TYPO_MAX_EDITS:
+        return base
+    remainder = Levenshtein.normalized_similarity(rem_t, rem_r) * 100
+    return min(base, (1 - REMAINDER_WEIGHT) * base + REMAINDER_WEIGHT * remainder)
+
+
+def _compare(target_raw: str, reference_raw: str) -> tuple[float, str]:
+    """Best of the three spec comparisons for one (target, reference) pair, with evidence."""
+    t_norm, r_norm = normalize_handle(target_raw), normalize_handle(reference_raw)
+    t_fold, r_fold = fold_homoglyphs(t_norm), fold_homoglyphs(r_norm)
+    if not t_fold or not r_fold:
+        return 0.0, ""
+
+    t_tokens = tokens(target_raw)
+    affixes = [t for t in t_tokens if t in AFFIXES]
+    t_core_raw = "".join(strip_affixes(t_tokens))
+    r_core_raw = "".join(strip_affixes(tokens(reference_raw))) or r_norm
+    t_core, r_core = fold_homoglyphs(t_core_raw), fold_homoglyphs(r_core_raw)
+
+    candidates: list[tuple[float, str]] = [(distinctive_similarity(t_fold, r_fold), "spelling")]
+    if affixes and t_core:
+        candidates.append((distinctive_similarity(t_core, r_core), "core"))
+    if len(r_fold) >= CONTAINMENT_MIN_LEN and r_fold in t_fold and r_fold != t_fold:
+        candidates.append((CONTAINMENT_SCORE, "contains"))
+    score, how = max(candidates, key=lambda c: c[0])
+
+    shown_t, shown_r = target_raw.strip().lstrip("@"), _clean(reference_raw)
+    affix_note = " + affix " + " ".join(f"'{a}'" for a in affixes) if affixes else ""
+    if how == "spelling" and score == 100.0:
+        kind = "same letters, different separators" if t_norm == r_norm else "look-alike characters"
+        evidence = f"'{shown_t}' imitates '{shown_r}' ({kind})"
+    elif how == "core" and score == 100.0:
+        glyphs = "" if t_core_raw == r_core_raw else " with look-alike characters"
+        evidence = f"'{shown_t}' is '{shown_r}'{glyphs}{affix_note}"
+    elif how == "contains":
+        evidence = f"'{shown_t}' contains '{shown_r}'{affix_note}"
+    else:
+        evidence = f"'{shown_t}' resembles '{shown_r}' ({score:.0f}% similar)"
+    return score, evidence
+
+
+def identity_score(
+    target_handle: str | None, target_name: str | None, merchant: MerchantLike
+) -> IdentityResult:
+    """Look-alike score of a page's handle / display name against a merchant.
+
+    Maximum over every official handle, the business name and every alias of:
+      a) distinctive similarity on fold(normalize(x)) (JW + edit ratio, remainder-aware)
+      b) the same on affix-stripped tokens
+      c) containment: 95 if fold(ref) is inside fold(target) and len(ref) >= 6
     """
-    best_score = 0.0
-    best_evidence = "No match"
-    
-    targets_to_test = []
-    if target_handle:
-        targets_to_test.append(target_handle)
-    if target_name:
-        targets_to_test.append(target_name)
-        
-    if not targets_to_test:
-        return IdentityResult(0.0, best_evidence)
-        
-    refs = []
-    if hasattr(merchant, 'official_handles') and merchant.official_handles:
-        for h in merchant.official_handles:
-            if hasattr(h, 'handle') and h.handle:
-                refs.append(h.handle)
-            elif isinstance(h, str):
-                refs.append(h)
-    if hasattr(merchant, 'business_name') and merchant.business_name:
+    targets = [t for t in (target_handle, target_name) if t and t.strip()]
+    refs: list[str] = [
+        h.handle for h in getattr(merchant, "official_handles", ()) or () if getattr(h, "handle", "")
+    ]
+    if getattr(merchant, "business_name", ""):
         refs.append(merchant.business_name)
-    if hasattr(merchant, 'aliases') and merchant.aliases:
-        refs.extend(merchant.aliases)
-        
-    for t_raw in targets_to_test:
-        t_norm = normalize_handle(t_raw)
-        t_folded = fold_homoglyphs(t_norm)
-        
-        # Original tokens for affix stripping
-        # Using a slightly different approach: extract tokens before removing dots/underscores to preserve word boundaries
-        # Wait, normalize_handle removes dots and underscores, so we should tokenise before that.
-        t_clean_for_tokens = str(t_raw).lower().lstrip('@').rstrip('/')
-        t_clean_for_tokens = unicodedata.normalize('NFKC', t_clean_for_tokens)
-        t_tokens = get_tokens(t_clean_for_tokens)
-        t_stripped_tokens = strip_affixes(t_tokens)
-        
-        for r_raw in refs:
-            score, ev = compare_identity(t_folded, t_stripped_tokens, r_raw)
+    refs.extend(a for a in getattr(merchant, "aliases", ()) or () if a)
+    if not targets or not refs:
+        return IdentityResult(0.0, "No match")
+
+    best_score, best_evidence = 0.0, "No match"
+    for target in targets:
+        for ref in refs:
+            score, evidence = _compare(target, ref)
             if score > best_score:
-                best_score = score
-                best_evidence = ev
-                
+                best_score, best_evidence = score, evidence
     return IdentityResult(round(best_score, 2), best_evidence)
 
-def language_score(bio_text: Optional[str]) -> LanguageResult:
-    if not bio_text:
+
+# --- language -----------------------------------------------------------------------------------
+
+
+def language_score(text: str | None) -> LanguageResult:
+    """Weighted scam-phrase score (EN / SW / Sheng) with whole-word matching.
+
+    Returns ``score=None`` when there is no text, ``0.0`` when there is text but no phrase matched,
+    else ``min(100, sum of matched weights)``. Phrases must match on word boundaries, so "leo tu"
+    does not fire inside "Leo tunauza".
+    """
+    if not text or not text.strip():
         return LanguageResult(None, None)
-        
-    bio_lower = bio_text.lower()
-    total_score = 0
-    matched_phrases = []
-    
-    for weight, phrases in LANGUAGE_TOKENS:
-        for phrase in phrases:
-            if phrase in bio_lower:
-                total_score += weight
-                matched_phrases.append(f"'{phrase}'")
-                
-    if not matched_phrases:
-        return LanguageResult(None, None)
-        
-    final_score = min(100.0, float(total_score))
-    evidence = ", ".join(matched_phrases)
-    return LanguageResult(final_score, evidence)
+    lowered = text.lower()
+    total = 0
+    matched: list[str] = []
+    for weight, phrase, pattern in _LANGUAGE_PATTERNS:
+        if pattern.search(lowered):
+            total += weight
+            matched.append(phrase)
+    if not matched:
+        return LanguageResult(0.0, "No scam phrases found")
+    return LanguageResult(min(100.0, float(total)), ", ".join(f"'{p}'" for p in matched), tuple(matched))

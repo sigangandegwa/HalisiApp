@@ -94,7 +94,9 @@ backend/
 │   │   ├── mock_seeder.py         # seeds Supabase or MemoryRepository
 │   │   └── fixtures/              # seed JSON + generated logo assets
 │   ├── alerts/  dispatcher.py
-│   └── schemas/ merchant.py  threat.py  check.py  remediation.py  report.py  common.py
+│   ├── services/ check.py (the /check pipeline, shared by API, seeder, simulator)  payments.py
+│   │             remediation.py (NIM client + fallback)  simulator.py  serializers.py
+│   └── schemas/ merchant.py  threat.py  check.py  remediation.py  report.py  alert.py  simulator.py  common.py
 ├── tests/  (mirrors app/: tests/engine/test_hasher.py, ...)
 ├── requirements.txt  requirements-ml.txt  requirements-dev.txt
 ├── pyproject.toml                 # ruff + pytest config (asyncio_mode = "auto")
@@ -115,7 +117,9 @@ Conventions:
 
 ## 4. Data model
 
-**Source of truth: [database/schema.sql](../database/schema.sql) (v2).** Tables: `merchants`, `merchant_handles`, `threats`, `scans`, `remediation_logs`, `community_reports`, `merchant_alerts` (v2.1), plus the RPC `match_merchant_logos`.
+**Source of truth: [database/schema.sql](../database/schema.sql) (v2.2).** Tables: `merchants`, `merchant_handles`, `threats`, `scans`, `remediation_logs`, `community_reports`, `merchant_alerts` (v2.1), `target_profiles` (v2.2), plus the RPC `match_merchant_logos`.
+
+v2.2 (2026-09-27): `threats.avatar_dhash` (the engine compares pHash **and** dHash), `threats.status_history` (jsonb, for `ThreatDetail.status_history`), and `target_profiles` (tier-1 "known pages" for the scraper: seeded pages and OpenGraph fetches, hashed at fetch time; manual submissions are never stored there so one user can't poison another's result). The file ends with an idempotent upgrade block for v2.1 databases.
 
 Why v2 replaced v1: v1 had no `logo_phash` (there was nothing to compare against), a single `risk_score` (the 5-dimension breakdown couldn't be stored), one till string, and no scans/reports tables. Its Pydantic models (`schemas/merchant.py`, `schemas/threat.py`) must be rewritten to mirror v2 (TSK-002).
 
@@ -152,6 +156,8 @@ class Repository(Protocol):
 ```
 
 The supabase-py client is synchronous. Wrap its calls in `asyncio.to_thread` inside `SupabaseRepository`.
+
+**Implemented (TSK-002, 2026-09-27).** Beyond the list above the protocol also has `ping`, `get_threat_by_target`, `list_threats_by_status`, `latest_scan_for_threat`, `list_remediations`, `set_report_status`, `confirmed_reported_numbers`, `unread_count`, `get_target_profile` and `upsert_target_profile`. `find_by_payment` returns facts (`merchant`, `report_count`, `confirmed_reports`, `linked_threats`); `services/payments.py` turns them into the 5.3 response. Threat ids are uuid5 of `(merchant_id, platform, handle)` and alert ids uuid5 of `(threat, kind, time)`, so re-seeding is idempotent. Both implementations run the same contract tests (`tests/core/test_repository.py`; Supabase against an in-memory fake of the supabase-py query builder in `tests/fakes.py`).
 
 ---
 
@@ -301,6 +307,21 @@ Fields: `data` (JSON: business_name, slug, aliases[], category, location, establ
 
 `{ merchant_id, tweaks: { handle_style: "suffix"|"homoglyph"|"underscore", logo: "exact"|"recolor"|"crop"|"jpeg", payment: "phone"|"pochi"|"none", bio_tokens: true } }` returns a `CheckResult`. It builds a synthetic target in memory and runs the real engine on it. Nothing is fabricated, and the result is persisted with `source = 'simulator'`.
 
+### 5.11 Implementation notes (2026-09-27, additive only: no existing field was renamed or removed)
+
+- **Errors** always have the shape `{"error": {"code", "message"}}`, including 422 validation errors (`INVALID_INPUT`), 401 `UNAUTHORIZED`, 404 `NOT_FOUND`, 409 (`SLUG_TAKEN`, `HANDLE_TAKEN`), 413 `PAYLOAD_TOO_LARGE`, 429 `RATE_LIMITED`, 502 `TARGET_UNREACHABLE`. New 422 codes: `UNSUPPORTED_PLATFORM`, `INVALID_IMAGE`, and `PAYMENT_INPUT` (a phone/till/wa.me link was sent to `/check`: call `/verify/payment` instead).
+- **5.1** `engine.clip` is `disabled` / `cpu` / `cuda` / `error` / `not_loaded`; `db` is `ok` (Supabase), `memory` or `error`; `llm` is `nim-hosted`, `nim-self-hosted`, `disabled`, `templates (demo mode)` or `templates (no LLM_API_KEY)`; `status` is `degraded` when the DB or hashing fails.
+- **5.2** `target.fetched_via` is one of `seed` (tier 1 known page), `opengraph`, `manual`, `simulator`, `none` (official short-circuit, nothing fetched). `threat_id` is set when a merchant matched and `score >= THREAT_THRESHOLD` (so an O4-capped `suspicious` page with a high score is still tracked for the merchant). `hashes` is null when there was no avatar or no match. The public result never contains the bio.
+- **5.3** `reported` = at least one **confirmed** report *or* the number is on an active impersonation threat. Pending reports are counted in `report_count` but don't flip the status. `official` numbers are shown in full (`0700 111 222`), everything else masked.
+- **5.4** also returns `id` (the dashboard needs it for the merchant-scoped endpoints).
+- **5.5** returns `201` with the 5.4 profile plus `logo_phash`, `logo_dhash`, `clip` (whether an embedding was stored). The logo is re-encoded as a normalised PNG under `MEDIA_DIR` and served at `/media/...`.
+- **5.6** `PATCH /threats/{id}` returns the updated `ThreatDetail`. `ThreatDetail` also has `first_seen_at`, `last_checked_at`, `resolved_at`; `scan_id`/`elapsed_ms` come from the latest scan of that page. `status_history[]` items are `{status, at}`; `playbooks_generated[]` items are `{playbook_type, language, generator, prompt_id, model, created_at}`.
+- **5.7** also returns `language`, `contacts_verified` (false until `VERIFIED_ON` is set in `engine/constants.py`), and a `generator` per playbook. Top-level `generator` is `llm` only when all four came from the LLM.
+- **5.8** returns `201`. `platform` must be one of the schema platforms.
+- **5.9** `customers_warned_estimate` is a **count** (not an estimate): real public checks (not seed/simulator) that returned `impersonation` or `suspicious` for a page imitating this merchant. `impersonations_blocked_7d` counts scans with verdict `impersonation` in the last 7 days.
+- **5.10** clone handles: `suffix` -> `<handle>_official`, `homoglyph` -> first `o`->`0` (else `l`->`1`, `i`->`1`...), `underscore` -> business name joined by `_`. The avatar is a real edit of the stored logo pixels and is returned as a small `data:image/png;base64` URL. Repeating the same tweaks re-scores the same handle (no new alert, by design).
+- Asset URLs are relative (`/seed/<file>.png`, `/media/<file>.png`). The backend serves both; the frontend copies `src/lib/fixtures/seed/assets/` to `public/seed/`.
+
 **Type generation:** the frontend runs `npx openapi-typescript <API>/openapi.json -o src/lib/api-types.ts`. Give every endpoint a `response_model` so the OpenAPI output is exact.
 
 ---
@@ -387,6 +408,8 @@ Golden tests (must pass; add more, never delete):
 | `nairobisneakervault` | `nairobisneakerhub` (real competitor) | < 70 |
 | `pwanithreads` | `mombasa_fashion_house` | < 30 |
 
+**MATCHER v2.1 (2026-09-27): the original table above passes.** Measured: `nairobi_sneakervault_official_ke` 100, `nairobisneakervau1t` 100, `nairobi.sneaker.vault` 100, `kiIimaniglow_ke` 100, `nairobi_bakery` 47.6 (v2: 77.7), `nairobisneakerhub` 43.2 (v2: 88.4), `mombasa_fashion_house` 21.1. Changes: (a) JW weight 0.5 -> 0.3 (`0.3*JW + 0.7*ratio`); (b) **distinctive remainder**: strip the shared prefix and suffix; if the remainders differ by more than a typo (OSA distance > 2), the pair score becomes `min(base, 0.35*base + 0.65*Levenshtein_sim(remainders))` (`hub` vs `vault` is a different brand, `vualt` vs `vault` is a typo); (c) a strict truncation (`nairobi` vs `nairobisneakervault`, 54) gets plain edit ratio without the JW prefix bonus; (d) comparison (b) runs on affix-stripped tokens (an affix-only variant scores 100). Extra must-hit (typosquats >= 90) and must-miss cases are in `tests/engine/test_matcher.py`. All scorer tests stayed green without changes.
+
 ### 6.5 Payment signal (`engine/payment.py` + `ingestion/extractors.py`), TSK-021 / TSK-016
 
 Extractors (Geoffrey, `ingestion/extractors.py`). Run them on bio, captions and link-in-bio text:
@@ -429,6 +452,8 @@ Weighted tokens, English + Swahili + Sheng. **Low-weight tokens are ones legitim
 | 10 | `strictly delivery`, `no physical shop`, `inbox to order`, `delivery countrywide`, `order now` |
 
 v1's flat `matches * 33.33` also caps at 99.99 instead of 100. Use explicit weights.
+
+Phrases match on **word boundaries** and tolerate extra whitespace (`"leo tu"` does not fire inside `"Leo tunauza"`). `language_score` returns `0.0` when there is text but no phrase, `None` only for empty text.
 
 ### 6.7 Account signal
 
@@ -518,6 +543,17 @@ Use **fictional** businesses only. Search each name first to make sure it isn't 
 - Commands: `python -m app.ingestion.mock_seeder --target supabase|memory --reset`. It must be idempotent.
 - The same fixtures JSON is copied to `frontend/src/lib/fixtures/` for offline frontend mode.
 
+**Implemented (TSK-007, 2026-09-27).** Every seeded page goes through `services/check.CheckService` (the same code as `POST /check`), so no score is hard-coded. Logo designs live in `ingestion/fixtures/logos.py` (shared with the engine tests); unrelated seed logos are 27-40 pHash bits apart (visual 0), blatant avatars 4-6 bits from their logo. Result on the seed set (engine v2 + matcher v2.1):
+
+| Page | Verdict | Score |
+| :-- | :-- | :-- |
+| blatant clones (nsv / kg / pt) | impersonation | 99.0 / 96.0 / 99.0 (confidence 1.0) |
+| subtle clones `nairobisneakervau1t` / `kiiimaniglow` / `pwanlthreads` | impersonation | 90.0 each (O2, confidence 0.9) |
+| competitors `nairobisneakerhub` / `kilimanibeautybar` / `pwanifashionhouse` | no_match | 19.06 / 14.68 / 15.68 |
+| official handles | official | 0 |
+
+Merchants: NSV Till 543210, Kilimani Glow Paybill 400200, Pwani Threads Pochi 0700 111 222, each with 2 handles, phone numbers and an M-Pesa account name. 5 reports (2 confirmed) on the blatant clones' numbers. IDs are uuid5, writes are upserts: re-running changes nothing. `DEMO_MODE` seeds the MemoryRepository at startup with timestamps relative to now; the CLI export uses a fixed clock (2026-09-27 09:00 UTC) so the exported files are reproducible (only measured `elapsed_ms` varies). Export: `frontend/src/lib/fixtures/seed/` (`README.md` there lists every file). `--target supabase` skips cleanly without credentials; `--reset` deletes only seed rows.
+
 ---
 
 ## 8. In-app alerts (Geoffrey)
@@ -569,16 +605,18 @@ An APScheduler job in the API process (not Celery or Redis for the MVP) re-fetch
 
 ## 11. Security checklist (must be green before the demo)
 
-- [ ] **SSRF guard** `is_public_url(url)`: `https` only, resolve DNS, reject private, loopback, link-local, multicast and reserved IPs (`ipaddress` module), re-check after each redirect, max 3 redirects. Apply it to every server-side fetch (profile pages *and* avatar URLs taken from OG tags, which the attacker controls).
-- [ ] Image limits: 5 MB, 25 MP, content-type check, Pillow `verify()`.
-- [ ] Rate limits (slowapi): `/check` 10/min/IP, `/verify/payment` 20/min/IP, `/reports` 5/min/IP. Behind ngrok, read the client IP from `X-Forwarded-For` (first hop) only when the request comes through the tunnel.
-- [ ] `X-Halisi-Key` required on all write/merchant endpoints; compare with `secrets.compare_digest`.
-- [ ] CORS: explicit origins from env. No `*` with credentials.
-- [ ] Secrets only in `.env`. The service-role key never leaves the backend. `.env` is gitignored.
-- [ ] Public responses mask third-party phone numbers. Reporter contact info is never returned by any endpoint.
-- [ ] Validation: Pydantic models with `max_length` on every string; handle regex `^[a-z0-9._]{1,60}$`.
-- [ ] Error handler returns generic messages; details are only logged.
-- [ ] Prompt injection: scraped bios go into the LLM **only as quoted data** inside the facts block, and the output validator (section 6.9) blocks any number that isn't in the facts.
+- [x] **SSRF guard** `is_public_url(url)`: `https` only, resolve DNS, reject private, loopback, link-local, multicast and reserved IPs (`ipaddress` module), re-check after each redirect, max 3 redirects. Apply it to every server-side fetch (profile pages *and* avatar URLs taken from OG tags, which the attacker controls).
+- [x] Image limits: 5 MB, 25 MP, content-type check, Pillow `verify()`.
+- [x] Rate limits (slowapi's `limits` engine, per-app dependency in `core/security.py`): `/check` 10/min/IP, `/verify/payment` 20/min/IP, `/reports` 5/min/IP. Behind ngrok, read the client IP from `X-Forwarded-For` (first hop) only when the request comes through the tunnel.
+- [x] `X-Halisi-Key` required on all write/merchant endpoints; compare with `secrets.compare_digest`.
+- [x] CORS: explicit origins from env. No `*` with credentials.
+- [x] Secrets only in `.env`. The service-role key never leaves the backend. `.env` is gitignored.
+- [x] Public responses mask third-party phone numbers. Reporter contact info is never returned by any endpoint.
+- [x] Validation: Pydantic models with `max_length` on every string; handle regex `^[a-z0-9._]{1,60}$`.
+- [x] Error handler returns generic messages; details are only logged.
+- [x] Prompt injection: scraped bios go into the LLM **only as quoted data** inside the facts block, and the output validator (section 6.9) blocks any number that isn't in the facts.
+
+Status 2026-09-27 (TSK-019): all items implemented and covered by `tests/api/test_security.py`. Known limitation: the SSRF guard resolves DNS itself and httpx resolves again on connect, so a DNS-rebinding host with a tiny TTL could race it (pinning the resolved IP is a follow-up). Body size is also capped at 8 MB by middleware (413).
 
 ---
 
@@ -619,35 +657,35 @@ Each card: owner · priority · depends on. **Done** means the code is merged, t
 
 **TSK-001 Deploy schema v2**: Geoffrey · P0. Run `database/schema.sql` in Supabase, and add the URL and service key to `backend/.env`. *Done:* all 7 tables and the RPC exist; `select match_merchant_logos(array_fill(0, array[512])::vector, 1)` runs.
 
-**TSK-002 Core scaffolding**: Geoffrey · P0 · 001. `config.py`, `repository.py` (both implementations), `cache.py`, `logging.py`, `main.py` lifespan and error handlers, `api/v1/router.py`, Pydantic v2 schemas for every model in section 5, and `pyproject.toml`. *Done:* `uvicorn app.main:app` starts with `DEMO_MODE=true` and no network; `/health` matches section 5.1; `/docs` lists every route (stubs return fixtures).
+**TSK-002 Core scaffolding**: Geoffrey · P0 · 001. `config.py`, `repository.py` (both implementations), `cache.py`, `logging.py`, `main.py` lifespan and error handlers, `api/v1/router.py`, Pydantic v2 schemas for every model in section 5, and `pyproject.toml`. *Done:* `uvicorn app.main:app` starts with `DEMO_MODE=true` and no network; `/health` matches section 5.1; `/docs` lists every route (stubs return fixtures). **Done 2026-09-27**: real MemoryRepository + SupabaseRepository (same contract tests), app factory `create_app()` with lifespan (shared httpx client, CLIP warm-up, seeding in DEMO_MODE), JSON error handlers, `/health` from real state, Telegram/AT settings removed, `ALERT_DEDUP_HOURS` added.
 
 **TSK-015 Hasher v2 + imaging**: Collins · P0 · 002. Implements sections 6.1–6.2 and removes the download from the engine (fetching belongs in ingestion, TSK-006/019). *Done:* `test_imaging.py` and `test_hasher.py` pass; unrelated generated images score ≤ 10. **Done 2026-09-27.** Measured on the generated set: jpeg/downscale/recolour move pHash 0–4 bits, a caption overlay moves it up to 8, unrelated logos are 30–40 apart, but an 85% crop moves it 10–28 bits. **Hashes do not catch crops**; CLIP (TSK-017) must.
 
-**TSK-016 Matcher v2**: Geoffrey · P0 · 002. Implements sections 6.4 and 6.6. *Done:* the golden table passes; root test scripts are deleted.
+**TSK-016 Matcher v2**: Geoffrey · P0 · 002. Implements sections 6.4 and 6.6. *Done:* the golden table passes; root test scripts are deleted. **Done 2026-09-27 (v2.1)**: spec golden table passes unchanged (see 6.4 for measured values); word-boundary language matching. The root test scripts no longer exist in the repo.
 
-**TSK-021 Extractors + payment score**: Geoffrey (extractors), Collins (score) · P0. Implements section 6.5. *Done:* `test_payment.py` passes, with at least 12 real-world Kenyan formats. **Payment-score half done 2026-09-27** (`engine/payment.py`: `payment_score`, `canonical_phone`, `canonical_till`, `mask_phone`). Extractors still to do: `ingestion/extractors.py` must return a `PaymentEvidence(phones, tills, pochi_phrasing)`, and can reuse `canonical_phone` / `canonical_till`.
+**TSK-021 Extractors + payment score**: Geoffrey (extractors), Collins (score) · P0. Implements section 6.5. *Done:* `test_payment.py` passes, with at least 12 real-world Kenyan formats. **Payment-score half done 2026-09-27** (`engine/payment.py`: `payment_score`, `canonical_phone`, `canonical_till`, `mask_phone`). Extractors still to do: `ingestion/extractors.py` must return a `PaymentEvidence(phones, tills, pochi_phrasing)`, and can reuse `canonical_phone` / `canonical_till`. **Extractor half done 2026-09-27**: `extract_payment_evidence(text) -> PaymentEvidence` (tills + paybills in `tills`, deterministic first-seen order), 17 real-world formats + the 12 legacy cases in `tests/ingestion/test_extractors.py`.
 
 **TSK-008 Scorer**: Collins · P0 · 015, 016, 021. Implements section 6.8. *Done:* the required scorer tests pass; `ScoreResult` serialises to the section 5.2 shape. **Done 2026-09-27**: all 5 required cases plus false-positive regressions (similar-named competitor, `nairobi_bakery` with its own number, dotted official-handle variant).
 
-**TSK-007 Mock seeder**: Geoffrey · P0 · 002. Implements section 7.3. *Done:* `--target memory` and `--target supabase` both work and are idempotent; fixtures are exported to the frontend.
+**TSK-007 Mock seeder**: Geoffrey · P0 · 002. Implements section 7.3. *Done:* `--target memory` and `--target supabase` both work and are idempotent; fixtures are exported to the frontend. **Done 2026-09-27**: see 7.3. Supabase path verified only against the fake client (no project yet, TSK-001).
 
-**TSK-018 API endpoints**: Geoffrey · P0 · 002, 008. Section 5 routes plus the URL parser (section 7.1). *Done:* `api/test_check.py` passes; the OpenAPI schema generates clean TS types.
+**TSK-018 API endpoints**: Geoffrey · P0 · 002, 008. Section 5 routes plus the URL parser (section 7.1). *Done:* `api/test_check.py` passes; the OpenAPI schema generates clean TS types. **Done 2026-09-27**: every section 5 route with a `response_model`; URL parser; `tests/api/test_check.py` (official / impersonation / no_match / 422 / 502 -> manual). Verified live with `uvicorn` in DEMO_MODE: the seeded blatant clone returns impersonation 99.0.
 
-**TSK-019 Security hardening**: Geoffrey · P1 · 018. Section 11. *Done:* `api/test_security.py` passes; every checklist item is ticked.
+**TSK-019 Security hardening**: Geoffrey · P1 · 018. Section 11. *Done:* `api/test_security.py` passes; every checklist item is ticked. **Done 2026-09-27**: section 11 ticked; `tests/api/test_security.py`.
 
-**TSK-006 Page scraper**: Geoffrey · P1 · 018. Tiers 1–3 (section 7.2). *Done:* 2 live public pages fetched (record whether IG blocks from Brev's IP); login walls are detected; the manual fallback works end to end.
+**TSK-006 Page scraper**: Geoffrey · P1 · 018. Tiers 1–3 (section 7.2). *Done:* 2 live public pages fetched (record whether IG blocks from Brev's IP); login walls are detected; the manual fallback works end to end. **Code done 2026-09-27** (tiers 1-3, login-wall + 429/404 detection, SSRF-guarded manual redirects, respx tests). **Not done:** the 2 live public pages from Brev's IP (no network here).
 
-**TSK-017 CLIP + Brev deployment**: Collins · P1 · 015. Section 6.3 plus BREV_ENGINE_SETUP.md. *Done:* `/health` shows `clip: cuda` on Brev; the calibration table is committed; thresholds are updated in constants.
+**TSK-017 CLIP + Brev deployment**: Collins · P1 · 015. Section 6.3 plus BREV_ENGINE_SETUP.md. *Done:* `/health` shows `clip: cuda` on Brev; the calibration table is committed; thresholds are updated in constants. **Code part done 2026-09-27**: `engine/embeddings.py` (lazy, optional, device auto, warm-up in lifespan, `asyncio.to_thread`), tested with an injected fake model. Brev deployment and calibration still open.
 
-**TSK-009 Remediation**: Collins · P1 · 008. Section 6.9. *Done:* LLM and template paths both produce EN and SW output; the validator test passes; prompts are registered in AGENTS.md section 7.
+**TSK-009 Remediation**: Collins · P1 · 008. Section 6.9. *Done:* LLM and template paths both produce EN and SW output; the validator test passes; prompts are registered in AGENTS.md section 7. **Done 2026-09-27 except channel verification**: facts object, NIM via `openai.AsyncOpenAI`, validator (phones, 5-7 digit numbers, @handles, percentages), EN+SW Jinja2 templates, `remediation_logs`, tests with the LLM mocked. `VERIFIED_ON = None`: Safaricom / KE-CIRT/CC addresses are placeholders the merchant must confirm. Not yet run against the real NIM endpoint.
 
-**TSK-012 In-app alerts (backend)**: Geoffrey · P1 · 018. Section 8. *Done:* scoring a seeded clone creates exactly one `new_threat` alert; a repeat check within 6 h creates none; a +10 score rise creates `score_increase`; `/alerts?since=` returns only newer rows; mark-read updates `unread_count`. Tests cover all of these in DEMO_MODE.
+**TSK-012 In-app alerts (backend)**: Geoffrey · P1 · 018. Section 8. *Done:* scoring a seeded clone creates exactly one `new_threat` alert; a repeat check within 6 h creates none; a +10 score rise creates `score_increase`; `/alerts?since=` returns only newer rows; mark-read updates `unread_count`. Tests cover all of these in DEMO_MODE. **Done 2026-09-27**: `alerts/dispatcher.py` + alert endpoints; `tests/api/test_alerts.py` covers every DoD item.
 
-**TSK-022 Reports + payment lookup**: Geoffrey · P1 · 018. `/reports` and `/verify/payment`. *Done:* a confirmed report flips a number to `reported`, and O3 applies in `/check`.
+**TSK-022 Reports + payment lookup**: Geoffrey · P1 · 018. `/reports` and `/verify/payment`. *Done:* a confirmed report flips a number to `reported`, and O3 applies in `/check`. **Done 2026-09-27**: pending reports don't flip a number; confirmed ones do, and O3 applies in `/check` (`tests/api/test_reports.py`). There is no moderation endpoint yet (`repo.set_report_status` only).
 
-**TSK-031 Simulator endpoint**: Collins · P1 · 008. Section 5.10. *Done:* each tweak combination returns a real engine score within 1.5 s.
+**TSK-031 Simulator endpoint**: Collins · P1 · 008. Section 5.10. *Done:* each tweak combination returns a real engine score within 1.5 s. **Done 2026-09-27**: all 72 tweak combinations x 3 merchants return a real engine score well under 1.5 s.
 
-~~TSK-013 Africa's Talking SMS~~ and ~~TSK-030 Consumer Telegram bot~~: **dropped 2026-09-27** (no Telegram/SMS). **TSK-029 Takedown tracker**: Geoffrey · P2. **TSK-028 Evidence dossier PDF** (Jinja2 → HTML → PDF, including side-by-side images, hashes, timestamps and a SHA-256 of the evidence bundle): Collins · P2.
+~~TSK-013 Africa's Talking SMS~~ and ~~TSK-030 Consumer Telegram bot~~: **dropped 2026-09-27** (no Telegram/SMS). **TSK-029 Takedown tracker**: Geoffrey · P2. **Code done 2026-09-27** (`ingestion/takedown_tracker.py`, asyncio loop instead of APScheduler, `ENABLE_TAKEDOWN_TRACKER`). **TSK-028 Evidence dossier PDF** (Jinja2 → HTML → PDF, including side-by-side images, hashes, timestamps and a SHA-256 of the evidence bundle): Collins · P2.
 
 ---
 

@@ -1,0 +1,21 @@
+Kwa National KE-CIRT/CC,
+
+Ninaripoti akaunti ya mitandao ya kijamii inayoonekana kuiga biashara yangu, {{ merchant_name }}, ili kupokea malipo kutoka kwa wateja wetu. Hili linaweza kuwa kosa chini ya Sheria ya Matumizi Mabaya ya Kompyuta na Uhalifu wa Mtandao, 2018 (Computer Misuse and Cybercrimes Act, 2018).
+
+Akaunti inayoripotiwa: @{{ target_handle }} kwenye {{ target_platform }} ({{ target_url }})
+Ilionekana mara ya kwanza: {{ first_seen_on }}
+Akaunti zetu rasmi: {{ official_handles | join(", ") }}
+{% if phones_local or extracted_tills %}
+Maelezo ya malipo kwenye akaunti hiyo: {{ (phones_local + extracted_tills) | join(", ") }}
+{% endif %}
+
+Ushahidi uliorekodiwa na Halisi:
+{% if phash_distance is not none %}
+- Umbali wa pHash wa picha ya wasifu ni {{ phash_distance }}/64 kutoka nembo yetu iliyosajiliwa.
+{% endif %}
+- Alama ya jumla ya uigaji ni {{ composite_score | round | int }}/100 (uhakika {{ confidence }}).
+{% for reason in reasons_sw %}
+- {{ reason }}
+{% endfor %}
+
+Niko tayari kutoa maelezo zaidi.

@@ -1,0 +1,60 @@
+{
+  "alerts": [
+    {
+      "id": "7064a1d4-82d7-5708-a1a9-fb855aab2737",
+      "threat_id": "b0a85e20-8d51-5fb7-8d55-0763eeb977fe",
+      "kind": "new_threat",
+      "title": "Impersonator detected: @pwanlthreads",
+      "body": "Its name imitates Pwani Threads's official account @pwanithreads.",
+      "score": 90.0,
+      "created_at": "2026-09-26T09:00:00Z",
+      "read_at": null,
+      "threat": {
+        "id": "b0a85e20-8d51-5fb7-8d55-0763eeb977fe",
+        "platform": "instagram",
+        "target_handle": "pwanlthreads",
+        "target_url": "https://instagram.com/pwanlthreads",
+        "avatar_url": "/seed/pt_subtle.png",
+        "composite_score": 90.0,
+        "verdict": "impersonation",
+        "status": "detected",
+        "first_seen_at": "2026-09-26T09:00:00Z",
+        "top_reason": {
+          "code": "HANDLE_LOOKALIKE",
+          "severity": "high",
+          "text": "Its name imitates Pwani Threads's official account @pwanithreads.",
+          "text_sw": "Jina lake linaiga akaunti rasmi ya Pwani Threads, @pwanithreads."
+        }
+      }
+    },
+    {
+      "id": "fc880d19-86a5-563a-8a05-37cbad711836",
+      "threat_id": "aee7afbd-7d25-5114-a2f1-5e47b5b2dc11",
+      "kind": "new_threat",
+      "title": "Impersonator detected: @pwanithreads_official_ke",
+      "body": "Uses a logo 100% similar to Pwani Threads's.",
+      "score": 99.0,
+      "created_at": "2026-09-24T09:00:00Z",
+      "read_at": null,
+      "threat": {
+        "id": "aee7afbd-7d25-5114-a2f1-5e47b5b2dc11",
+        "platform": "instagram",
+        "target_handle": "pwanithreads_official_ke",
+        "target_url": "https://instagram.com/pwanithreads_official_ke",
+        "avatar_url": "/seed/pt_blatant.png",
+        "composite_score": 99.0,
+        "verdict": "impersonation",
+        "status": "detected",
+        "first_seen_at": "2026-09-24T09:00:00Z",
+        "top_reason": {
+          "code": "LOGO_COPY",
+          "severity": "high",
+          "text": "Uses a logo 100% similar to Pwani Threads's.",
+          "text_sw": "Inatumia nembo inayofanana 100% na ya Pwani Threads."
+        }
+      }
+    }
+  ],
+  "unread_count": 2,
+  "server_time": "2026-09-27T09:00:00Z"
+}

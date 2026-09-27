@@ -1,0 +1,20 @@
+I am reporting an account that is impersonating my business, {{ merchant_name }}.
+
+Impersonating account: @{{ target_handle }} ({{ target_url }})
+Our official account(s): {{ official_handles | join(", ") }}
+
+Evidence recorded by Halisi (first seen {{ first_seen_on }}):
+{% if phash_distance is not none and visual_score is not none %}
+- Profile picture: perceptual-hash distance {{ phash_distance }}/64 from our registered logo (visual similarity {{ visual_score | round | int }}%).
+{% endif %}
+{% if identity_score is not none %}
+- Name/handle similarity to our official account: {{ identity_score | round | int }}%.
+{% endif %}
+{% if phones_local or extracted_tills %}
+- It asks customers to pay {{ (phones_local + extracted_tills) | join(", ") }}, which is not registered to our business.
+{% endif %}
+{% for reason in reasons_en %}
+- {{ reason }}
+{% endfor %}
+
+Please remove this account. It uses our identity to take payments from our customers.

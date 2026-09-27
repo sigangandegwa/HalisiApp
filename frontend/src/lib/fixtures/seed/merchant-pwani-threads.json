@@ -1,0 +1,28 @@
+{
+  "id": "22d3547a-f603-5b6e-a6af-c8d78ffb2ce3",
+  "business_name": "Pwani Threads",
+  "slug": "pwani-threads",
+  "logo_url": "/seed/pt_logo.png",
+  "category": "Fashion",
+  "location": "Mombasa",
+  "established_on": "2020-11-02",
+  "is_verified": true,
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "pwanithreads",
+      "url": "https://instagram.com/pwanithreads"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "pwanithreads",
+      "url": "https://tiktok.com/@pwanithreads"
+    }
+  ],
+  "payment": {
+    "type": "pochi",
+    "number": "+254700111222",
+    "account_name": "PWANI THREADS"
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

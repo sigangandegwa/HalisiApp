@@ -1,0 +1,65 @@
+{
+  "scan_id": "cb9cc7f0-3ed3-5980-8705-4eb1dea569fe",
+  "verdict": "no_match",
+  "score": 15.68,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "pwanifashionhouse",
+    "display_name": "Pwani Fashion House",
+    "url": "https://instagram.com/pwanifashionhouse",
+    "avatar_url": "/seed/pt_competitor.png",
+    "follower_count": 3100,
+    "post_count": 280,
+    "account_created_on": null,
+    "fetched_via": "seed"
+  },
+  "matched_merchant": null,
+  "dimensions": [
+    {
+      "key": "visual",
+      "label": "Logo match",
+      "score": 0.0,
+      "weight": 0.3,
+      "available": true,
+      "evidence": "pHash distance 32/64 · dHash distance 40/64"
+    },
+    {
+      "key": "identity",
+      "label": "Name & handle",
+      "score": 29.7,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "'pwanifashionhouse' resembles 'pwanithreads' (30% similar)"
+    },
+    {
+      "key": "payment",
+      "label": "Payment details",
+      "score": 25.0,
+      "weight": 0.25,
+      "available": true,
+      "evidence": "Till/Paybill 334455 is not registered to this business"
+    },
+    {
+      "key": "language",
+      "label": "Scam language",
+      "score": 10.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "'order now'"
+    },
+    {
+      "key": "account",
+      "label": "Account signals",
+      "score": 10.0,
+      "weight": 0.1,
+      "available": true,
+      "evidence": "280 posts · 3100 followers"
+    }
+  ],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": null,
+  "threat_id": null,
+  "elapsed_ms": 2
+}

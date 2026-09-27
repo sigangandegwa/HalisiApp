@@ -1,0 +1,19 @@
+Kwa timu ya Safaricom ya kupambana na ulaghai,
+
+Ninaripoti maelezo ya malipo ya M-Pesa yanayotumiwa na ukurasa bandia wa mitandao ya kijamii unaoiga biashara yangu, {{ merchant_name }}.
+
+{% if phones_local %}
+Namba zinazopokea pesa kwenye ukurasa bandia: {{ phones_local | join(", ") }}
+{% endif %}
+{% if extracted_tills %}
+Till/Paybill kwenye ukurasa bandia: {{ extracted_tills | join(", ") }}
+{% endif %}
+Ukurasa bandia: @{{ target_handle }} kwenye {{ target_platform }} ({{ target_url }}), ulionekana mara ya kwanza {{ first_seen_on }}.
+Njia yetu rasmi ya malipo: {{ safe_action_sw }}
+
+Jinsi wateja wanavyodanganywa:
+{% for reason in reasons_sw %}
+- {{ reason }}
+{% endfor %}
+
+Tafadhali chunguzeni maelezo ya malipo yaliyotajwa hapo juu. SMS za ulaghai pia zinaweza kutumwa kwa {{ sms_note }}.
