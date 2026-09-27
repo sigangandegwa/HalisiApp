@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "skills": {
+    "elite-product-studio": {
+      "source": "../../AppData/Local/Temp/eps_inspect/elite-product-studio",
+      "sourceType": "local",
+      "computedHash": "e4b7fc3c91d4f472c838f618c16ce5979fa2bbe0b57a1cccd24eb81610483cea"
+    },
+    "top-design": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "skillPath": "top-design/SKILL.md",
+      "computedHash": "915c4743240d9e4d8512c3500feb5235c04669feae81a994912ee0143c80a987"
+    }
+  }
+}
