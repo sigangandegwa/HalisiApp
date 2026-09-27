@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=280&section=header&text=Halisi&fontSize=90&animation=twinkling&fontAlignY=38&desc=AI-Powered%20Brand%20Impersonation%20Detection%20for%20Kenya&descAlignY=55&descAlign=50" alt="Halisi Banner" width="100%" />
 
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=27ae60&center=true&vCenter=true&width=600&lines=Stopping+M-Pesa+Fraud+Before+It+Happens;Detecting+Scam+Clones+with+AI;Automated+Safaricom+%26+Meta+Takedowns" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=27ae60&center=true&vCenter=true&width=600&lines=Stopping+M-Pesa+Fraud+Before+It+Happens;Detecting+Scam+Clones+with+AI;AI-Drafted+Takedown+Kits+in+English+%26+Swahili" alt="Typing SVG" />
 </div>
 
 <p align="center">
@@ -10,112 +10,102 @@
   <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"></a>
+  <a href="https://www.nvidia.com/en-us/"><img src="https://img.shields.io/badge/NVIDIA%20Brev%20%2B%20NIM-76B900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA Brev + NIM"></a>
 </p>
 
 ---
 
-## 🚨 The Problem: The "Send to Till" Scam
-In Kenya, social commerce is exploding, but so is impersonation fraud. Scammers clone legitimate Instagram and Facebook storefronts, steal their product photos, and funnel desperate customers into paying fraudulent M-Pesa Till numbers. The authentic brands lose their reputation, and customers lose their hard-earned money.
+## 🚨 The Problem: The Clone-and-Collect Scam
+In Kenya, social commerce runs on Instagram, Facebook, TikTok and WhatsApp, and payments run on M-Pesa. Scammers clone a trusted shop's page in minutes: they copy the logo and product photos, pick a look-alike handle (`nairobi_sneakervault_official_ke`), and ask customers to pay a personal number or a Pochi la Biashara. The customer loses money. The real business loses its reputation.
 
 ## 🛡️ The Solution: Halisi
-**Halisi** *(Swahili for Authentic/Real)* is a multi-modal AI detection engine built to automatically discover, score, and remediate brand impersonation across Kenyan social commerce. We bridge the gap between AI threat detection and actual financial/legal takedown workflows.
+**Halisi** *(Swahili for "authentic")* gives customers a verdict **before they pay**, and gives businesses a response kit **within the first minute** of a clone appearing.
 
-<br>
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Shield-Dark.svg" width="60" />
-  <h3>5-Dimensional Risk Scoring</h3>
-</div>
-
-Instead of just looking at the account name, Halisi's AI Engine computes a holistic `0-100` threat score using five concurrent modules:
-1. **Logo Perceptual Hashing:** Compares the target's avatar against the merchant's registered logo using pHash/dHash (`imagehash`).
-2. **Handle Typosquatting:** Evaluates Jaro-Winkler string distance (`rapidfuzz`) to catch sneaky username shifts (e.g., `nairobi_shoes` vs `nairobl_shoes`).
-3. **M-Pesa Till Verification:** Checks if the requested payment Till matches the merchant's official Safaricom records.
-4. **Bio Keyword Analysis:** Flags suspicious Kenyan scam tokens ("Pay before delivery", "Delivery countrywide").
-5. **Creation Date Discrepancy:** Flags brand new accounts pretending to be established 5-year-old brands.
+- 🔍 **Check a page**: paste a link and get **HALISI** (official), **FEKI** (impersonator), **TAHADHARI** (caution) or **HAIJULIKANI** (not verified), with plain-language reasons.
+- 💳 **Check a till or phone**: is this number registered to a verified business, or reported by other customers?
+- 🏅 **Halisi Verified**: a certificate page and QR story sticker merchants post, so customers have one trusted place to confirm the real page and till.
+- 📡 **Live merchant alerts**: in-app alerts in the Halisi dashboard (bell, toasts, and opt-in phone/browser notifications) with the evidence attached.
+- 📝 **AI-drafted response kit**: customer warnings in **English and Swahili**, Instagram/Facebook impersonation report text, and Safaricom and KE-CIRT/CC report drafts. The kit is grounded in computed evidence and **sent by the merchant**, never auto-filed.
 
 ---
 
-## 🏗️ Architecture & Data Flow
+## 🧠 How the engine decides
+
+Halisi separates **"who is this imitating?"** from **"how dangerous is it?"**. That's how it avoids flagging honest shops that happen to have similar names.
+
+| Dimension | Weight | Signal |
+| :-- | :-: | :-- |
+| Visual | 30% | Logo vs avatar: perceptual hashes (pHash/dHash) + CLIP ViT-B-32 embeddings on NVIDIA GPUs |
+| Identity | 25% | Handle and name look-alikes: separators, homoglyphs (`l`/`1`, `rn`/`m`), `_official_ke`-style affixes |
+| Payment | 25% | Phone numbers, tills, paybills or Pochi requests that aren't registered to the business |
+| Language | 10% | Weighted English/Swahili/Sheng scam phrases ("lipa kwanza", "pay before delivery") |
+| Account | 10% | New account, low activity, first seen recently |
+
+Missing signals lower the **confidence** instead of being guessed. Score ≥ 70 means impersonation; 40–69 means suspicious. Halisi never tells a user a page is "safe".
 
 ```mermaid
 graph TD
-    A[Mock Target Profiles / OpenGraph Scraper] -->|Raw Metadata| B(FastAPI Ingestion Engine)
-    B -->|Extract Image/Text| C{AI Scoring Matrix}
-    
-    C -->|pHash Matching| D[Logo Similarity]
-    C -->|Jaro-Winkler| E[Username Typosquatting]
-    C -->|Regex Matching| F[M-Pesa Verification]
-    
-    D --> G(Composite Risk Score 0-100)
-    E --> G
-    F --> G
-    
-    G -->|Score > 80| H[High Threat Alert]
-    
-    H -->|Push Notification| I[Telegram Alert Bot]
-    H -->|Generative AI| J[Automated Remediation Playbooks]
-    
-    J --> K(Safaricom Fraud Report)
-    J --> L(Meta Takedown Notice)
-    J --> M(Consumer Social Warning)
+    A[Link / handle / till] --> B{Official handle?}
+    B -- yes --> V[HALISI: official page]
+    B -- no --> C[Acquire target: seeded / OpenGraph / manual upload]
+    C --> D[Resemblance: logo hash + CLIP, handle look-alike]
+    C --> E[Malice: payment mismatch, scam language, account signals]
+    D --> F(Composite score 0-100 + confidence)
+    E --> F
+    F -->|>= 70| G[FEKI: threat created]
+    F -->|40-69| H[TAHADHARI]
+    F -->|< 40| I[HAIJULIKANI: not verified]
+    G --> J[In-app alert + browser notification]
+    G --> K[AI response kit via NVIDIA NIM, validated, human sends]
 ```
 
 ---
 
-## 🚀 Key Features
-* 🔍 **Public Link Checker:** Consumers can paste an Instagram/Facebook link and instantly get a Trust/Danger badge before sending any money.
-* 📊 **Merchant Dashboard:** A centralized radar for brands to track who is impersonating them in real-time.
-* 📝 **AI Playbook Generation:** Automatically drafts official Meta Copyright Takedown notices and Safaricom Fraud Escalation reports, ready to send with one click.
-* 🔔 **Instant Alerts:** Pushes critical threat alerts directly to the merchant's Telegram or via Africa's Talking SMS.
+## 💻 Tech Stack
+- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS v4, shadcn/ui, Motion + GSAP
+- **Backend:** FastAPI, Pydantic v2, HTTPX
+- **AI engine:** CLIP ViT-B-32 on **NVIDIA Brev** GPUs, imagehash, RapidFuzz; remediation LLM via **NVIDIA NIM** (Llama 3.1)
+- **Data:** Supabase Postgres + pgvector
+- **Alerts:** in-app (polling + service-worker notifications), no third-party messaging
 
 ---
 
-## 💻 Tech Stack Highlights
-- **Frontend:** Next.js 14, Tailwind CSS, shadcn/ui, Recharts
-- **Backend Core:** FastAPI, Pydantic, Celery (Async Tasks)
-- **AI Engine:** CLIP ViT-B-32 (Nvidia Brev GPUs), RapidFuzz, ImageHash
-- **Database:** Supabase PostgreSQL
-- **Integrations:** Telegram Bot API, Africa's Talking Sandbox, Playwright
+## 📚 Documentation
+| Doc | For |
+| :-- | :-- |
+| [AGENTS.md](AGENTS.md) | Tasks, owners, change log, review findings (start here) |
+| [docs/BACKEND.md](docs/BACKEND.md) | API contract, engine maths, security |
+| [docs/FRONTEND.md](docs/FRONTEND.md) | Design system, pages, motion |
+| [docs/BREV_ENGINE_SETUP.md](docs/BREV_ENGINE_SETUP.md) | GPU deployment + demo-day failover |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local setup, build order, demo script |
 
 ---
 
-## 🛠️ Quick Start (Developer Setup)
+## 🛠️ Quick Start
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/chiromo-tech-club/halisi.git
-   cd halisi
-   ```
+```bash
+git clone https://github.com/chiromo-tech-club/halisi.git
+cd halisi/backend
+uv venv --python 3.12 && source .venv/bin/activate   # Windows: .venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt -r requirements-dev.txt
+cp .env.example .env                                  # DEMO_MODE=true runs fully offline
+uvicorn app.main:app --reload --port 8080             # http://localhost:8080/docs
+```
 
-2. **Backend Setup**
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. **Start the FastAPI Server**
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-4. **Frontend Setup** *(Coming Soon)*
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+Frontend *(coming soon, TSK-005)*:
+```bash
+cd frontend && npm install && npm run dev             # http://localhost:3000
+```
 
 ---
 
 ## 👥 The Team
-Built with ❤️ by the **Chiromo Tech Club (University of Nairobi)** for the Hackathon:
-* **Dennis Kuria** - Tech Lead, Lead Architect, AI Pipeline & Database
-* **Collins Kimanzi** - UI/UX Engineer & Design System
-* **Geoffrey** - Ingestion Pipelines & External Integrations
-* **Ndegwa** - Frontend Application & UI Components
+Built by the **Chiromo Tech Club (University of Nairobi)**:
+* **Collins Kimanzi**: Lead, Detection Engine, AI Remediation & Design Direction
+* **Geoffrey**: Backend API, Data, Ingestion & Alerts
+* **Ndegwa**: Frontend Application & Experience
+
+With thanks to **Dennis Kuria** for early architecture work.
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=rect&color=27ae60&height=40&text=Securing%20Kenya's%20Digital%20Economy&fontColor=ffffff&fontSize=20&fontAlignY=65" />

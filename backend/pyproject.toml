@@ -1,7 +1,19 @@
+# Halisi backend tooling config (docs/BACKEND.md section 12).
+# Created early by TSK-015 so engine tests run; TSK-002 owns and extends it.
+
+[project]
+name = "halisi-backend"
+version = "0.2.0"
+requires-python = ">=3.11,<3.14"
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+pythonpath = ["."]          # import the app as `app.*` when running pytest from backend/
 
 [tool.ruff]
 line-length = 110
 target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

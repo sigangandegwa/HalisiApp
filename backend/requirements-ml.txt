@@ -1,0 +1,8 @@
+# Halisi engine: GPU/ML extras (CLIP ViT-B-32 embeddings). Install on the NVIDIA Brev instance.
+# On Linux x86_64 the default PyPI torch wheel ships with CUDA. For CPU-only Linux hosts use:
+#   uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+# See docs/BREV_ENGINE_SETUP.md.
+torch==2.14.0
+sentence-transformers==6.1.0
+transformers==5.17.0
+safetensors==0.8.0

@@ -1,5 +1,36 @@
+# Agent tooling (local only)
 /.claude
-/_pycache_
+
+# Secrets
 .env
-/node_modules
-/dist
+.env.*
+!.env.example
+!.env.local.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+
+# Model & data caches
+.cache/
+*.safetensors
+*.onnx
+
+# OS / editors
+.DS_Store
+Thumbs.db
