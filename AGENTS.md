@@ -4,7 +4,7 @@
 **Organization**: Chiromo Tech Club, University of Nairobi
 **Active team (3)**: Collins Kimanzi (Lead · Detection Engine · Design Direction), Geoffrey (API · Data · Ingestion · Alerts), Ndegwa (Frontend Application)
 **Unavailable**: Dennis Kuria. His tasks were redistributed on 2026-09-27 (see section 2).
-**Status**: Foundations. Hasher v2, matcher v2 and backend scaffolding merged; scorer, API endpoints, frontend and deployment not started.
+**Status**: Foundations. Hasher v2, matcher v2, scorer and backend scaffolding merged; API endpoints, frontend and deployment not started.
 **Version**: 0.2.0-alpha
 
 ---
