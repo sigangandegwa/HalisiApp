@@ -43,10 +43,55 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | **Geoffrey** | Backend API, Data, Ingestion, Alerts | Supabase schema, FastAPI core and endpoints, repository layer, security, URL parser, scraper, extractors, matcher, seeder, in-app alert dispatcher + endpoints | `backend/app/{api,core,ingestion,alerts,schemas}/*`, `backend/app/engine/matcher.py`, `database/*` |
 | **Ndegwa** | Frontend Application | Next.js app, all pages and components, data layer and proxy, demo mode, i18n | `frontend/*` |
 | ~~Dennis Kuria~~ | *Unavailable* | Former: engine, alerts, DB, security | Redistributed: engine/scorer → Collins; DB, alerts, security, matcher → Geoffrey |
+conflicts
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[ ] Pending` | — |
+| TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` | 001 |
+| TSK-003 | P0 | Engine | pHash prototype (`hasher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 015) | 002 |
+| TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
+| TSK-015 | P0 | Engine | **Hasher v2**: calibrated similarity, alpha/EXIF/square normalisation, dHash, no I/O in engine | Collins | `[ ] Pending` | 002 |
+| TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[x] Done` | 002 |
+| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[ ] Pending` | 002 |
+| TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[ ] Pending` | 015, 016, 021 |
+| TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[ ] Pending` | 002 |
+| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[ ] Pending` | 002, 008 |
+| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[ ] Pending` | 018 |
+| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[ ] Pending` | 018 |
+| TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | 015 |
+| TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | 008 |
+| TSK-012 | P1 | Alerts | Telegram alerts (HTML mode, photo, button, de-dup) + chat linking | Geoffrey | `[ ] Pending` | 018 |
+| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[ ] Pending` | 018 |
+| TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[ ] Pending` | 008 |
+| TSK-013 | P2 | Alerts | Africa's Talking SMS (sandbox simulator) | Geoffrey | `[ ] Pending` | 018 |
+| TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
+| TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[ ] Pending` | 006 |
+| TSK-030 | P2 | Alerts | Consumer Telegram checker bot (forward a link or number, get a verdict) | Geoffrey | `[ ] Pending` | 012, 022 |
+| TSK-036 | P2 | Alerts | USSD "check a till" menu via Africa's Talking (feature phones) | Geoffrey | `[ ] Pending` | 022 |
 
-**Review pairs:** Collins reviews Ndegwa's motion and design; Geoffrey reviews Collins's engine PRs for API fit; Ndegwa reviews API changes for frontend impact.
+### Frontend
 
----
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[ ] Pending` | — |
+| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[ ] Pending` | 005 |
+| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[ ] Pending` | 005 |
+| TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
+| TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
+| TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
+| TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[ ] Pending` | 020 |
+| TSK-011 | P1 | Merchant | Dashboard: KPIs + live threat feed with handle diffs | Ndegwa | `[ ] Pending` | 033 |
+| TSK-025 | P1 | Merchant | Threat detail Evidence Board + playbook tabs | Ndegwa | `[ ] Pending` | 011 |
+| TSK-026 | P1 | Merchant | Onboarding wizard with logo fingerprint grid | Ndegwa | `[ ] Pending` | 033 |
+| TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[ ] Pending` | 010, 031 |
+| TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[ ] Pending` | 010 |
+
+### Integration & demo
+
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-014 | P1 | QA / Demo | End-to-end test: public check → threat → Telegram → playbook; failover drill | All (lead: Geoffrey) | `[ ] Pending` | 010, 011, 012, 017 |
+| TSK-035 | P1 | Pitch | 3-minute script, sourced problem statistic, Q&A prep, screen-recording backup | Collins | `[ ] Pending` | 014 |
 
 ## 3. Priority Task Matrix & Sprint Board
 
