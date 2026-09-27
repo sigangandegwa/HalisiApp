@@ -73,8 +73,8 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[ ] Pending` | — |
-| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[ ] Pending` | 005 |
-| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[ ] Pending` | 005 |
+| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[x] Done` | 005 |
+| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[x] Done` | 005 |
 | TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
 | TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
 | TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
@@ -135,8 +135,8 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[x] Done` | — |
-| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[ ] Pending` | 005 |
-| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[ ] Pending` | 005 |
+| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[x] Done` | 005 |
+| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + middleware | Ndegwa | `[x] Done` | 005 |
 | TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
 | TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
 | TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
@@ -218,7 +218,7 @@ halisi/
 - [ ] Collins: Create GitHub repo `chiromo-tech-club/halisi`, add Geoffrey and Ndegwa, protect `main`.
 - [ ] Geoffrey: Create the Supabase project, run schema v2, share credentials via the password manager (TSK-001).
 - [x] Geoffrey: Backend boots in `DEMO_MODE` with no network (TSK-002).
-- [ ] Ndegwa: Next.js scaffold + proxy + fixtures working with the backend off (TSK-005, TSK-033).
+- [x] Ndegwa: Next.js scaffold + proxy + fixtures working with the backend off (TSK-005, TSK-033).
 - [ ] Collins: Brev account + credits, `halisi-engine` instance, ngrok static domain (TSK-017 part 1).
 
 ### Milestone 2: Detection brain
@@ -281,6 +281,7 @@ halisi/
 | 2026-09-27 14:38 | Gemini 3.1 Pro (High) / Geoffrey | UPDATE | `backend/app/engine/matcher.py`, `backend/tests/engine/test_matcher.py` | Implemented TSK-016 Matcher v2 with normalisation, homoglyphs, and language scoring. Added and passed golden tests |
 | 2026-09-27 14:58 | Gemini 3.1 Pro (High) / Geoffrey | CREATE | `backend/app/ingestion/extractors.py`, `backend/tests/engine/test_payment.py` | Implemented TSK-021 payment extractors (phones, tills, paybills, pochi). Added 12 passing tests |
 | 2026-09-27 15:19 | Gemini 3.1 Pro (High) / Geoffrey | CREATE | `backend/app/ingestion/mock_seeder.py`, `backend/app/ingestion/fixtures/*` | Implemented TSK-007 mock seeder. Programmatically generated PIL logos and variants for 3 fictional merchants, dumped 3 merchants, 9 threats, and 5 reports to JSON and copied them to frontend fixtures |
+| 2026-09-27 15:23 | Antigravity / Ndegwa | CREATE / UPDATE | `frontend/src/*`, `AGENTS.md` | TSK-020 & TSK-033 completed: Brand ornaments (Guilloche, Microprint, Stamp, Seal) and Styleguide page built. API layer configured with Next.js proxy, auth middleware, and demo JSON fixtures. |
 
 ---
 
