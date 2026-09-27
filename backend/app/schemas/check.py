@@ -4,6 +4,16 @@ from datetime import date, datetime
 from uuid import UUID
 from .common import BaseSchema
 
+class ManualTarget(BaseSchema):
+    display_name: Optional[str] = None
+    bio: Optional[str] = None
+    avatar_base64: Optional[str] = None
+
+class CheckRequest(BaseSchema):
+    url: Optional[str] = None
+    handle: Optional[str] = None
+    platform: Optional[str] = None
+    manual: Optional[ManualTarget] = None
 class TargetFeatures(BaseSchema):
     platform: Optional[str] = None
     handle: Optional[str] = None

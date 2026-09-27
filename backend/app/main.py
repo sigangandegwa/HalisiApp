@@ -7,6 +7,9 @@ from app.core.config import settings
 from app.core.repository import MemoryRepository, SupabaseRepository
 from app.api.v1.router import router as api_v1_router
 from app.core.logging import logger
+from app.core.security import limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -35,6 +38,9 @@ app = FastAPI(
     version="0.2.0",
     lifespan=lifespan
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
