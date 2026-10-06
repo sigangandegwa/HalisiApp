@@ -16,7 +16,7 @@ export default async function NotFound() {
         <Guilloche seed={404} layers={5} draw opacity={0.08} className="absolute -top-40 -right-60 -z-10 w-[900px] text-fg" />
         <div className="page-wrap grid gap-10 py-20 md:py-28">
           <div style={{ animation: "halisi-fade 400ms var(--ease-quart) both" }}>
-            <Stamp word="FEKI." color="var(--color-feki)" misregister size="xl" />
+            <Stamp word={t("verdict.impersonation.word")} color="var(--color-feki)" misregister size="xl" />
           </div>
           <div>
             <h1 className="type-display-m">

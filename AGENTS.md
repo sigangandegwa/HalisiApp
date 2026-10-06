@@ -89,10 +89,10 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
 | TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
 | TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[ ] Pending` | 020 |
-| TSK-011 | P1 | Merchant | Dashboard: KPIs + live threat feed with handle diffs | Ndegwa | `[ ] Pending` | 033 |
-| TSK-037 | P1 | Merchant | **In-app alerts UI**: bell + drawer, toast, tab badge, opt-in service-worker browser notifications | Ndegwa | `[ ] Pending` | 011, 012 |
-| TSK-025 | P1 | Merchant | Threat detail Evidence Board + playbook tabs | Ndegwa | `[ ] Pending` | 011 |
-| TSK-026 | P1 | Merchant | Onboarding wizard with logo fingerprint grid | Ndegwa | `[ ] Pending` | 033 |
+| TSK-011 | P1 | Merchant | Dashboard: KPIs + live threat feed with handle diffs | Ndegwa | `[x] Done` | 033 |
+| TSK-037 | P1 | Merchant | **In-app alerts UI**: bell + drawer, toast, tab badge, opt-in service-worker browser notifications | Ndegwa | `[x] Done` | 011, 012 |
+| TSK-025 | P1 | Merchant | Threat detail Evidence Board + playbook tabs | Ndegwa | `[x] Done` | 011 |
+| TSK-026 | P1 | Merchant | Onboarding wizard with logo fingerprint grid | Ndegwa | `[x] Done` | 033 |
 | TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[ ] Pending` | 010, 031 |
 | TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[ ] Pending` | 010 |
 
@@ -327,3 +327,4 @@ Findings from the full-repo review, and what was done about each. **Open** items
 - **Contract:** section 5.11 of BACKEND.md lists additive changes (merchant `id` on the public profile, 201s, ThreatDetail timestamps, playbook `language` / `contacts_verified` / `generator`, error codes, relative asset URLs). Frontend must copy `src/lib/fixtures/seed/assets/` to `public/seed/` for fixture mode.
 - Swahili strings (reasons, safe action, templates) need a fluent speaker's review (TSK-032).
 - Branch hygiene: rebase on `main` before opening a PR. Old bases re-added `.pyc` files, duplicated the board and committed conflict markers. Check `git diff --stat` for 0-byte files before committing (commit `a3cbb70` saved 10 frontend files empty).
+| 2026-09-27 18:00 | Antigravity / Agent | CREATE / UPDATE | rontend/src/app/dashboard/*, rontend/src/app/onboarding/*, rontend/src/components/merchant/* | Implemented Merchant Dashboard layout, pages, and components including live threats feed, Evidence Board, Onboarding wizard and In-app alerts.

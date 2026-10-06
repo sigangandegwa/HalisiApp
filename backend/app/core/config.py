@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     verify_payment_rate_limit: str = "20/minute"
     report_rate_limit: str = "5/minute"
     rate_limit_enabled: bool = True
-    trust_forwarded_for: bool = False  # true behind ngrok: read X-Forwarded-For from loopback peers only
+    trust_forwarded_for: bool = True   # true behind Render/cloud proxies to read X-Forwarded-For
     media_dir: Path = BACKEND_DIR / "media"  # onboarded merchant logos (served at /media)
     public_base_url: str = ""  # optional absolute prefix for asset URLs
 
@@ -38,8 +38,8 @@ class Settings(BaseSettings):
     supabase_service_role_key: str = ""
 
     # --- engine ---
-    enable_clip: bool = False
-    engine_device: str = "auto"  # auto | cuda | cpu
+    enable_clip: bool = True
+    engine_device: str = "cpu"  # auto | cuda | cpu
     clip_model: str = "clip-ViT-B-32"
     threat_threshold: float = 70.0
     suspicious_threshold: float = 40.0

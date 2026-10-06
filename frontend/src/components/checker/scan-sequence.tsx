@@ -292,7 +292,7 @@ function Comparison({ result, instant, color }: { result: CheckResult; instant: 
         </motion.figure>
 
         {!instant ? (
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-[18%] top-0 h-24 overflow-hidden lg:h-36">
+          <div aria-hidden="true" className="pointer-events-none absolute -z-10 inset-x-[18%] top-0 h-24 overflow-hidden lg:h-36">
             <div
               className="absolute inset-x-0 top-0 h-full"
               style={{ animation: `halisi-scanline 600ms var(--ease-in-out) ${BEAT.scan}ms both` }}

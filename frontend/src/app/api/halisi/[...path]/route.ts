@@ -9,7 +9,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { classify } from "@/lib/allowlist";
 import { resolveFixture } from "@/lib/fixtures/router";
-import { SESSION_COOKIE, verifySession } from "@/lib/session";
+import { SESSION_COOKIE, SESSION_TTL_SECONDS, signSession, verifySession } from "@/lib/session";
 import { FIXTURE_HEADER, callUpstream, demoFallbackEnabled } from "@/lib/upstream";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +66,34 @@ async function handle(req: NextRequest, ctx: Ctx): Promise<Response> {
     if (type) headers.set("content-type", type);
     const retry = upstream.headers.get("retry-after");
     if (retry) headers.set("retry-after", retry);
+
+    // Signup: registering a business and being logged into its dashboard is one request. Read the
+    // body to sign a session for the merchant that was just created, then still forward the exact
+    // same body and status to the client (so onboarding sees the normal MerchantCreated response).
+    if (path.length === 1 && path[0] === "merchants" && req.method === "POST" && upstream.ok) {
+      const bodyText = await upstream.text();
+      const res = new NextResponse(bodyText, { status: upstream.status, headers });
+      try {
+        const created: unknown = JSON.parse(bodyText);
+        const mid = created && typeof created === "object" && "id" in created ? String((created as { id: unknown }).id) : null;
+        const slug = created && typeof created === "object" && "slug" in created ? String((created as { slug: unknown }).slug) : null;
+        if (mid && slug) {
+          const token = await signSession({ mid, slug });
+          res.cookies.set(SESSION_COOKIE, token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production" && !req.nextUrl.hostname.match(/^(localhost|127\.0\.0\.1)$/),
+            sameSite: "lax",
+            path: "/",
+            maxAge: SESSION_TTL_SECONDS,
+          });
+        }
+      } catch {
+        // Malformed body or SESSION_SECRET not configured: the merchant was still created
+        // successfully, they just won't be auto-logged in. Let the response through either way.
+      }
+      return res;
+    }
+
     return new Response(upstream.body, { status: upstream.status, headers });
   }
 

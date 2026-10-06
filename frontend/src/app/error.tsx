@@ -12,7 +12,7 @@ export default function ErrorBoundary({ error, reset }: { error: Error & { diges
   }, [error]);
   return (
     <main id="content" className="page-wrap grid min-h-[70dvh] content-center gap-6 py-20">
-      <p className="type-caption text-fake">HITILAFU.</p>
+      <p className="type-caption text-fake">{t("verdict.error.word")}</p>
       <h1 className="type-display-m max-w-[18ch]">{t("error.title")}</h1>
       <p className="max-w-[44ch] text-lede text-fg-2">{t("error.body")}</p>
       {error.digest ? <p className="font-mono text-[0.75rem] text-fg-3">ref {error.digest}</p> : null}

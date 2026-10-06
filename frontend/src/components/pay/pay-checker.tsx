@@ -170,7 +170,7 @@ function PaymentResult({ lookup, onAgain }: { lookup: PaymentLookup; onAgain: ()
       <section className="relative overflow-hidden rounded-doc border border-feki bg-bg p-6 pl-8 before:absolute before:inset-y-0 before:left-0 before:w-1.5 before:bg-feki sm:p-8 sm:pl-10" style={{ animation: "halisi-fade-up 600ms var(--ease-out) both" }}>
         <p className="flex items-center gap-2 text-fake">
           <VerdictGlyph glyph="broken" />
-          <span className="type-caption">FEKI.</span>
+          <span className="type-caption">{t("verdict.impersonation.word")}</span>
         </p>
         <p className="mt-3 type-data text-[clamp(2rem,6vw,3.25rem)] leading-none">{lookup.display}</p>
         <h2 className="mt-4 font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-tight font-medium tracking-[-0.02em]">
@@ -187,7 +187,7 @@ function PaymentResult({ lookup, onAgain }: { lookup: PaymentLookup; onAgain: ()
     <section className="rounded-doc border border-line-strong bg-bg-2 p-6 sm:p-8" style={{ animation: "halisi-fade-up 600ms var(--ease-out) both" }}>
       <p className="flex items-center gap-2 text-fg-2">
         <VerdictGlyph glyph="circle" />
-        <span className="type-caption">HAIJULIKANI.</span>
+        <span className="type-caption">{t("verdict.no_match.word")}</span>
       </p>
       <p className="mt-3 type-data text-[clamp(2rem,6vw,3.25rem)] leading-none">{lookup.display}</p>
       <h2 className="mt-4 font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-tight font-medium tracking-[-0.02em]">{t("pay.unknown.title")}</h2>

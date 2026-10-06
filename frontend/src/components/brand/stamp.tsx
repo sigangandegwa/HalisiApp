@@ -103,8 +103,10 @@ export function Stamp({
   const style = {
     color,
     rotate: `${rotate}deg`,
-    // fit long words (HAIJULIKANI.) into narrow columns
-    "--stamp-fit": `${(88 / chars) * 1.55}vw`,
+    // Keeps chars * font-size roughly constant so every verdict word (4-11 letters: FAKE.,
+    // AUTHENTIC., UNVERIFIED., HAIJULIKANI., ...) fills about the same width instead of a long
+    // word rendering at the same size as a short one and overflowing its column.
+    "--stamp-fit": `${(88 / chars) * 0.85}vw`,
   } as CSSProperties;
   const text = misregister ? <Misregister offset={size === "sm" ? 1 : 2}>{word}</Misregister> : word;
   return (
