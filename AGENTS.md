@@ -56,25 +56,25 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[ ] Pending` | — |
-| TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` (follow-ups in section 10) | `[x] Done` (follow-ups closed 2026-09-27) |
+| TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` | — |
 | TSK-003 | P0 | Engine | pHash prototype (`hasher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 015) | 002 |
 | TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
 | TSK-015 | P0 | Engine | **Hasher v2**: calibrated similarity, alpha/EXIF/square normalisation, dHash, no I/O in engine | Collins | `[x] Done` | 002 |
-| TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[x] Done` (follow-ups in section 10) | `[x] Done` (v2.1: spec golden table restored) |
-| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[/] In Progress` (payment score done; extractors merged; `PaymentEvidence` adapter pending) | `[x] Done` |
+| TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[x] Done` | 002 |
+| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[x] Done` | 002 |
 | TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[x] Done` | 015, 016, 021 |
-| TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[/] In Progress` (reopened: v1 hard-coded its scores; rework via the real engine) | `[x] Done` (reworked: scores from the real engine) |
-| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[x] Done` | `[x] Done` |
-| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[x] Done` | `[x] Done` (DNS-rebinding pinning is a follow-up) |
-| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[x] Done` | `[/] In Progress` (code + respx tests done; live fetch from Brev untested) |
-| TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | `[/] In Progress` (`embeddings.py` done with a fake model; Brev deploy + calibration pending) |
-| TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | `[/] In Progress` (LLM + validator + EN/SW templates done; real NIM run and verified contacts pending) |
-| TSK-012 | P1 | Alerts | **In-app alerts backend**: `merchant_alerts` dispatcher (create, de-dup, score rise) + `/alerts` poll + mark-read (was Telegram) | Geoffrey | `[x] Done` | `[x] Done` |
-| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[x] Done` | `[x] Done` (no report-moderation endpoint yet) |
-| TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[ ] Pending` | `[x] Done` |
+| TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[x] Done` (reworked: scores from the real engine) | 002 |
+| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[x] Done` | 002, 008 |
+| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[x] Done` | 018 |
+| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[x] Done` | 018 |
+| TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[/] In Progress` (`embeddings.py` code done; Brev deploy + `calibrate.py` + calibration pending) | 015 |
+| TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[/] In Progress` (LLM client + validator + EN/SW Jinja2 templates done; real NIM run + verified contacts pending) | 008 |
+| TSK-012 | P1 | Alerts | **In-app alerts backend**: `merchant_alerts` dispatcher (create, de-dup, score rise) + `/alerts` poll + mark-read | Geoffrey | `[x] Done` | 018 |
+| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[x] Done` | 018 |
+| TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[x] Done` (`services/simulator.py` implemented) | 008 |
 | TSK-013 | — | Alerts | ~~Africa's Talking SMS~~ | — | `[-] Dropped` (no SMS) | — |
 | TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
-| TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[ ] Pending` | `[x] Done` (asyncio loop, off by default) |
+| TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[x] Done` (`ingestion/takedown_tracker.py` implemented; asyncio loop, off by default) | 018 |
 | TSK-030 | — | Alerts | ~~Consumer Telegram checker bot~~ | — | `[-] Dropped` (no Telegram) | — |
 | TSK-036 | P2 | Channels | USSD "check a till" menu via Africa's Talking (feature phones). Stretch only; needs an AT account | Geoffrey | `[ ] Pending` | 022 |
 
@@ -83,18 +83,18 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[x] Done` | — |
-| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[/] In Progress` (reopened: files were committed empty in `a3cbb70`) | 005 |
-| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + `proxy.ts` gate (Next 16) | Ndegwa | `[/] In Progress` (reopened: files were committed empty in `a3cbb70`) | 005 |
-| TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
-| TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
-| TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
-| TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[ ] Pending` | 020 |
+| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[x] Done` (components: `guilloche.tsx`, `microprint.tsx`, `stamp.tsx`, `seal.tsx`; styleguide page exists) | 005 |
+| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + `proxy.ts` gate (Next 16) | Ndegwa | `[x] Done` (`proxy.ts`, `allowlist.ts`, `session.ts`, fixture router all exist) | 005 |
+| TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[x] Done` (landing page, checker components, verdict stamp, scan sequence all implemented) | 020, 033 |
+| TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[x] Done` (`check/[scanId]/page.tsx` + `opengraph-image.tsx` + `share-actions.tsx`) | 010 |
+| TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[x] Done` (`pay/page.tsx` + `pay-checker.tsx`, `report/page.tsx` + `report-form.tsx`) | 033 |
+| TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[x] Done` (`v/[slug]/page.tsx` + `certificate.tsx` + `opengraph-image.tsx`) | 020 |
 | TSK-011 | P1 | Merchant | Dashboard: KPIs + live threat feed with handle diffs | Ndegwa | `[x] Done` | 033 |
 | TSK-037 | P1 | Merchant | **In-app alerts UI**: bell + drawer, toast, tab badge, opt-in service-worker browser notifications | Ndegwa | `[x] Done` | 011, 012 |
 | TSK-025 | P1 | Merchant | Threat detail Evidence Board + playbook tabs | Ndegwa | `[x] Done` | 011 |
 | TSK-026 | P1 | Merchant | Onboarding wizard with logo fingerprint grid | Ndegwa | `[x] Done` | 033 |
-| TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[ ] Pending` | 010, 031 |
-| TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[ ] Pending` | 010 |
+| TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[x] Done` (`simulator/page.tsx` + `simulator-client.tsx` implemented) | 010, 031 |
+| TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[x] Done` (`i18n/en.ts`, `i18n/sw.ts` with 303 lines of Swahili strings; `language-toggle.tsx`; needs fluent speaker review) | 010 |
 
 ### Integration & demo
 
@@ -102,6 +102,16 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-014 | P1 | QA / Demo | End-to-end test: public check → threat → in-app alert (phone notification) → playbook; failover drill | All (lead: Geoffrey) | `[ ] Pending` | 010, 011, 012, 017, 037 |
 | TSK-035 | P1 | Pitch | 3-minute script, sourced problem statistic, Q&A prep, screen-recording backup | Collins | `[ ] Pending` | 014 |
+
+### Future specification (from `future_spec.md` — P2/P3, post-MVP)
+
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-038 | P3 | Ingestion | **Meta Rights Manager API** integration for automated takedown requests on 95+ score threats | Geoffrey | `[ ] Pending` | 009, 017 |
+| TSK-039 | P3 | Ingestion | **Safaricom Daraja API** integration for live M-Pesa till/paybill owner validation | Geoffrey | `[ ] Pending` | 021 |
+| TSK-040 | P3 | Ingestion | **Playwright headless scraper** cluster upgrade for tier-2 (bypass aggressive anti-bot protections) + full-page CLIP screenshots | Geoffrey / Collins | `[ ] Pending` | 006, 017 |
+| TSK-041 | P2 | Channels | **SMS alerts** via Africa's Talking for critical impersonation notifications to merchants | Geoffrey | `[ ] Pending` | 012 |
+| TSK-042 | P3 | Channels | **Telegram consumer checker bot**: forward IG/TikTok links → instant Forensic Verdict response | Geoffrey | `[ ] Pending` | 018 |
 
 *Legend: `[ ] Pending` | `[/] In Progress` | `[x] Done` | `[!] Blocked` | `[-] Dropped`*
 
@@ -180,15 +190,15 @@ halisi/
 
 ### Milestone 3: Remediation & alerts
 
-- [ ] Collins: NIM playbooks + validator + EN/SW templates (TSK-009); prompts registered in section 7.
+- [/] Collins: NIM playbooks + validator + EN/SW templates (TSK-009); code done, real NIM run pending.
 - [x] Geoffrey: In-app alert rows created and de-duplicated; `/alerts` poll works (TSK-012).
 - [x] Geoffrey: Reports + payment lookup (TSK-022).
 
 ### Milestone 4: Frontend control center & public verification
 
-- [ ] Ndegwa: Landing + Forensic Verdict (TSK-010), share page (TSK-023), pay/report (TSK-034).
-- [ ] Ndegwa: Dashboard (TSK-011), in-app alerts with phone notification (TSK-037), threat detail (TSK-025), onboarding (TSK-026).
-- [ ] Ndegwa + Collins: Certificate + badge (TSK-024), simulator stage (TSK-027), Swahili (TSK-032).
+- [x] Ndegwa: Landing + Forensic Verdict (TSK-010), share page (TSK-023), pay/report (TSK-034).
+- [x] Ndegwa: Dashboard (TSK-011), in-app alerts with phone notification (TSK-037), threat detail (TSK-025), onboarding (TSK-026).
+- [x] Ndegwa + Collins: Certificate + badge (TSK-024), simulator stage (TSK-027), Swahili (TSK-032).
 
 ### Milestone 5: Rehearsal & live-demo hardening
 
