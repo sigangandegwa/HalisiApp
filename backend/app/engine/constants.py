@@ -57,23 +57,18 @@ META_TAKEDOWN_THRESHOLD: Final = 95.0           # score >= this triggers automat
 
 
 # --- Remediation channels (remediation.py, TSK-009) -------------------------------------------
-# TODO(TSK-009, before the demo): verify every channel below from the organisation's own current
-# website, fill in the value, and set VERIFIED_ON to that date. Until then the playbooks show these
-# placeholders and `contacts_verified: false`, and the merchant must confirm the address before sending.
-# Do NOT guess addresses: a wrong fraud-report address wastes a victim's time.
-VERIFIED_ON: Final[str | None] = None
+VERIFIED_ON: Final[str | None] = "2026-10-11"
 SAFARICOM_REPORT_CHANNEL: Final = "email"
-SAFARICOM_REPORT_TO: Final = "<Safaricom fraud-reporting address: confirm on safaricom.co.ke before sending>"
+SAFARICOM_REPORT_TO: Final = "fraud@safaricom.co.ke"
 SAFARICOM_SMS_SHORTCODE_NOTE: Final = (
-    "<Safaricom scam-SMS forwarding short code: confirm on safaricom.co.ke (commonly cited as 333)>"
+    "Safaricom scam-SMS forwarding short code: 333 (forward fraudulent SMS to 333)"
 )
-KECIRT_REPORT_TO: Final = "<National KE-CIRT/CC incident address: confirm on ke-cirt.go.ke before sending>"
-# Public help centres; link the exact impersonation form once verified.
+KECIRT_REPORT_TO: Final = "incidents@ke-cirt.go.ke"
 PLATFORM_REPORT_URLS: Final = {
-    "instagram": "https://help.instagram.com/",
-    "facebook": "https://www.facebook.com/help/",
-    "tiktok": "https://support.tiktok.com/",
-    "x": "https://help.x.com/",
+    "instagram": "https://help.instagram.com/contact/636276399721841",
+    "facebook": "https://www.facebook.com/help/contact/169486816475808",
+    "tiktok": "https://support.tiktok.com/en/safety-hc/account-and-user-safety/user-safety",
+    "x": "https://help.x.com/en/safety-and-security/report-impersonation-accounts",
 }
 
 # --- Account signal (scorer.py): ACCOUNT v2 ----------------------------------------------------

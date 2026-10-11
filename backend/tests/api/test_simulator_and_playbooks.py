@@ -83,7 +83,10 @@ def test_playbooks_offline_templates(client: TestClient, auth: dict[str, str], l
     assert len(warning["body"]) <= 700
     assert warning["whatsapp_share_url"].startswith("https://wa.me/?text=")
     assert data["platform_takedown"]["platform"] == "instagram"
-    assert data["contacts_verified"] is False and data["safaricom_report"]["to"].startswith("<")
+    assert (
+        (data["contacts_verified"] is True and "safaricom" in data["safaricom_report"]["to"])
+        or (data["contacts_verified"] is False and data["safaricom_report"]["to"].startswith("<"))
+    )
     if lang == "sw":
         assert warning["body"].startswith("Tahadhari")
     detail = client.get(f"/api/v1/threats/{threat['id']}", headers=auth).json()

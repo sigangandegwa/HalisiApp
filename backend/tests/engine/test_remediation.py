@@ -159,10 +159,11 @@ async def test_bad_json_and_errors_fall_back() -> None:
         assert out.consumer_warning.body.startswith("Tahadhari")
 
 
-async def test_no_llm_uses_templates_and_channels_are_placeholders() -> None:
+async def test_no_llm_uses_templates_and_channels_are_verified() -> None:
     out = await generate_playbooks(MemoryRepository(), THREAT, MERCHANT, "en", None)
     assert out.generator == "template"
-    assert out.contacts_verified is False
-    assert out.safaricom_report.to.startswith("<") and out.kecirt_report.to.startswith("<")
-    assert out.platform_takedown.report_url.startswith("https://help.instagram.com")
+    assert out.contacts_verified is True
+    assert out.safaricom_report.to == "fraud@safaricom.co.ke"
+    assert out.kecirt_report.to == "incidents@ke-cirt.go.ke"
+    assert out.platform_takedown.report_url == "https://help.instagram.com/contact/636276399721841"
     assert "distance 1/64" in out.platform_takedown.body
