@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="evidence-hash" content="{{ evidence_hash }}">
+  <title>Halisi Forensic Evidence Dossier · {{ bundle.case_id }}</title>
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --brand-navy: #0f2343;
+      --brand-gold: #c59b27;
+      --danger-red: #b91c1c;
+      --danger-bg: #fef2f2;
+      --warning-amber: #b45309;
+      --warning-bg: #fffbeb;
+      --success-green: #047857;
+      --success-bg: #f0fdf4;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-primary);
+      line-height: 1.5;
+      padding: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .dossier-wrapper {
+      border: 2px solid var(--brand-navy);
+      padding: 32px;
+      background: var(--bg-primary);
+      position: relative;
+    }
+    .security-watermark {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-size: 80px;
+      font-weight: 900;
+      color: rgba(15, 35, 67, 0.04);
+      text-transform: uppercase;
+      letter-spacing: 12px;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .content-layer {
+      position: relative;
+      z-index: 1;
+    }
+    .header-bar {
+      border-bottom: 2px solid var(--brand-navy);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .header-titles h1 {
+      font-size: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--brand-navy);
+      margin-bottom: 4px;
+    }
+    .header-titles p {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .case-badge {
+      text-align: right;
+    }
+    .case-id {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      background: #e2e8f0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+    .hash-banner {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+    }
+    .hash-banner .label {
+      color: #94a3b8;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .hash-value {
+      word-break: break-all;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .verdict-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+      align-items: center;
+    }
+    .verdict-stamp-box {
+      border: 3px dashed;
+      padding: 16px 20px;
+      border-radius: 8px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .verdict-stamp-box.impersonation {
+      border-color: var(--danger-red);
+      background-color: var(--danger-bg);
+      color: var(--danger-red);
+    }
+    .verdict-stamp-box.suspicious {
+      border-color: var(--warning-amber);
+      background-color: var(--warning-bg);
+      color: var(--warning-amber);
+    }
+    .verdict-stamp-box.clean {
+      border-color: var(--success-green);
+      background-color: var(--success-bg);
+      color: var(--success-green);
+    }
+    .stamp-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      margin-bottom: 4px;
+    }
+    .stamp-subtitle {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .score-summary {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 6px;
+    }
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .score-row.total {
+      border-top: 1px solid var(--border-color);
+      padding-top: 8px;
+      margin-bottom: 0;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--brand-navy);
+      border-bottom: 1.5px solid var(--border-color);
+      padding-bottom: 6px;
+      margin-top: 24px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .card {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 16px;
+      background: var(--bg-secondary);
+    }
+    .card-header {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .card-header.merchant { color: var(--success-green); }
+    .card-header.threat { color: var(--danger-red); }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .logo-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #e2e8f0;
+      border: 1px solid var(--border-color);
+    }
+    .logo-fallback {
+      width: 64px;
+      height: 64px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e2e8f0;
+      border: 1px solid var(--border-color);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .field-list {
+      font-size: 12px;
+    }
+    .field-row {
+      margin-bottom: 6px;
+    }
+    .field-label {
+      color: var(--text-muted);
+      font-size: 11px;
+      display: block;
+    }
+    .field-val {
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    table.dimensions-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+    table.dimensions-table th, table.dimensions-table td {
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      text-align: left;
+    }
+    table.dimensions-table th {
+      background: var(--brand-navy);
+      color: #fff;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    table.dimensions-table tr:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+    .meter-bar-container {
+      width: 100px;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .meter-bar {
+      height: 100%;
+      background: var(--brand-navy);
+    }
+    .legal-box {
+      border-left: 3px solid var(--brand-navy);
+      background: var(--bg-secondary);
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .legal-statute {
+      font-weight: 700;
+      color: var(--brand-navy);
+      margin-bottom: 4px;
+    }
+    .legal-citation {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .signature-block {
+      border-top: 2px solid var(--brand-navy);
+      padding-top: 16px;
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .sig-col h4 {
+      font-size: 12px;
+      color: var(--brand-navy);
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="dossier-wrapper">
+  <div class="security-watermark">HALISI FORENSIC</div>
+
+  <div class="content-layer">
+    <div class="header-bar">
+      <div class="header-titles">
+        <h1>Halisi Forensic Evidence Dossier</h1>
+        <p>Republic of Kenya · AI Brand Impersonation & Financial Fraud Analysis</p>
+      </div>
+      <div class="case-badge">
+        <div class="case-id">{{ bundle.case_id }}</div>
+        <div style="font-size: 11px; color: var(--text-muted);">Compiled: {{ bundle.generated_at }}</div>
+      </div>
+    </div>
+
+    <div class="hash-banner">
+      <div class="label">Cryptographic Evidence Integrity Seal (SHA-256)</div>
+      <div class="hash-value">{{ evidence_hash }}</div>
+    </div>
+
+    <div class="verdict-section">
+      <div class="verdict-stamp-box {{ bundle.scores.verdict }}">
+        <div class="stamp-title">{{ bundle.scores.verdict_sw }} · {{ bundle.scores.verdict }}</div>
+        <div class="stamp-subtitle">Composite Forensic Verdict</div>
+      </div>
+      <div class="score-summary">
+        <div class="score-row">
+          <span>Target Score:</span>
+          <span style="font-weight: 700;">{{ bundle.scores.composite_score }}%</span>
+        </div>
+        <div class="score-row">
+          <span>Confidence:</span>
+          <span>{{ (bundle.scores.confidence * 100) | round | int }}%</span>
+        </div>
+        <div class="score-row">
+          <span>Workflow Status:</span>
+          <span style="text-transform: capitalize;">{{ threat.status }}</span>
+        </div>
+        <div class="score-row total">
+          <span>Action Required:</span>
+          <span>{% if bundle.scores.composite_score >= 70 %}TAKEDOWN{% elif bundle.scores.composite_score >= 40 %}INVESTIGATE{% else %}MONITOR{% endif %}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">1. Comparative Identity & Profile Forensics</div>
+    <div class="side-by-side">
+      <div class="card">
+        <div class="card-header merchant">Authentic Registered Business</div>
+        <div class="logo-container">
+          {% if merchant.logo_url %}
+            <img class="logo-img" src="{{ merchant.logo_url }}" alt="Official Logo" onerror="this.style.display='none'">
+          {% else %}
+            <div class="logo-fallback">{{ merchant.business_name[:2] | upper }}</div>
+          {% endif %}
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">{{ merchant.business_name }}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Slug: {{ merchant.slug }}</div>
+          </div>
+        </div>
+        <div class="field-list">
+          <div class="field-row">
+            <span class="field-label">Official Handles:</span>
+            <span class="field-val">
+              {% for h in merchant.official_handles %}
+                @{{ h.handle }} ({{ h.platform }}){% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Logo pHash:</span>
+            <span class="field-val mono">{{ bundle.visual_hashes.merchant_phash or 'N/A' }}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Logo dHash:</span>
+            <span class="field-val mono">{{ bundle.visual_hashes.merchant_dhash or 'N/A' }}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Registered M-Pesa:</span>
+            <span class="field-val">{{ merchant.mpesa_type | upper }} {{ merchant.mpesa_number or 'None' }} ({{ merchant.mpesa_account_name or 'N/A' }})</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header threat">Target Impersonator Profile</div>
+        <div class="logo-container">
+          {% if threat.avatar_url %}
+            <img class="logo-img" src="{{ threat.avatar_url }}" alt="Target Avatar" onerror="this.style.display='none'">
+          {% else %}
+            <div class="logo-fallback">{{ threat.target_handle[:2] | upper }}</div>
+          {% endif %}
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">@{{ threat.target_handle }}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Platform: {{ threat.platform }}</div>
+          </div>
+        </div>
+        <div class="field-list">
+          <div class="field-row">
+            <span class="field-label">Target URL:</span>
+            <span class="field-val mono" style="font-size: 11px;">{{ threat.target_url }}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Avatar pHash:</span>
+            <span class="field-val mono">{{ bundle.visual_hashes.target_phash or 'N/A' }}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Avatar dHash:</span>
+            <span class="field-val mono">{{ bundle.visual_hashes.target_dhash or 'N/A' }}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Extracted Financial Numbers:</span>
+            <span class="field-val" style="color: var(--danger-red);">
+              {{ (threat.extracted_phones + threat.extracted_tills) | join(', ') or 'None detected' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">2. 5-Dimensional Forensic Analysis</div>
+    <table class="dimensions-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Weight</th>
+          <th>Score</th>
+          <th>Evidence / Finding</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Visual Identity (Logo / Avatar)</strong></td>
+          <td>30%</td>
+          <td>
+            <div class="meter-bar-container"><div class="meter-bar" style="width: {{ bundle.scores.visual_score or 0 }}%;"></div></div>
+            <strong>{{ bundle.scores.visual_score or 0 }}%</strong>
+          </td>
+          <td>
+            {% if bundle.visual_hashes.phash_hamming_distance is not none %}
+              pHash Distance: {{ bundle.visual_hashes.phash_hamming_distance }}/64 · Similarity: {{ bundle.visual_hashes.phash_similarity }}%
+            {% else %}
+              Visual comparison unavailable.
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Handle / Name Similarity</strong></td>
+          <td>25%</td>
+          <td>
+            <div class="meter-bar-container"><div class="meter-bar" style="width: {{ bundle.scores.identity_score or 0 }}%;"></div></div>
+            <strong>{{ bundle.scores.identity_score or 0 }}%</strong>
+          </td>
+          <td>Handle &amp; character similarity between target @{{ threat.target_handle }} and official merchant accounts.</td>
+        </tr>
+        <tr>
+          <td><strong>Payment Signal (M-Pesa / Till)</strong></td>
+          <td>25%</td>
+          <td>
+            <div class="meter-bar-container"><div class="meter-bar" style="width: {{ bundle.scores.payment_score or 0 }}%;"></div></div>
+            <strong>{{ bundle.scores.payment_score or 0 }}%</strong>
+          </td>
+          <td>
+            {% if threat.extracted_phones or threat.extracted_tills %}
+              Unauthorized destination: {{ (threat.extracted_phones + threat.extracted_tills) | join(', ') }}.
+            {% else %}
+              No unauthorized payment lines detected.
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Deceptive Language &amp; Tokens</strong></td>
+          <td>10%</td>
+          <td>
+            <div class="meter-bar-container"><div class="meter-bar" style="width: {{ bundle.scores.language_score or 0 }}%;"></div></div>
+            <strong>{{ bundle.scores.language_score or 0 }}%</strong>
+          </td>
+          <td>High-risk Kenyan urgency tokens (lipa kwanza, pay before delivery, whatsapp order).</td>
+        </tr>
+        <tr>
+          <td><strong>Account Age &amp; Authenticity Metrics</strong></td>
+          <td>10%</td>
+          <td>
+            <div class="meter-bar-container"><div class="meter-bar" style="width: {{ bundle.scores.account_score or 0 }}%;"></div></div>
+            <strong>{{ bundle.scores.account_score or 0 }}%</strong>
+          </td>
+          <td>Followers: {{ threat.follower_count if threat.follower_count is not none else 'Unknown' }} · Posts: {{ threat.post_count if threat.post_count is not none else 'Unknown' }}.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    {% if threat.reasons %}
+    <div class="section-title">3. Forensic Findings &amp; Reasons</div>
+    <div style="font-size: 12px; margin-bottom: 20px;">
+      {% for reason in threat.reasons %}
+        <div style="margin-bottom: 8px; padding-left: 12px; border-left: 2px solid {% if reason.severity == 'high' %}var(--danger-red){% else %}var(--warning-amber){% endif %};">
+          <strong style="text-transform: uppercase; font-size: 10px; color: {% if reason.severity == 'high' %}var(--danger-red){% else %}var(--warning-amber){% endif %};">[{{ reason.severity }}] {{ reason.code }}</strong>
+          <div>{{ reason.text }}</div>
+          {% if reason.text_sw %}
+            <div style="color: var(--text-muted); font-size: 11px;">Swahili: {{ reason.text_sw }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="section-title">4. Statutory Kenyan Legal Framework Citations</div>
+    {% for legal in bundle.legal_framework %}
+    <div class="legal-box">
+      <div class="legal-statute">{{ legal.statute }} — {{ legal.section }} ({{ legal.title }})</div>
+      <div class="legal-citation">&ldquo;{{ legal.citation }}&rdquo;</div>
+    </div>
+    {% endfor %}
+
+    <div class="section-title">5. Escalation &amp; Enforcement Authorities</div>
+    <div style="font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+      <div class="card">
+        <strong style="color: var(--brand-navy);">Safaricom Fraud Directorate</strong>
+        <p style="color: var(--text-muted); margin-top: 4px;">Channel: {{ bundle.verification.safaricom_channel }}</p>
+        <p class="mono">{{ bundle.verification.safaricom_report_to }}</p>
+        <p style="font-size: 11px; margin-top: 4px;">Scam-SMS forwarding shortcode: <strong>333</strong></p>
+      </div>
+      <div class="card">
+        <strong style="color: var(--brand-navy);">National KE-CIRT/CC</strong>
+        <p style="color: var(--text-muted); margin-top: 4px;">Cyber Incident Reporting Channel</p>
+        <p class="mono">{{ bundle.verification.kecirt_report_to }}</p>
+        <p style="font-size: 11px; margin-top: 4px;">Communications Authority of Kenya</p>
+      </div>
+    </div>
+
+    <div class="signature-block">
+      <div class="sig-col">
+        <h4>Halisi Detection &amp; Remediation Engine</h4>
+        <p>Chiromo Tech Club, University of Nairobi</p>
+        <p>Digital Cryptographic Seal Verified: {{ bundle.verification.verified_on or bundle.generated_at }}</p>
+      </div>
+      <div class="sig-col" style="text-align: right;">
+        <h4>Evidence Bundle Integrity</h4>
+        <p class="mono">SHA-256: {{ evidence_hash[:16] }}...{{ evidence_hash[-16:] }}</p>
+        <p>Tamper-evident legal record</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="bundle-data" type="application/json">{{ bundle | tojson }}</script>
+</body>
+</html>
