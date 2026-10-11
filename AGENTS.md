@@ -110,7 +110,7 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-038 | P3 | Ingestion | **Meta Rights Manager API** integration for automated takedown requests on 95+ score threats | Geoffrey | `[ ] Pending` | 009, 017 |
 | TSK-039 | P3 | Ingestion | **Safaricom Daraja API** integration for live M-Pesa till/paybill owner validation | Geoffrey | `[ ] Pending` | 021 |
 | TSK-040 | P3 | Ingestion | **Playwright headless scraper** cluster upgrade for tier-2 (bypass aggressive anti-bot protections) + full-page CLIP screenshots | Geoffrey / Collins | `[ ] Pending` | 006, 017 |
-| TSK-041 | P2 | Channels | **SMS alerts** via Africa's Talking for critical impersonation notifications to merchants | Geoffrey | `[ ] Pending` | 012 |
+| TSK-041 | P2 | Channels | **SMS alerts** via Africa's Talking for critical impersonation notifications to merchants | Geoffrey | `[x] Done` | 012 |
 | TSK-042 | P3 | Channels | **Telegram consumer checker bot**: forward IG/TikTok links → instant Forensic Verdict response | Geoffrey | `[ ] Pending` | 018 |
 
 *Legend: `[ ] Pending` | `[/] In Progress` | `[x] Done` | `[!] Blocked` | `[-] Dropped`*
@@ -251,6 +251,7 @@ halisi/
 | 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `backend/app/api/v1/router.py` | TSK-022: Rewrote router clean — removed unused `MerchantCreate` import, replaced `Dict`/`List`/`Optional` with built-ins, fixed all E501 long lines, changed `/reports` validation error from `HTTPException` (returns `{detail}`) to `JSONResponse(422, {error:{code,message}})` matching the global DomainException shape; moved `parse_input` import inside endpoint to avoid circular load. `ruff check` clean. |
 | 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `AGENTS.md` | TSK-022: Marked `[x] Done` in both task matrices and the Milestone 3 checklist; appended mutation log rows. Override O3 already wired in `scorer.py` (lines 269-271). |
 | 2026-10-11 11:35 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/channels/ussd.py`, `backend/app/api/v1/router.py`, `backend/tests/channels/test_ussd.py`, `AGENTS.md` | TSK-036: Implemented Africa's Talking USSD feature-phone check/report menu (`POST /api/v1/channels/ussd`), phone/till verify with `services.payments.verify_payment`, scam report intake, and comprehensive unit tests. |
+| 2026-10-11 11:37 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/alerts/sms.py`, `backend/app/alerts/dispatcher.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/tests/alerts/test_sms.py`, `AGENTS.md` | TSK-041: Implemented Africa's Talking SMS integration for critical impersonation alerts (`send_threat_sms`, `format_threat_sms`, `AfricasTalkingClient`, dispatcher integration for critical score >= 90 / new_threat, respx/sandbox unit tests). |
 
 ---
 

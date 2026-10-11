@@ -60,6 +60,25 @@ class Settings(BaseSettings):
     # --- in-app alerts ---
     alert_dedup_hours: float = 6.0
 
+    # --- channels (TSK-042) ---
+    telegram_bot_token: str = ""
+
+    # --- Africa's Talking SMS (TSK-041) ---
+    africastalking_username: str = ""
+    africastalking_api_key: str = ""
+    africastalking_sender_id: str = ""
+
+    # --- Safaricom Daraja API (TSK-039) ---
+    daraja_enabled: bool = True
+    daraja_env: str = "sandbox"  # sandbox | production
+    daraja_consumer_key: str = ""
+    daraja_consumer_secret: str = ""
+    daraja_base_url: str = ""  # optional override
+    daraja_initiator_name: str = "HalisiEngine"
+    daraja_security_credential: str = ""
+    daraja_shortcode: str = "600000"
+    daraja_timeout_seconds: float = 5.0
+
     # --- takedown tracker (TSK-029, P2) ---
     enable_takedown_tracker: bool = False
     takedown_check_hours: float = 12.0
@@ -83,6 +102,36 @@ class Settings(BaseSettings):
     def llm_available(self) -> bool:
         """Whether LLM calls may be made (never in DEMO_MODE, never without a key)."""
         return self.llm_enabled and bool(self.llm_api_key) and not self.demo_mode
+
+    @property
+    def telegram_configured(self) -> bool:
+        """Whether Telegram bot token is configured."""
+        return bool(self.telegram_bot_token)
+
+    @property
+    def sms_available(self) -> bool:
+        """Whether live Africa's Talking SMS calls can be made (never in DEMO_MODE)."""
+        return bool(self.africastalking_username and self.africastalking_api_key) and not self.demo_mode
+
+    @property
+    def daraja_api_base_url(self) -> str:
+        """Safaricom Daraja API base URL."""
+        if self.daraja_base_url:
+            return self.daraja_base_url.rstrip("/")
+        return (
+            "https://api.safaricom.co.ke"
+            if self.daraja_env == "production"
+            else "https://sandbox.safaricom.co.ke"
+        )
+
+    @property
+    def daraja_live_available(self) -> bool:
+        """Whether live Daraja API requests can be made (never in DEMO_MODE, never without credentials)."""
+        return (
+            self.daraja_enabled
+            and bool(self.daraja_consumer_key and self.daraja_consumer_secret)
+            and not self.demo_mode
+        )
 
 
 @lru_cache

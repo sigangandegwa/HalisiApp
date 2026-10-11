@@ -348,6 +348,7 @@ class CheckService:
                 threshold=self.settings.threat_threshold,
                 dedup_hours=self.settings.alert_dedup_hours,
                 now=outcome.scan.created_at,
+                settings=self.settings,
             )
 
     # -- builders --------------------------------------------------------------------------
@@ -491,3 +492,16 @@ class CheckService:
 
 
 BackgroundRunner = Callable[[CheckOutcome], Awaitable[None]]
+
+
+async def perform_check(
+    service: CheckService,
+    request: CheckRequest,
+    *,
+    source: ScanSource = "public_checker",
+    scan_id: UUID | None = None,
+    now: datetime | None = None,
+    acquired: Acquired | None = None,
+) -> CheckOutcome:
+    """Convenience wrapper around CheckService.check."""
+    return await service.check(request, source=source, scan_id=scan_id, now=now, acquired=acquired)
