@@ -55,7 +55,7 @@ This file is the single source of truth (SSOT) for coordinating human developers
 
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
-| TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[ ] Pending` | — |
+| TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[x] Done` | — |
 | TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` | — |
 | TSK-003 | P0 | Engine | pHash prototype (`hasher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 015) | 002 |
 | TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
@@ -137,7 +137,7 @@ halisi/
 │   ├── tech-stack.md                      [SPEC] stack choices
 │   └── calibration.md                     [PLANNED] TSK-017 threshold calibration table
 ├── database/
-│   └── schema.sql                         [DONE v2.2, NOT DEPLOYED] TSK-001 (v2.1 merchant_alerts; v2.2 target_profiles, avatar_dhash, status_history + upgrade block)
+│   └── schema.sql                         [DONE v2.2, DEPLOYED] TSK-001 (v2.1 merchant_alerts; v2.2 target_profiles, avatar_dhash, status_history + upgrade block)
 ├── backend/
 │   ├── requirements.txt                   [DONE] core (UTF-8, curated)
 │   ├── requirements-ml.txt                [DONE] torch + sentence-transformers (Brev)
@@ -176,7 +176,7 @@ halisi/
 ### Milestone 1: Environment & foundation
 
 - [ ] Collins: Create GitHub repo `chiromo-tech-club/halisi`, add Geoffrey and Ndegwa, protect `main`.
-- [ ] Geoffrey: Create the Supabase project, run schema v2, share credentials via the password manager (TSK-001).
+- [x] Geoffrey: Create the Supabase project, run schema v2, share credentials via the password manager (TSK-001).
 - [x] Geoffrey: Backend boots in `DEMO_MODE` with no network (TSK-002).
 - [x] Ndegwa: Next.js scaffold + proxy + fixtures working with the backend off (TSK-005, TSK-033).
 - [ ] Collins: Brev account + credits, `halisi-engine` instance, ngrok static domain (TSK-017 part 1).
@@ -257,6 +257,7 @@ halisi/
 | 2026-10-11 11:46 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/ingestion/meta_rights.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/app/engine/constants.py`, `backend/app/alerts/dispatcher.py`, `backend/app/main.py`, `backend/app/api/deps.py`, `backend/tests/ingestion/test_meta_rights.py`, `AGENTS.md` | TSK-038: Implemented Meta Rights Manager API automated takedowns for 95+ score threats (`MetaRightsManagerClient`, `submit_takedown`, `compute_evidence_hash`, deterministic simulation fallback, background dispatcher integration with `takedown_filed` threat status update & remediation log, and 12 passing unit tests). |
 | 2026-10-11 11:55 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/ingestion/playwright_scraper.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/tests/ingestion/test_playwright_scraper.py`, `AGENTS.md` | TSK-040: Implemented Playwright headless scraper upgrade for tier-2 + full-page CLIP screenshots (`PlaywrightScraper`, `scrape_with_playwright`, DOM/OpenGraph extraction, modal dismissal, full-page screenshot buffers, graceful OpenGraph/simulation fallback, and 13 unit tests). |
 | 2026-10-11 13:25 | Antigravity / Agent | UPDATE | `frontend/src/lib/utils.ts`, `frontend/src/components/ui/button.tsx`, `frontend/src/app/globals.css`, `AGENTS.md` | Fixed button text/background contrast across all pages: configured `extendTailwindMerge` in `utils.ts` with custom Halisi font-size (`text-body`, `text-small`, etc.) and color tokens (`text-bg`, `text-fg`, `text-paper`, etc.) so `twMerge` no longer strips `text-bg` when merging with `text-body` on `size="lg"` buttons; updated `size.lg` in `button.tsx` and excluded `.theme-paper` islands from `@custom-variant night`. |
+| 2026-10-11 13:56 | Antigravity / Geoffrey | UPDATE | `AGENTS.md` | TSK-001: Marked `[x] Done` across sprint board, architecture map, and Milestone 1 checklist after deploying schema v2 (`database/schema.sql`) to Supabase. |
 
 ---
 
