@@ -76,7 +76,7 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
 | TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[x] Done` (`ingestion/takedown_tracker.py` implemented; asyncio loop, off by default) | 018 |
 | TSK-030 | — | Alerts | ~~Consumer Telegram checker bot~~ | — | `[-] Dropped` (no Telegram) | — |
-| TSK-036 | P2 | Channels | USSD "check a till" menu via Africa's Talking (feature phones). Stretch only; needs an AT account | Geoffrey | `[ ] Pending` | 022 |
+| TSK-036 | P2 | Channels | USSD "check a till" menu via Africa's Talking (feature phones) | Geoffrey | `[x] Done` | 022 |
 
 ### Frontend
 
@@ -161,6 +161,7 @@ halisi/
 │   │   │   └── calibrate.py               [PLANNED] TSK-017
 │   │   ├── ingestion/ url_parser.py page_scraper.py extractors.py mock_seeder.py fixtures/   [PLANNED] TSK-006/007/018/021
 │   │   ├── alerts/ dispatcher.py                                                            [DONE] TSK-012 (in-app only)
+│   │   ├── channels/ ussd.py                                                                [DONE] TSK-036 Africa's Talking USSD
 │   │   └── schemas/ merchant.py threat.py check.py remediation.py report.py common.py   [DONE] Pydantic v2 (TSK-002)
 │   └── tests/engine/                      [DONE] hasher, imaging, matcher, payment, scorer tests · api/ [PLANNED]
 ├── frontend/                              [PLANNED] TSK-005, full tree in FRONTEND.md section 3.1
@@ -249,8 +250,10 @@ halisi/
 | 2026-09-27 16:30 | Antigravity / Agent | CREATE | `backend/tests/api/__init__.py` | TSK-022: Empty package init so pytest can discover `conftest.py` from the root `tests/` directory. |
 | 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `backend/app/api/v1/router.py` | TSK-022: Rewrote router clean — removed unused `MerchantCreate` import, replaced `Dict`/`List`/`Optional` with built-ins, fixed all E501 long lines, changed `/reports` validation error from `HTTPException` (returns `{detail}`) to `JSONResponse(422, {error:{code,message}})` matching the global DomainException shape; moved `parse_input` import inside endpoint to avoid circular load. `ruff check` clean. |
 | 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `AGENTS.md` | TSK-022: Marked `[x] Done` in both task matrices and the Milestone 3 checklist; appended mutation log rows. Override O3 already wired in `scorer.py` (lines 269-271). |
+| 2026-10-11 11:35 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/channels/ussd.py`, `backend/app/api/v1/router.py`, `backend/tests/channels/test_ussd.py`, `AGENTS.md` | TSK-036: Implemented Africa's Talking USSD feature-phone check/report menu (`POST /api/v1/channels/ussd`), phone/till verify with `services.payments.verify_payment`, scam report intake, and comprehensive unit tests. |
 
 ---
+
 
 
 ## 7. Prompt & Heuristic Registry
