@@ -53,6 +53,8 @@ MIN_CONFIDENCE_FOR_IMPERSONATION: Final = 0.5   # O4
 REASON_MIN_SCORE: Final = 60.0                  # a dimension at/above this emits a plain-language reason
 LANGUAGE_REASON_MIN: Final = 40.0               # one strong scam phrase ("lipa kwanza") is worth a reason
 REASON_HIGH_SEVERITY: Final = 85.0
+META_TAKEDOWN_THRESHOLD: Final = 95.0           # score >= this triggers automated takedown (TSK-038)
+
 
 # --- Remediation channels (remediation.py, TSK-009) -------------------------------------------
 # TODO(TSK-009, before the demo): verify every channel below from the organisation's own current

@@ -26,15 +26,16 @@ def test_official_numbers(client: TestClient) -> None:
 
 def test_reported_number_is_masked(client: TestClient) -> None:
     data = verify(client, "0798999111")
-    assert data == {
-        "kind": "phone",
-        "normalized": "+254798999111",
-        "display": "0798 *** 111",
-        "status": "reported",
-        "merchant": None,
-        "report_count": 2,
-        "linked_threats": 1,
-    }
+    assert data["kind"] == "phone"
+    assert data["normalized"] == "+254798999111"
+    assert data["display"] == "0798 *** 111"
+    assert data["status"] == "reported"
+    assert data["merchant"] is None
+    assert data["report_count"] == 2
+    assert data["linked_threats"] == 1
+    assert data["daraja"] is not None
+    assert data["daraja"]["is_valid"] is True
+    assert data["daraja"]["account_name"] == "JOHN KAMAU NJOROGE"
 
 
 def test_wa_me_link_is_accepted(client: TestClient) -> None:

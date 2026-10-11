@@ -26,6 +26,8 @@ from app.core.security import RateLimiter, Resolver, system_resolver
 from app.engine.embeddings import ClipEmbedder
 from app.engine.hasher import compute_hashes
 from app.ingestion import mock_seeder
+from app.ingestion.daraja import DarajaClient
+from app.ingestion.meta_rights import MetaRightsManagerClient
 from app.ingestion.takedown_tracker import tracker_loop
 from app.schemas.simulator import EngineHealth, HealthResponse
 from app.services.check import CheckService
@@ -96,6 +98,8 @@ def create_app(
         app.state.repo = repository
         app.state.clip = engine
         app.state.http = http
+        app.state.daraja = DarajaClient(settings, http=http)
+        app.state.meta_rights = MetaRightsManagerClient(settings, http_client=http)
         app.state.check_service = service
         app.state.rate_limiter = RateLimiter()
         app.state.hash_status = _hash_self_test()

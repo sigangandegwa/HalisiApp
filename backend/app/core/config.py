@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     fetch_timeout_seconds: float = 5.0
     image_timeout_seconds: float = 8.0
     profile_cache_seconds: int = 600
+    playwright_scraper_enabled: bool = False  # tier-2 headless browser cluster upgrade (TSK-040)
+    playwright_timeout_seconds: float = 15.0
 
     # --- LLM remediation (NVIDIA NIM, OpenAI-compatible) ---
     llm_enabled: bool = True
@@ -59,6 +61,32 @@ class Settings(BaseSettings):
 
     # --- in-app alerts ---
     alert_dedup_hours: float = 6.0
+
+    # --- channels (TSK-042) ---
+    telegram_bot_token: str = ""
+
+    # --- Africa's Talking SMS (TSK-041) ---
+    africastalking_username: str = ""
+    africastalking_api_key: str = ""
+    africastalking_sender_id: str = ""
+
+    # --- Safaricom Daraja API (TSK-039) ---
+    daraja_enabled: bool = True
+    daraja_env: str = "sandbox"  # sandbox | production
+    daraja_consumer_key: str = ""
+    daraja_consumer_secret: str = ""
+    daraja_base_url: str = ""  # optional override
+    daraja_initiator_name: str = "HalisiEngine"
+    daraja_security_credential: str = ""
+    daraja_shortcode: str = "600000"
+    daraja_timeout_seconds: float = 5.0
+
+    # --- Meta Rights Manager API (TSK-038) ---
+    meta_rights_manager_enabled: bool = False
+    meta_access_token: str = ""
+    meta_rights_manager_id: str = ""
+    meta_graph_api_url: str = ""  # optional override (default https://graph.facebook.com/v19.0)
+    meta_timeout_seconds: float = 10.0
 
     # --- takedown tracker (TSK-029, P2) ---
     enable_takedown_tracker: bool = False
@@ -83,6 +111,41 @@ class Settings(BaseSettings):
     def llm_available(self) -> bool:
         """Whether LLM calls may be made (never in DEMO_MODE, never without a key)."""
         return self.llm_enabled and bool(self.llm_api_key) and not self.demo_mode
+
+    @property
+    def playwright_available(self) -> bool:
+        """Whether Playwright scraper can run (enabled and not in DEMO_MODE)."""
+        return self.playwright_scraper_enabled and not self.demo_mode
+
+    @property
+    def telegram_configured(self) -> bool:
+        """Whether Telegram bot token is configured."""
+        return bool(self.telegram_bot_token)
+
+    @property
+    def sms_available(self) -> bool:
+        """Whether live Africa's Talking SMS calls can be made (never in DEMO_MODE)."""
+        return bool(self.africastalking_username and self.africastalking_api_key) and not self.demo_mode
+
+    @property
+    def daraja_api_base_url(self) -> str:
+        """Safaricom Daraja API base URL."""
+        if self.daraja_base_url:
+            return self.daraja_base_url.rstrip("/")
+        return (
+            "https://api.safaricom.co.ke"
+            if self.daraja_env == "production"
+            else "https://sandbox.safaricom.co.ke"
+        )
+
+    @property
+    def daraja_live_available(self) -> bool:
+        """Whether live Daraja API requests can be made (never in DEMO_MODE, never without credentials)."""
+        return (
+            self.daraja_enabled
+            and bool(self.daraja_consumer_key and self.daraja_consumer_secret)
+            and not self.demo_mode
+        )
 
 
 @lru_cache

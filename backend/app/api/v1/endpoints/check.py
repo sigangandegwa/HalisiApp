@@ -5,9 +5,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
-from app.api.deps import CheckLimit, VerifyLimit, get_check_service, get_repo
+from app.api.deps import CheckLimit, VerifyLimit, get_check_service, get_daraja_client, get_repo
 from app.core.errors import NotFoundError
 from app.core.repository import Repository
+from app.ingestion.daraja import DarajaClient
 from app.schemas.check import CheckRequest, CheckResult
 from app.schemas.common import ErrorResponse
 from app.schemas.report import VerifyPaymentResult
@@ -44,7 +45,8 @@ async def get_check(scan_id: UUID, repo: Annotated[Repository, Depends(get_repo)
 )
 async def verify(
     repo: Annotated[Repository, Depends(get_repo)],
+    daraja: Annotated[DarajaClient, Depends(get_daraja_client)],
     value: Annotated[str, Query(min_length=1, max_length=64)],
 ) -> VerifyPaymentResult:
     """Is this phone/till official, reported, or unknown ("not registered with Halisi")?"""
-    return await verify_payment(repo, value)
+    return await verify_payment(repo, value, daraja=daraja)

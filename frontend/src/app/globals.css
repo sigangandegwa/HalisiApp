@@ -7,7 +7,7 @@
  * "Colour is evidence": green = verified, vermilion = fake, amber = caution. Everything else is ink.
  */
 
-@custom-variant night (&:where(.theme-night, .theme-night *));
+@custom-variant night (&:where(.theme-night, .theme-night *):not(:where(.theme-paper, .theme-paper *)));
 
 @theme {
   /* Tailwind's default palette, radii and easings are removed so only tokens exist. */

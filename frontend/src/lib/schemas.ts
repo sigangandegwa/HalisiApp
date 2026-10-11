@@ -145,6 +145,17 @@ export const MerchantPublic = z.object({
 });
 export type MerchantPublic = z.infer<typeof MerchantPublic>;
 
+export const DarajaValidation = z.object({
+  is_valid: z.boolean(),
+  account_name: z.string().nullable().optional(),
+  account_type: z.string().nullable().optional(),
+  kyc_status: z.string().nullable().optional(),
+  source: z.string(),
+  error_message: z.string().nullable().optional(),
+  operator: z.string().optional(),
+});
+export type DarajaValidation = z.infer<typeof DarajaValidation>;
+
 export const PaymentLookup = z.object({
   kind: z.string(), // "phone" | "till" | "paybill"
   normalized: z.string(),
@@ -153,6 +164,7 @@ export const PaymentLookup = z.object({
   merchant: MerchantPublic.nullable().optional().transform((v) => v ?? null),
   report_count: z.number().int(),
   linked_threats: z.number().int(),
+  daraja: DarajaValidation.nullable().optional(),
 });
 export type PaymentLookup = z.infer<typeof PaymentLookup>;
 

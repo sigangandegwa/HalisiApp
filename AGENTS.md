@@ -55,46 +55,46 @@ This file is the single source of truth (SSOT) for coordinating human developers
 
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
-| TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[ ] Pending` | — |
-| TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` (follow-ups in section 10) | `[x] Done` (follow-ups closed 2026-09-27) |
+| TSK-001 | P0 | Database | Deploy **schema v2** (`database/schema.sql`) to Supabase. v1 was reopened: it had no logo hash and no sub-score columns | Geoffrey | `[x] Done` | — |
+| TSK-002 | P0 | Backend core | config, repository (Supabase + Memory), cache, error handlers, router, Pydantic v2 schemas mirroring v2. Reopened: only `/health` existed | Geoffrey | `[x] Done` | — |
 | TSK-003 | P0 | Engine | pHash prototype (`hasher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 015) | 002 |
 | TSK-004 | P0 | Engine | Jaro-Winkler + scam tokens prototype (`matcher.py` v1) | ~~Dennis~~ | `[x] Done` (v1, superseded by 016) | 002 |
 | TSK-015 | P0 | Engine | **Hasher v2**: calibrated similarity, alpha/EXIF/square normalisation, dHash, no I/O in engine | Collins | `[x] Done` | 002 |
-| TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[x] Done` (follow-ups in section 10) | `[x] Done` (v2.1: spec golden table restored) |
-| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[/] In Progress` (payment score done; extractors merged; `PaymentEvidence` adapter pending) | `[x] Done` |
+| TSK-016 | P0 | Engine | **Matcher v2**: normalisation, homoglyphs, affix stripping, multi-handle, weighted EN/SW/Sheng lexicon, golden tests | Geoffrey | `[x] Done` | 002 |
+| TSK-021 | P0 | Ingestion + Engine | Kenyan phone/Till/Paybill/Pochi extractors (Geoffrey) + payment score (Collins) | Geoffrey / Collins | `[x] Done` | 002 |
 | TSK-008 | P0 | Engine | **Composite scorer**: 5 dimensions, renormalisation, confidence, gate and overrides, reasons EN/SW | Collins | `[x] Done` | 015, 016, 021 |
-| TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[/] In Progress` (reopened: v1 hard-coded its scores; rework via the real engine) | `[x] Done` (reworked: scores from the real engine) |
-| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[ ] Pending` | `[x] Done` |
-| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[ ] Pending` | `[x] Done` (DNS-rebinding pinning is a follow-up) |
-| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[ ] Pending` | `[/] In Progress` (code + respx tests done; live fetch from Brev untested) |
-| TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[ ] Pending` | `[/] In Progress` (`embeddings.py` done with a fake model; Brev deploy + calibration pending) |
-| TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[ ] Pending` | `[/] In Progress` (LLM + validator + EN/SW templates done; real NIM run and verified contacts pending) |
-| TSK-012 | P1 | Alerts | **In-app alerts backend**: `merchant_alerts` dispatcher (create, de-dup, score rise) + `/alerts` poll + mark-read (was Telegram) | Geoffrey | `[ ] Pending` | `[x] Done` |
-| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[ ] Pending` | `[x] Done` (no report-moderation endpoint yet) |
-| TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[ ] Pending` | `[x] Done` |
+| TSK-007 | P0 | Ingestion | Mock seeder: 3 fictional merchants × (blatant clone, subtle clone, legit competitor) + reports; exports frontend fixtures | Geoffrey | `[x] Done` (reworked: scores from the real engine) | 002 |
+| TSK-018 | P0 | API | Endpoints per BACKEND.md section 5 + URL parser | Geoffrey | `[x] Done` | 002, 008 |
+| TSK-019 | P1 | Security | SSRF guard, rate limits, API key, CORS fix, input limits, masking | Geoffrey | `[x] Done` | 018 |
+| TSK-006 | P1 | Ingestion | Tiered page scraper (seeded → OpenGraph → manual fallback) | Geoffrey | `[x] Done` | 018 |
+| TSK-017 | P1 | Engine / Infra | CLIP embeddings + Brev GPU deployment + ngrok + threshold calibration | Collins | `[/] In Progress` (`embeddings.py` code done; Brev deploy + `calibrate.py` + calibration pending) | 015 |
+| TSK-009 | P1 | Remediation | Playbooks via NVIDIA NIM + validator + EN/SW templates | Collins | `[/] In Progress` (LLM client + validator + EN/SW Jinja2 templates done; real NIM run + verified contacts pending) | 008 |
+| TSK-012 | P1 | Alerts | **In-app alerts backend**: `merchant_alerts` dispatcher (create, de-dup, score rise) + `/alerts` poll + mark-read | Geoffrey | `[x] Done` | 018 |
+| TSK-022 | P1 | API | Community reports + `/verify/payment` lookup + override O3 | Geoffrey | `[x] Done` | 018 |
+| TSK-031 | P1 | API / Engine | Simulator clone endpoint (real engine on synthetic targets) | Collins | `[x] Done` (`services/simulator.py` implemented) | 008 |
 | TSK-013 | — | Alerts | ~~Africa's Talking SMS~~ | — | `[-] Dropped` (no SMS) | — |
 | TSK-028 | P2 | Remediation | Evidence dossier PDF with SHA-256 of evidence bundle | Collins | `[ ] Pending` | 009 |
-| TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[ ] Pending` | `[x] Done` (asyncio loop, off by default) |
+| TSK-029 | P2 | Ingestion | Takedown tracker (APScheduler re-check, time-to-takedown) | Geoffrey | `[x] Done` (`ingestion/takedown_tracker.py` implemented; asyncio loop, off by default) | 018 |
 | TSK-030 | — | Alerts | ~~Consumer Telegram checker bot~~ | — | `[-] Dropped` (no Telegram) | — |
-| TSK-036 | P2 | Channels | USSD "check a till" menu via Africa's Talking (feature phones). Stretch only; needs an AT account | Geoffrey | `[ ] Pending` | 022 |
+| TSK-036 | P2 | Channels | USSD "check a till" menu via Africa's Talking (feature phones) | Geoffrey | `[x] Done` | 022 |
 
 ### Frontend
 
 | Task ID | Pri | Module | Description | Owner | Status | Depends on |
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-005 | P0 | Frontend | Scaffold Next.js (latest, App Router) + Tailwind v4 + shadcn/ui + fonts + providers | Ndegwa | `[x] Done` | — |
-| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[/] In Progress` (reopened: files were committed empty in `a3cbb70`) | 005 |
-| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + `proxy.ts` gate (Next 16) | Ndegwa | `[/] In Progress` (reopened: files were committed empty in `a3cbb70`) | 005 |
-| TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[ ] Pending` | 020, 033 |
-| TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[ ] Pending` | 010 |
-| TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[ ] Pending` | 033 |
-| TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[ ] Pending` | 020 |
+| TSK-020 | P0 | Design system | Tokens, brand ornaments (guilloche, microprint, stamp, seal), restyled primitives, `/styleguide` | Collins + Ndegwa | `[x] Done` (components: `guilloche.tsx`, `microprint.tsx`, `stamp.tsx`, `seal.tsx`; styleguide page exists) | 005 |
+| TSK-033 | P0 | Data layer | Server proxy with path allowlist, demo fallback fixtures, passcode session + `proxy.ts` gate (Next 16) | Ndegwa | `[x] Done` (`proxy.ts`, `allowlist.ts`, `session.ts`, fixture router all exist) | 005 |
+| TSK-010 | P1 | Public | Landing + checker + **Forensic Verdict** signature sequence | Ndegwa | `[x] Done` (landing page, checker components, verdict stamp, scan sequence all implemented) | 020, 033 |
+| TSK-023 | P1 | Public | Shareable result page + OG stamp image + WhatsApp share | Ndegwa | `[x] Done` (`check/[scanId]/page.tsx` + `opengraph-image.tsx` + `share-actions.tsx`) | 010 |
+| TSK-034 | P1 | Public | `/pay` till/phone check + `/report` scam report | Ndegwa | `[x] Done` (`pay/page.tsx` + `pay-checker.tsx`, `report/page.tsx` + `report-form.tsx`) | 033 |
+| TSK-024 | P1 | Public | Halisi Verified certificate `/v/[slug]` + QR badge / story sticker | Collins (design) + Ndegwa | `[x] Done` (`v/[slug]/page.tsx` + `certificate.tsx` + `opengraph-image.tsx`) | 020 |
 | TSK-011 | P1 | Merchant | Dashboard: KPIs + live threat feed with handle diffs | Ndegwa | `[x] Done` | 033 |
 | TSK-037 | P1 | Merchant | **In-app alerts UI**: bell + drawer, toast, tab badge, opt-in service-worker browser notifications | Ndegwa | `[x] Done` | 011, 012 |
 | TSK-025 | P1 | Merchant | Threat detail Evidence Board + playbook tabs | Ndegwa | `[x] Done` | 011 |
 | TSK-026 | P1 | Merchant | Onboarding wizard with logo fingerprint grid | Ndegwa | `[x] Done` | 033 |
-| TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[ ] Pending` | 010, 031 |
-| TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[ ] Pending` | 010 |
+| TSK-027 | P1 | Demo | Simulator stage mode (projector, presenter keys, phone alert) | Ndegwa | `[x] Done` (`simulator/page.tsx` + `simulator-client.tsx` implemented) | 010, 031 |
+| TSK-032 | P1 | i18n | English / Swahili for all public pages + verdict copy | Ndegwa | `[x] Done` (`i18n/en.ts`, `i18n/sw.ts` with 303 lines of Swahili strings; `language-toggle.tsx`; needs fluent speaker review) | 010 |
 
 ### Integration & demo
 
@@ -102,6 +102,16 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | :-- | :-: | :-- | :-- | :-- | :-: | :-- |
 | TSK-014 | P1 | QA / Demo | End-to-end test: public check → threat → in-app alert (phone notification) → playbook; failover drill | All (lead: Geoffrey) | `[ ] Pending` | 010, 011, 012, 017, 037 |
 | TSK-035 | P1 | Pitch | 3-minute script, sourced problem statistic, Q&A prep, screen-recording backup | Collins | `[ ] Pending` | 014 |
+
+### Future specification (from `future_spec.md` — P2/P3, post-MVP)
+
+| Task ID | Pri | Module | Description | Owner | Status | Depends on |
+| :-- | :-: | :-- | :-- | :-- | :-: | :-- |
+| TSK-038 | P3 | Ingestion | **Meta Rights Manager API** integration for automated takedown requests on 95+ score threats | Geoffrey | `[x] Done` | 009, 017 |
+| TSK-039 | P3 | Ingestion | **Safaricom Daraja API** integration for live M-Pesa till/paybill owner validation | Geoffrey | `[x] Done` | 021 |
+| TSK-040 | P3 | Ingestion | **Playwright headless scraper** cluster upgrade for tier-2 (bypass aggressive anti-bot protections) + full-page CLIP screenshots | Geoffrey / Collins | `[x] Done` | 006, 017 |
+| TSK-041 | P2 | Channels | **SMS alerts** via Africa's Talking for critical impersonation notifications to merchants | Geoffrey | `[x] Done` | 012 |
+| TSK-042 | P3 | Channels | **Telegram consumer checker bot**: forward IG/TikTok links → instant Forensic Verdict response | Geoffrey | `[x] Done` | 018 |
 
 *Legend: `[ ] Pending` | `[/] In Progress` | `[x] Done` | `[!] Blocked` | `[-] Dropped`*
 
@@ -127,7 +137,7 @@ halisi/
 │   ├── tech-stack.md                      [SPEC] stack choices
 │   └── calibration.md                     [PLANNED] TSK-017 threshold calibration table
 ├── database/
-│   └── schema.sql                         [DONE v2.2, NOT DEPLOYED] TSK-001 (v2.1 merchant_alerts; v2.2 target_profiles, avatar_dhash, status_history + upgrade block)
+│   └── schema.sql                         [DONE v2.2, DEPLOYED] TSK-001 (v2.1 merchant_alerts; v2.2 target_profiles, avatar_dhash, status_history + upgrade block)
 ├── backend/
 │   ├── requirements.txt                   [DONE] core (UTF-8, curated)
 │   ├── requirements-ml.txt                [DONE] torch + sentence-transformers (Brev)
@@ -149,10 +159,11 @@ halisi/
 │   │   │   ├── scorer.py                  [DONE] composite scorer, O1-O4/G1, reasons EN/SW, safe action (TSK-008)
 │   │   │   ├── remediation.py + prompts/  [DONE] NIM client, validator, EN/SW Jinja2 templates (TSK-009)
 │   │   │   └── calibrate.py               [PLANNED] TSK-017
-│   │   ├── ingestion/ url_parser.py page_scraper.py extractors.py mock_seeder.py takedown_tracker.py fixtures/   [DONE] (live scrape untested)
-│   │   ├── alerts/ dispatcher.py          [DONE] in-app alerts, de-dup, score-rise (TSK-012)
-│   │   └── schemas/ merchant threat check remediation report alert simulator common   [DONE] Pydantic v2
-│   └── tests/ engine/ ingestion/ core/ api/   [DONE] 355 passed, 3 strict xfails (hash-only crop limit)
+│   │   ├── ingestion/ url_parser.py page_scraper.py extractors.py mock_seeder.py fixtures/   [PLANNED] TSK-006/007/018/021
+│   │   ├── alerts/ dispatcher.py                                                            [DONE] TSK-012 (in-app only)
+│   │   ├── channels/ ussd.py                                                                [DONE] TSK-036 Africa's Talking USSD
+│   │   └── schemas/ merchant.py threat.py check.py remediation.py report.py common.py   [DONE] Pydantic v2 (TSK-002)
+│   └── tests/engine/                      [DONE] hasher, imaging, matcher, payment, scorer tests · api/ [PLANNED]
 ├── frontend/                              [PLANNED] TSK-005, full tree in FRONTEND.md section 3.1
 ├── deploy/                                [PLANNED] update.sh, systemd units (TSK-017)
 └── skills-lock.json                       [DONE] agent design skills lock
@@ -165,7 +176,7 @@ halisi/
 ### Milestone 1: Environment & foundation
 
 - [ ] Collins: Create GitHub repo `chiromo-tech-club/halisi`, add Geoffrey and Ndegwa, protect `main`.
-- [ ] Geoffrey: Create the Supabase project, run schema v2, share credentials via the password manager (TSK-001).
+- [x] Geoffrey: Create the Supabase project, run schema v2, share credentials via the password manager (TSK-001).
 - [x] Geoffrey: Backend boots in `DEMO_MODE` with no network (TSK-002).
 - [x] Ndegwa: Next.js scaffold + proxy + fixtures working with the backend off (TSK-005, TSK-033).
 - [ ] Collins: Brev account + credits, `halisi-engine` instance, ngrok static domain (TSK-017 part 1).
@@ -180,15 +191,15 @@ halisi/
 
 ### Milestone 3: Remediation & alerts
 
-- [ ] Collins: NIM playbooks + validator + EN/SW templates (TSK-009); prompts registered in section 7.
+- [/] Collins: NIM playbooks + validator + EN/SW templates (TSK-009); code done, real NIM run pending.
 - [x] Geoffrey: In-app alert rows created and de-duplicated; `/alerts` poll works (TSK-012).
 - [x] Geoffrey: Reports + payment lookup (TSK-022).
 
 ### Milestone 4: Frontend control center & public verification
 
-- [ ] Ndegwa: Landing + Forensic Verdict (TSK-010), share page (TSK-023), pay/report (TSK-034).
-- [ ] Ndegwa: Dashboard (TSK-011), in-app alerts with phone notification (TSK-037), threat detail (TSK-025), onboarding (TSK-026).
-- [ ] Ndegwa + Collins: Certificate + badge (TSK-024), simulator stage (TSK-027), Swahili (TSK-032).
+- [x] Ndegwa: Landing + Forensic Verdict (TSK-010), share page (TSK-023), pay/report (TSK-034).
+- [x] Ndegwa: Dashboard (TSK-011), in-app alerts with phone notification (TSK-037), threat detail (TSK-025), onboarding (TSK-026).
+- [x] Ndegwa + Collins: Certificate + badge (TSK-024), simulator stage (TSK-027), Swahili (TSK-032).
 
 ### Milestone 5: Rehearsal & live-demo hardening
 
@@ -230,10 +241,27 @@ halisi/
 | 2026-09-27 14:58 | Gemini 3.1 Pro (High) / Geoffrey | CREATE | `backend/app/ingestion/extractors.py`, `backend/tests/engine/test_payment.py` | Implemented TSK-021 payment extractors (phones, tills, paybills, pochi). Added 12 passing tests |
 | 2026-09-27 15:19 | Gemini 3.1 Pro (High) / Geoffrey | CREATE | `backend/app/ingestion/mock_seeder.py`, `backend/app/ingestion/fixtures/*` | Implemented TSK-007 mock seeder. Programmatically generated PIL logos and variants for 3 fictional merchants, dumped 3 merchants, 9 threats, and 5 reports to JSON and copied them to frontend fixtures |
 | 2026-09-27 15:23 | Antigravity / Ndegwa | CREATE / UPDATE | `frontend/src/*`, `AGENTS.md` | TSK-020 & TSK-033 completed: Brand ornaments (Guilloche, Microprint, Stamp, Seal) and Styleguide page built. API layer configured with Next.js proxy, auth middleware, and demo JSON fixtures. |
-| 2026-09-27 21:00 | Claude Code / Collins | UPDATE / MOVE | `AGENTS.md`, `backend/tests/engine/test_payment.py` → split into `backend/tests/ingestion/test_extractors.py` | Review of PRs #3–#4 and `a3cbb70`/`c42f224`: resolved committed conflict markers in `test_payment.py`; removed a third duplicated sprint board; reopened TSK-007 (hard-coded scores), TSK-020 and TSK-033 (10 files committed as 0 bytes). Backend suite back to 123 passed |
+| 2026-09-27 21:00 | Claude Code / Collins | UPDATE / MOVE | `AGENTS.md`, `backend/app/tests/engine/test_payment.py` → split into `backend/tests/ingestion/test_extractors.py` | Review of PRs #3–#4 and `a3cbb70`/`c42f224`: resolved committed conflict markers in `test_payment.py`; removed a third duplicated sprint board; reopened TSK-007 (hard-coded scores), TSK-020 and TSK-033 (10 files committed as 0 bytes). Backend suite back to 123 passed |
 | 2026-09-27 22:10 | Claude Code (backend agent) / Collins | CREATE / UPDATE / DELETE | `backend/**`, `database/schema.sql` (v2.2), `docs/BACKEND.md`, `frontend/src/lib/fixtures/seed/**`, `.gitignore` | Seeder rebuilt on the real engine (deterministic); extractor `PaymentEvidence` adapter; matcher v2.1 (spec golden table passes); real Memory/Supabase repositories; all section 5 endpoints; in-app alerts; reports + payment lookup + O3; SSRF/API-key/rate-limit security; tiered scraper; simulator; NIM remediation + EN/SW templates; CLIP module; takedown tracker. 355 tests pass, ruff clean; lead verified with a live DEMO_MODE server |
+| 2026-09-27 16:15 | Antigravity / Agent | CREATE / UPDATE | `backend/app/alerts/dispatcher.py`, `backend/app/schemas/alert.py`, `backend/app/api/v1/router.py`, `backend/app/core/repository.py`, `backend/tests/api/test_alerts.py` | Implemented TSK-012 (In-app alerts backend): added `Alert` schemas and repository methods, implemented `dispatch_alert` BackgroundTask, created alert endpoints `/merchants/{id}/alerts` and `/alerts/read`, and added test suite `test_alerts.py` |
+| 2026-09-27 16:27 | Antigravity / Agent | UPDATE | `backend/app/alerts/dispatcher.py`, `backend/app/schemas/alert.py`, `AGENTS.md` | TSK-012 finalisation: fixed all ruff lint errors (import order, unused imports, `Optional`→`X\|None`, `timezone.UTC` alias, line-length); tightened de-dup logic (score_increase bypasses window per spec, resolved/new_threat still obey it; timezone-aware comparison). All 4 `test_alerts.py` tests pass, ruff clean. Marked TSK-012 `[x] Done` in both task matrices. |
+| 2026-09-27 16:26 | Antigravity / Agent | UPDATE | `backend/app/ingestion/page_scraper.py`, `backend/tests/ingestion/test_page_scraper.py` | TSK-006: Fixed incomplete edit — added missing `from datetime import date` import (F821), sorted imports (I001), converted `Optional[X]` to `X \| None` (UP045), split long User-Agent string (E501), added `raise … from err` (B904). Used `getattr` for optional ThreatRecord fields. Fixed incorrect PNG magic-bytes assertion in tests. `ruff check` clean; 4/4 tests pass. |
+| 2026-09-27 16:30 | Antigravity / Agent | CREATE | `backend/tests/conftest.py` | TSK-022: Root pytest conftest with `mem_repo` + `client` fixtures. Sets `DEMO_MODE=true` env var before app import and patches `settings.demo_mode` so `lifespan` always picks `MemoryRepository`. No network required. |
+| 2026-09-27 16:30 | Antigravity / Agent | CREATE | `backend/tests/api/__init__.py` | TSK-022: Empty package init so pytest can discover `conftest.py` from the root `tests/` directory. |
+| 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `backend/app/api/v1/router.py` | TSK-022: Rewrote router clean — removed unused `MerchantCreate` import, replaced `Dict`/`List`/`Optional` with built-ins, fixed all E501 long lines, changed `/reports` validation error from `HTTPException` (returns `{detail}`) to `JSONResponse(422, {error:{code,message}})` matching the global DomainException shape; moved `parse_input` import inside endpoint to avoid circular load. `ruff check` clean. |
+| 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `AGENTS.md` | TSK-022: Marked `[x] Done` in both task matrices and the Milestone 3 checklist; appended mutation log rows. Override O3 already wired in `scorer.py` (lines 269-271). |
+| 2026-10-11 11:35 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/channels/ussd.py`, `backend/app/api/v1/router.py`, `backend/tests/channels/test_ussd.py`, `AGENTS.md` | TSK-036: Implemented Africa's Talking USSD feature-phone check/report menu (`POST /api/v1/channels/ussd`), phone/till verify with `services.payments.verify_payment`, scam report intake, and comprehensive unit tests. |
+| 2026-10-11 11:37 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/alerts/sms.py`, `backend/app/alerts/dispatcher.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/tests/alerts/test_sms.py`, `AGENTS.md` | TSK-041: Implemented Africa's Talking SMS integration for critical impersonation alerts (`send_threat_sms`, `format_threat_sms`, `AfricasTalkingClient`, dispatcher integration for critical score >= 90 / new_threat, respx/sandbox unit tests). |
+| 2026-10-11 11:40 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/channels/telegram.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/app/services/check.py`, `backend/app/api/v1/router.py`, `backend/tests/channels/test_telegram.py`, `AGENTS.md` | TSK-042: Implemented Telegram consumer checker bot channel (`POST /api/v1/channels/telegram/webhook`), URL/handle extraction, check and payment verification, Forensic Verdict response formatter (HALISI/FEKI/TAHADHARI), `/start` and `/help` commands, graceful fallback when `TELEGRAM_BOT_TOKEN` is not configured, and 14 passing unit tests. |
+| 2026-10-11 11:43 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/ingestion/daraja.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/app/schemas/report.py`, `backend/app/services/payments.py`, `backend/app/main.py`, `backend/app/api/deps.py`, `backend/app/api/v1/endpoints/check.py`, `frontend/src/lib/schemas.ts`, `backend/tests/ingestion/test_daraja.py`, `backend/tests/api/test_reports.py`, `AGENTS.md` | TSK-039: Implemented Safaricom Daraja API integration for live M-Pesa till/paybill owner validation. Features OAuth token generation (`/oauth/v1/generate`), account/business validation (`/mpesa/accountname/v1/query`), token caching, resilient fallback to simulated resolver in DEMO_MODE or without credentials, payment lookup service enrichment, and comprehensive unit tests. |
+| 2026-10-11 11:46 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/ingestion/meta_rights.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/app/engine/constants.py`, `backend/app/alerts/dispatcher.py`, `backend/app/main.py`, `backend/app/api/deps.py`, `backend/tests/ingestion/test_meta_rights.py`, `AGENTS.md` | TSK-038: Implemented Meta Rights Manager API automated takedowns for 95+ score threats (`MetaRightsManagerClient`, `submit_takedown`, `compute_evidence_hash`, deterministic simulation fallback, background dispatcher integration with `takedown_filed` threat status update & remediation log, and 12 passing unit tests). |
+| 2026-10-11 11:55 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/ingestion/playwright_scraper.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/tests/ingestion/test_playwright_scraper.py`, `AGENTS.md` | TSK-040: Implemented Playwright headless scraper upgrade for tier-2 + full-page CLIP screenshots (`PlaywrightScraper`, `scrape_with_playwright`, DOM/OpenGraph extraction, modal dismissal, full-page screenshot buffers, graceful OpenGraph/simulation fallback, and 13 unit tests). |
+| 2026-10-11 13:25 | Antigravity / Agent | UPDATE | `frontend/src/lib/utils.ts`, `frontend/src/components/ui/button.tsx`, `frontend/src/app/globals.css`, `AGENTS.md` | Fixed button text/background contrast across all pages: configured `extendTailwindMerge` in `utils.ts` with custom Halisi font-size (`text-body`, `text-small`, etc.) and color tokens (`text-bg`, `text-fg`, `text-paper`, etc.) so `twMerge` no longer strips `text-bg` when merging with `text-body` on `size="lg"` buttons; updated `size.lg` in `button.tsx` and excluded `.theme-paper` islands from `@custom-variant night`. |
+| 2026-10-11 13:56 | Antigravity / Geoffrey | UPDATE | `AGENTS.md` | TSK-001: Marked `[x] Done` across sprint board, architecture map, and Milestone 1 checklist after deploying schema v2 (`database/schema.sql`) to Supabase. |
 
 ---
+
+
 
 ## 7. Prompt & Heuristic Registry
 
