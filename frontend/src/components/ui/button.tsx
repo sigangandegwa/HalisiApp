@@ -29,7 +29,7 @@ export const buttonVariants = cva(
       size: {
         sm: "h-9 px-4 text-[0.875rem] pointer-coarse:h-11 [&_svg:not([class*='size-'])]:size-4",
         md: "h-11 px-5 text-[0.9375rem] [&_svg:not([class*='size-'])]:size-[1.05rem]",
-        lg: "h-14 px-7 text-body [&_svg:not([class*='size-'])]:size-5",
+        lg: "h-14 px-7 text-[1.0625rem] [&_svg:not([class*='size-'])]:size-5",
         icon: "size-11 [&_svg:not([class*='size-'])]:size-[1.15rem]",
         "icon-sm": "size-9 pointer-coarse:size-11 [&_svg:not([class*='size-'])]:size-4",
       },
