@@ -111,7 +111,7 @@ This file is the single source of truth (SSOT) for coordinating human developers
 | TSK-039 | P3 | Ingestion | **Safaricom Daraja API** integration for live M-Pesa till/paybill owner validation | Geoffrey | `[ ] Pending` | 021 |
 | TSK-040 | P3 | Ingestion | **Playwright headless scraper** cluster upgrade for tier-2 (bypass aggressive anti-bot protections) + full-page CLIP screenshots | Geoffrey / Collins | `[ ] Pending` | 006, 017 |
 | TSK-041 | P2 | Channels | **SMS alerts** via Africa's Talking for critical impersonation notifications to merchants | Geoffrey | `[x] Done` | 012 |
-| TSK-042 | P3 | Channels | **Telegram consumer checker bot**: forward IG/TikTok links → instant Forensic Verdict response | Geoffrey | `[ ] Pending` | 018 |
+| TSK-042 | P3 | Channels | **Telegram consumer checker bot**: forward IG/TikTok links → instant Forensic Verdict response | Geoffrey | `[x] Done` | 018 |
 
 *Legend: `[ ] Pending` | `[/] In Progress` | `[x] Done` | `[!] Blocked` | `[-] Dropped`*
 
@@ -252,6 +252,7 @@ halisi/
 | 2026-09-27 16:30 | Antigravity / Agent | UPDATE | `AGENTS.md` | TSK-022: Marked `[x] Done` in both task matrices and the Milestone 3 checklist; appended mutation log rows. Override O3 already wired in `scorer.py` (lines 269-271). |
 | 2026-10-11 11:35 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/channels/ussd.py`, `backend/app/api/v1/router.py`, `backend/tests/channels/test_ussd.py`, `AGENTS.md` | TSK-036: Implemented Africa's Talking USSD feature-phone check/report menu (`POST /api/v1/channels/ussd`), phone/till verify with `services.payments.verify_payment`, scam report intake, and comprehensive unit tests. |
 | 2026-10-11 11:37 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/alerts/sms.py`, `backend/app/alerts/dispatcher.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/tests/alerts/test_sms.py`, `AGENTS.md` | TSK-041: Implemented Africa's Talking SMS integration for critical impersonation alerts (`send_threat_sms`, `format_threat_sms`, `AfricasTalkingClient`, dispatcher integration for critical score >= 90 / new_threat, respx/sandbox unit tests). |
+| 2026-10-11 11:40 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/app/channels/telegram.py`, `backend/app/core/config.py`, `backend/.env.example`, `backend/app/services/check.py`, `backend/app/api/v1/router.py`, `backend/tests/channels/test_telegram.py`, `AGENTS.md` | TSK-042: Implemented Telegram consumer checker bot channel (`POST /api/v1/channels/telegram/webhook`), URL/handle extraction, check and payment verification, Forensic Verdict response formatter (HALISI/FEKI/TAHADHARI), `/start` and `/help` commands, graceful fallback when `TELEGRAM_BOT_TOKEN` is not configured, and 14 passing unit tests. |
 
 ---
 
