@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     fetch_timeout_seconds: float = 5.0
     image_timeout_seconds: float = 8.0
     profile_cache_seconds: int = 600
+    playwright_scraper_enabled: bool = False  # tier-2 headless browser cluster upgrade (TSK-040)
+    playwright_timeout_seconds: float = 15.0
 
     # --- LLM remediation (NVIDIA NIM, OpenAI-compatible) ---
     llm_enabled: bool = True
@@ -79,6 +81,13 @@ class Settings(BaseSettings):
     daraja_shortcode: str = "600000"
     daraja_timeout_seconds: float = 5.0
 
+    # --- Meta Rights Manager API (TSK-038) ---
+    meta_rights_manager_enabled: bool = False
+    meta_access_token: str = ""
+    meta_rights_manager_id: str = ""
+    meta_graph_api_url: str = ""  # optional override (default https://graph.facebook.com/v19.0)
+    meta_timeout_seconds: float = 10.0
+
     # --- takedown tracker (TSK-029, P2) ---
     enable_takedown_tracker: bool = False
     takedown_check_hours: float = 12.0
@@ -102,6 +111,11 @@ class Settings(BaseSettings):
     def llm_available(self) -> bool:
         """Whether LLM calls may be made (never in DEMO_MODE, never without a key)."""
         return self.llm_enabled and bool(self.llm_api_key) and not self.demo_mode
+
+    @property
+    def playwright_available(self) -> bool:
+        """Whether Playwright scraper can run (enabled and not in DEMO_MODE)."""
+        return self.playwright_scraper_enabled and not self.demo_mode
 
     @property
     def telegram_configured(self) -> bool:

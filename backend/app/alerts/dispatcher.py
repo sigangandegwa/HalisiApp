@@ -19,7 +19,9 @@ from app.alerts.sms import send_threat_sms
 from app.core.config import Settings, get_settings
 from app.core.logging import log_event
 from app.core.repository import Repository, utcnow
+from app.engine.constants import META_TAKEDOWN_THRESHOLD
 from app.engine.payment import mask_phone
+from app.ingestion.meta_rights import maybe_submit_meta_takedown
 from app.schemas.alert import AlertCreate, AlertRecord
 from app.schemas.threat import ThreatRecord
 
@@ -59,6 +61,20 @@ async def dispatch_threat_alert(
     settings: Settings | None = None,
 ) -> AlertRecord | None:
     """Write at most one ``merchant_alerts`` row for a threat upsert. Returns the alert or None."""
+    # Automated Meta Rights Manager takedown for 95+ score threats (TSK-038)
+    if after.composite_score >= META_TAKEDOWN_THRESHOLD and after.source != "seed":
+        cfg = settings or get_settings()
+        if cfg.meta_rights_manager_enabled:
+            try:
+                await maybe_submit_meta_takedown(repo, after, settings=cfg)
+            except Exception as exc:  # noqa: BLE001
+                log_event(
+                    "meta_takedown_dispatch_error",
+                    threat_id=str(after.id),
+                    handle=after.target_handle,
+                    error=str(exc),
+                )
+
     kind = decide_kind(before, after, threshold)
     if kind is None:
         return None
