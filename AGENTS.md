@@ -135,7 +135,8 @@ halisi/
 │   ├── DEVELOPMENT.md                     [SPEC] runbook, build order, demo script
 │   ├── data-flow.md                       [SPEC] lifecycle + remediation
 │   ├── tech-stack.md                      [SPEC] stack choices
-│   └── calibration.md                     [DONE] TSK-017 threshold calibration specification
+│   ├── calibration.md                     [DONE] TSK-017 threshold calibration specification
+│   └── E2E_TESTING_GUIDE.md               [DONE] End-to-end system testing & defect tracking guide (TSK-014)
 ├── database/
 │   └── schema.sql                         [DONE v2.2, DEPLOYED] TSK-001 (v2.1 merchant_alerts; v2.2 target_profiles, avatar_dhash, status_history + upgrade block)
 ├── backend/
@@ -263,6 +264,7 @@ halisi/
 | 2026-10-11 22:45 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/tests/api/test_e2e.py`, `backend/app/api/v1/endpoints/threats.py`, `backend/app/services/dossier.py`, `backend/tests/api/test_simulator_and_playbooks.py`, `AGENTS.md` | TSK-014: Implemented End-to-End Integration & Failover Test Suite. Tested complete consumer journey against blatant clones, merchant alert lifecycle, community reporting & payment lookup, false-positive prevention, and 100% offline DEMO_MODE failover. Added `GET /threats/{id}/dossier` with SHA-256 `X-Evidence-Hash` and `GET /threats/{id}/playbook` alias. All 439 tests passing, ruff clean. |
 | 2026-10-11 22:52 | Antigravity / Geoffrey | CREATE | `docs/PITCH.md` | TSK-035: Created comprehensive, judge-ready pitch manual and script containing sourced CAK/CBK/KBA statistics, 3-minute timed stage script (Collins ↔ Ndegwa), live demo runbook, hot-spare failover protocol (<10s), and judge Q&A defense matrix. |
 | 2026-10-11 23:00 | Antigravity / Collins | CREATE / UPDATE | `backend/app/engine/constants.py`, `backend/app/services/dossier.py`, `backend/app/engine/prompts/templates/dossier.html.j2`, `backend/app/api/v1/endpoints/threats.py`, `backend/app/engine/calibrate.py`, `docs/calibration.md`, `backend/tests/services/test_dossier.py`, `backend/tests/api/test_dossier.py`, `backend/tests/engine/test_calibrate.py`, `backend/tests/engine/test_remediation.py`, `AGENTS.md` | TSK-009 / TSK-017 / TSK-028: Finalized verified contacts in `constants.py` (VERIFIED_ON 2026-10-11, Safaricom `fraud@safaricom.co.ke`, KE-CIRT `incidents@ke-cirt.go.ke`, verified platform abuse URLs). Implemented TSK-028 Evidence Dossier with canonical SHA-256 evidence bundle hashing, legal Jinja2 HTML template (`dossier.html.j2`), pure-Python compliant PDF generator (`_PDFBuilder`), and `/dossier` endpoints supporting format=pdf/html/json. Implemented TSK-017 `calibrate.py` benchmark suite and comprehensive `docs/calibration.md` specification. All 453 tests passing cleanly. |
+| 2026-10-13 13:38 | Antigravity / Agent | CREATE | `docs/E2E_TESTING_GUIDE.md`, `AGENTS.md` | TSK-014: Developed comprehensive End-to-End System Testing & Quality Assurance Guide. Features granular assignable test cases across Collins (Engine/Remediation/Failover), Geoffrey (Backend/API/Channels), and Ndegwa (Frontend/Public/SOC), plus Master 90-second Golden Rehearsal flow, non-functional resilience criteria, and a structured Shortcoming & Feedback Registry (Improvement Log). |
 
 ---
 
