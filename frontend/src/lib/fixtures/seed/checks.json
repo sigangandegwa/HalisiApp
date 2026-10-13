@@ -18,10 +18,10 @@
     "handle": "kilimanibeautybar",
     "platform": "instagram",
     "url": "https://instagram.com/kilimanibeautybar",
-    "verdict": "no_match",
-    "score": 14.68,
+    "verdict": "suspicious",
+    "score": 40.47,
     "kind": "competitor",
-    "merchant_slug": null
+    "merchant_slug": "nairobi-sneaker-vault"
   },
   {
     "key": "nsv_competitor",
@@ -31,7 +31,7 @@
     "platform": "instagram",
     "url": "https://instagram.com/nairobisneakerhub",
     "verdict": "no_match",
-    "score": 19.06,
+    "score": 35.19,
     "kind": "competitor",
     "merchant_slug": null
   },
@@ -103,7 +103,7 @@
     "platform": "instagram",
     "url": "https://instagram.com/pwanlthreads",
     "verdict": "impersonation",
-    "score": 90.0,
+    "score": 97.78,
     "kind": "subtle",
     "merchant_slug": "pwani-threads"
   },

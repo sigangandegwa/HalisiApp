@@ -1,7 +1,7 @@
 {
-  "pages_scanned": 3,
+  "pages_scanned": 4,
   "threats_detected": 2,
-  "impersonations_blocked_7d": 2,
+  "impersonations_blocked_7d": 0,
   "merchants_protected": 3,
   "median_detection_ms": 1,
   "top_platforms": [

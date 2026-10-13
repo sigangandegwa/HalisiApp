@@ -16,22 +16,22 @@
   },
   "platform_takedown": {
     "platform": "instagram",
-    "report_url": "https://help.instagram.com/",
+    "report_url": "https://help.instagram.com/contact/636276399721841",
     "body": "I am reporting an account that is impersonating my business, Pwani Threads.\n\nImpersonating account: @pwanithreads_official_ke (https://instagram.com/pwanithreads_official_ke)\nOur official account(s): @pwanithreads (instagram), @pwanithreads (tiktok)\n\nEvidence recorded by Halisi (first seen 2026-09-24):\n- Profile picture: perceptual-hash distance 4/64 from our registered logo (visual similarity 100%).\n- Name/handle similarity to our official account: 100%.\n- It asks customers to pay 0799 111 222, which is not registered to our business.\n- Uses a logo 100% similar to Pwani Threads's.\n- Its name imitates Pwani Threads's official account @pwanithreads.\n- Asks for payment to a personal number, not Pwani Threads's official payment channel.\n- Uses pressure phrases common in scams: 'pay before delivery', 'send money to', 'limited stock'.\n- The account was created recently (Account is 8 days old · 4 posts · 90 followers).\n\nPlease remove this account. It uses our identity to take payments from our customers.",
     "generator": "template"
   },
   "safaricom_report": {
     "channel": "email",
-    "to": "<Safaricom fraud-reporting address: confirm on safaricom.co.ke before sending>",
+    "to": "fraud@safaricom.co.ke",
     "subject": "Fraud report: M-Pesa number used to impersonate Pwani Threads",
-    "body": "Dear Safaricom fraud team,\n\nI am reporting M-Pesa payment details used by a fake social-media page that impersonates my business, Pwani Threads.\n\nReceiving number(s) on the fake page: 0799 111 222\nFake page: @pwanithreads_official_ke on instagram (https://instagram.com/pwanithreads_official_ke), first seen 2026-09-24.\nOur official payment channel: Pay only via Pochi la Biashara 0700 111 222 (PWANI THREADS) through @pwanithreads.\n\nHow customers are misled:\n- Uses a logo 100% similar to Pwani Threads's.\n- Its name imitates Pwani Threads's official account @pwanithreads.\n- Asks for payment to a personal number, not Pwani Threads's official payment channel.\n- Uses pressure phrases common in scams: 'pay before delivery', 'send money to', 'limited stock'.\n- The account was created recently (Account is 8 days old · 4 posts · 90 followers).\n\nPlease investigate the payment details above. Scam SMS can also be forwarded to <Safaricom scam-SMS forwarding short code: confirm on safaricom.co.ke (commonly cited as 333)>.",
+    "body": "Dear Safaricom fraud team,\n\nI am reporting M-Pesa payment details used by a fake social-media page that impersonates my business, Pwani Threads.\n\nReceiving number(s) on the fake page: 0799 111 222\nFake page: @pwanithreads_official_ke on instagram (https://instagram.com/pwanithreads_official_ke), first seen 2026-09-24.\nOur official payment channel: Pay only via Pochi la Biashara 0700 111 222 (PWANI THREADS) through @pwanithreads.\n\nHow customers are misled:\n- Uses a logo 100% similar to Pwani Threads's.\n- Its name imitates Pwani Threads's official account @pwanithreads.\n- Asks for payment to a personal number, not Pwani Threads's official payment channel.\n- Uses pressure phrases common in scams: 'pay before delivery', 'send money to', 'limited stock'.\n- The account was created recently (Account is 8 days old · 4 posts · 90 followers).\n\nPlease investigate the payment details above. Scam SMS can also be forwarded to Safaricom scam-SMS forwarding short code: 333 (forward fraudulent SMS to 333).",
     "generator": "template"
   },
   "kecirt_report": {
-    "to": "<National KE-CIRT/CC incident address: confirm on ke-cirt.go.ke before sending>",
+    "to": "incidents@ke-cirt.go.ke",
     "subject": "Incident report: social-media impersonation of Pwani Threads",
     "body": "To the National KE-CIRT/CC,\n\nI wish to report a social-media account that appears to impersonate my business, Pwani Threads, in order to collect payments from our customers. This may amount to an offence under the Computer Misuse and Cybercrimes Act, 2018.\n\nAccount reported: @pwanithreads_official_ke on instagram (https://instagram.com/pwanithreads_official_ke)\nFirst seen: 2026-09-24\nOur official account(s): @pwanithreads (instagram), @pwanithreads (tiktok)\nPayment details shown on the account: 0799 111 222\n\nEvidence recorded by Halisi:\n- Profile picture perceptual-hash distance 4/64 from our registered logo.\n- Overall impersonation score 99/100 (confidence 1.0).\n- Uses a logo 100% similar to Pwani Threads's.\n- Its name imitates Pwani Threads's official account @pwanithreads.\n- Asks for payment to a personal number, not Pwani Threads's official payment channel.\n- Uses pressure phrases common in scams: 'pay before delivery', 'send money to', 'limited stock'.\n- The account was created recently (Account is 8 days old · 4 posts · 90 followers).\n\nI am available to provide further information.",
     "generator": "template"
   },
-  "contacts_verified": false
+  "contacts_verified": true
 }

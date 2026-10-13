@@ -22,7 +22,7 @@
       "score": 0.0,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 32/64 · dHash distance 40/64"
+      "evidence": "pHash distance 32/64 · dHash distance 40/64 · CLIP similarity 0.60"
     },
     {
       "key": "identity",

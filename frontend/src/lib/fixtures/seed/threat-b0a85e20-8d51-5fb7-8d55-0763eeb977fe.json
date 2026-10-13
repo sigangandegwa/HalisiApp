@@ -1,7 +1,7 @@
 {
   "scan_id": "2f4c3d57-9801-51b8-ab20-7ae58e138ef0",
   "verdict": "impersonation",
-  "score": 90.0,
+  "score": 97.78,
   "confidence": 0.9,
   "target": {
     "platform": "instagram",
@@ -41,10 +41,10 @@
     {
       "key": "visual",
       "label": "Logo match",
-      "score": 35.0,
+      "score": 100.0,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 20/64 · dHash distance 17/64"
+      "evidence": "pHash distance 20/64 · dHash distance 17/64 · CLIP similarity 0.93"
     },
     {
       "key": "identity",
@@ -81,6 +81,12 @@
   ],
   "reasons": [
     {
+      "code": "LOGO_COPY",
+      "severity": "high",
+      "text": "Uses a logo 100% similar to Pwani Threads's.",
+      "text_sw": "Inatumia nembo inayofanana 100% na ya Pwani Threads."
+    },
+    {
       "code": "HANDLE_LOOKALIKE",
       "severity": "high",
       "text": "Its name imitates Pwani Threads's official account @pwanithreads.",
@@ -109,7 +115,7 @@
     "text_sw": "Lipa tu kwa Pochi la Biashara 0700 111 222 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
   },
   "threat_id": "b0a85e20-8d51-5fb7-8d55-0763eeb977fe",
-  "elapsed_ms": 1,
+  "elapsed_ms": 4,
   "status": "detected",
   "status_history": [
     {

@@ -44,7 +44,7 @@
       "score": 100.0,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 4/64 · dHash distance 3/64"
+      "evidence": "pHash distance 4/64 · dHash distance 3/64 · CLIP similarity 0.88"
     },
     {
       "key": "identity",
@@ -121,7 +121,7 @@
     "text_sw": "Lipa tu kwa Pochi la Biashara 0700 111 222 (PWANI THREADS). Ukurasa rasmi ni @pwanithreads."
   },
   "threat_id": "aee7afbd-7d25-5114-a2f1-5e47b5b2dc11",
-  "elapsed_ms": 1,
+  "elapsed_ms": 2,
   "status": "detected",
   "status_history": [
     {

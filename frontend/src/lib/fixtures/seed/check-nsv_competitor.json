@@ -1,7 +1,7 @@
 {
   "scan_id": "fcbeccce-81c6-5d85-b466-21ead41b8513",
   "verdict": "no_match",
-  "score": 19.06,
+  "score": 35.19,
   "confidence": 1.0,
   "target": {
     "platform": "instagram",
@@ -19,10 +19,10 @@
     {
       "key": "visual",
       "label": "Logo match",
-      "score": 0.0,
+      "score": 53.77,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 34/64 · dHash distance 32/64"
+      "evidence": "pHash distance 34/64 · dHash distance 32/64 · CLIP similarity 0.87"
     },
     {
       "key": "identity",
@@ -61,5 +61,5 @@
   "hashes": null,
   "safe_action": null,
   "threat_id": null,
-  "elapsed_ms": 1
+  "elapsed_ms": 3
 }

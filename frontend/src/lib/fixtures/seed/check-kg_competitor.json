@@ -1,7 +1,7 @@
 {
   "scan_id": "ff4343d7-761f-59e4-969b-b480d4a5ecfe",
-  "verdict": "no_match",
-  "score": 14.68,
+  "verdict": "suspicious",
+  "score": 40.47,
   "confidence": 1.0,
   "target": {
     "platform": "instagram",
@@ -14,15 +14,37 @@
     "account_created_on": null,
     "fetched_via": "seed"
   },
-  "matched_merchant": null,
+  "matched_merchant": {
+    "id": "190bec2a-588a-54e5-8590-c237c6239a4a",
+    "business_name": "Nairobi Sneaker Vault",
+    "slug": "nairobi-sneaker-vault",
+    "logo_url": "/seed/nsv_logo.png",
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "nairobisneakervault",
+        "url": "https://instagram.com/nairobisneakervault"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "nairobisneakervault",
+        "url": "https://tiktok.com/@nairobisneakervault"
+      }
+    ],
+    "payment": {
+      "type": "till",
+      "number": "543210",
+      "account_name": "NAIROBI SNEAKER VAULT"
+    }
+  },
   "dimensions": [
     {
       "key": "visual",
       "label": "Logo match",
-      "score": 0.0,
+      "score": 65.13,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 32/64 · dHash distance 33/64"
+      "evidence": "pHash distance 32/64 · dHash distance 33/64 · CLIP similarity 0.88"
     },
     {
       "key": "identity",
@@ -35,7 +57,7 @@
     {
       "key": "payment",
       "label": "Payment details",
-      "score": 25.0,
+      "score": 50.0,
       "weight": 0.25,
       "available": true,
       "evidence": "Till/Paybill 667788 is not registered to this business"
@@ -57,9 +79,23 @@
       "evidence": "620 posts · 8900 followers"
     }
   ],
-  "reasons": [],
-  "hashes": null,
-  "safe_action": null,
+  "reasons": [
+    {
+      "code": "LOGO_COPY",
+      "severity": "medium",
+      "text": "Uses a logo 65% similar to Nairobi Sneaker Vault's.",
+      "text_sw": "Inatumia nembo inayofanana 65% na ya Nairobi Sneaker Vault."
+    }
+  ],
+  "hashes": {
+    "target_phash": "aad5d52a2a2ad5aa",
+    "reference_phash": "bd3cd0e2c4cd91c3",
+    "hamming_distance": 32
+  },
+  "safe_action": {
+    "text": "Pay only via Buy Goods Till 543210 (NAIROBI SNEAKER VAULT) through @nairobisneakervault.",
+    "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
+  },
   "threat_id": null,
   "elapsed_ms": 1
 }

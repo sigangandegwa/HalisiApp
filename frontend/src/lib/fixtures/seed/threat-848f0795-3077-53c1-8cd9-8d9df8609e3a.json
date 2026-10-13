@@ -41,10 +41,10 @@
     {
       "key": "visual",
       "label": "Logo match",
-      "score": 60.0,
+      "score": 80.16,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 28/64 · dHash distance 12/64"
+      "evidence": "pHash distance 28/64 · dHash distance 12/64 · CLIP similarity 0.90"
     },
     {
       "key": "identity",
@@ -95,8 +95,8 @@
     {
       "code": "LOGO_COPY",
       "severity": "medium",
-      "text": "Uses a logo 60% similar to Kilimani Glow's.",
-      "text_sw": "Inatumia nembo inayofanana 60% na ya Kilimani Glow."
+      "text": "Uses a logo 80% similar to Kilimani Glow's.",
+      "text_sw": "Inatumia nembo inayofanana 80% na ya Kilimani Glow."
     },
     {
       "code": "SCAM_LANGUAGE",
@@ -115,7 +115,7 @@
     "text_sw": "Lipa tu kwa Paybill 400200 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
   },
   "threat_id": "848f0795-3077-53c1-8cd9-8d9df8609e3a",
-  "elapsed_ms": 1,
+  "elapsed_ms": 2,
   "status": "detected",
   "status_history": [
     {
