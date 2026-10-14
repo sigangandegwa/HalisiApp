@@ -24,18 +24,14 @@ from pathlib import Path
 from uuid import UUID
 
 import pytest
-import respx
-import httpx
 from fastapi.testclient import TestClient
 
 from app.alerts.sms import send_threat_sms
-from app.core.config import Settings
 from app.core.repository import MemoryRepository
 from app.core.security import RateLimiter
 from app.ingestion.daraja import DarajaClient
 from app.ingestion.fixtures import logos as L
 from app.ingestion.meta_rights import (
-    META_GRAPH_API_DEFAULT_URL,
     MetaRightsManagerClient,
     compute_evidence_hash,
 )
@@ -207,14 +203,18 @@ def test_tc_b08_alert_dispatcher_deduplication(client: TestClient, auth: dict[st
     assert check_resp.json()["verdict"] == "impersonation"
 
     # Verify alert created
-    new_alerts = client.get(f"/api/v1/merchants/{NSV_ID}/alerts", headers=auth, params={"since": cursor}).json()
+    new_alerts = client.get(
+        f"/api/v1/merchants/{NSV_ID}/alerts", headers=auth, params={"since": cursor}
+    ).json()
     assert len(new_alerts["alerts"]) >= 1
     assert any("nairobisneakervault_module_b_test" in a["title"] for a in new_alerts["alerts"])
 
     # Trigger same page again with identical score
     next_cursor = new_alerts["server_time"]
     client.post("/api/v1/check", json=body)
-    dup_alerts = client.get(f"/api/v1/merchants/{NSV_ID}/alerts", headers=auth, params={"since": next_cursor}).json()
+    dup_alerts = client.get(
+        f"/api/v1/merchants/{NSV_ID}/alerts", headers=auth, params={"since": next_cursor}
+    ).json()
     assert dup_alerts["alerts"] == []
 
 
@@ -244,7 +244,12 @@ def test_tc_b09_ussd_menu_navigation(client: TestClient) -> None:
     # 3. Level 2 Official Till Check (543210)
     resp2 = client.post(
         "/api/v1/channels/ussd",
-        data={"sessionId": "s1", "serviceCode": "*384*100#", "phoneNumber": "+254712345678", "text": "1*543210"},
+        data={
+            "sessionId": "s1",
+            "serviceCode": "*384*100#",
+            "phoneNumber": "+254712345678",
+            "text": "1*543210",
+        },
     )
     assert resp2.status_code == 200
     assert resp2.text.startswith("END ")
@@ -357,7 +362,8 @@ async def test_tc_b14_tiered_page_scraper_fallback(client: TestClient) -> None:
     sample_html = (
         "<html><head>"
         '<meta property="og:title" content="Sneaker Store Official (@sample_store)">'
-        '<meta property="og:description" content="500 Followers, 50 Following, 20 Posts - Best kicks in Kenya">'
+        '<meta property="og:description" '
+        'content="500 Followers, 50 Following, 20 Posts - Best kicks in Kenya">'
         '<meta property="og:image" content="https://example.com/logo.png">'
         "</head></html>"
     )
