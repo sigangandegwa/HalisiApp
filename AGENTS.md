@@ -127,6 +127,7 @@ Status tags: `[DONE]` · `[V1: NEEDS REWRITE]` · `[PLANNED]` · `[SPEC]` (autho
 halisi/
 ├── AGENTS.md                              [SPEC] coordination, tasks, change log
 ├── README.md                              [DONE] public project overview
+├── LIVE.md                                [DONE] comprehensive live presentation & demo runbook
 ├── LICENSE.md                             [DONE] MIT
 ├── docs/
 │   ├── BACKEND.md                         [SPEC] backend + engine + API contract
@@ -267,6 +268,7 @@ halisi/
 | 2026-10-13 13:38 | Antigravity / Agent | CREATE | `docs/E2E_TESTING_GUIDE.md`, `AGENTS.md` | TSK-014: Developed comprehensive End-to-End System Testing & Quality Assurance Guide. Features granular assignable test cases across Collins (Engine/Remediation/Failover), Geoffrey (Backend/API/Channels), and Ndegwa (Frontend/Public/SOC), plus Master 90-second Golden Rehearsal flow, non-functional resilience criteria, and a structured Shortcoming & Feedback Registry (Improvement Log). |
 | 2026-10-13 14:44 | Antigravity / Geoffrey | CREATE / UPDATE | `backend/tests/api/test_module_b_e2e.py`, `docs/E2E_TESTING_GUIDE.md`, `AGENTS.md` | TC-B01 to TC-B14: Automated and executed 14/14 End-to-End integration tests for Module 3.B (Health, /check, SSRF, Rate Limiting, Merchants/Threats, Payment Verification, Reports, Alerts dedup, USSD, SMS, Telegram Bot, Daraja M-Pesa, Meta Rights Manager, 3-tier scraper). All 14 tests passing cleanly (100% pass rate). Updated guide status and signed off. |
 | 2026-10-15 06:30 | Antigravity / Collins | UPDATE | `docs/E2E_TESTING_GUIDE.md`, `backend/tests/api/test_module_b_e2e.py`, `AGENTS.md` | TC-E01 to TC-E09: Verified and executed all 9 Module C engine/visual/remediation tests (152 engine tests + 11 dossier tests + 5 e2e tests + calibrate benchmark); verified natural Kenyan Swahili (FB-005) and PDF dossier generator (FB-006); fixed ruff linter on test_module_b_e2e.py. 467 tests passing (100%), ruff clean, frontend build clean. Signed off Module C. |
+| 2026-10-15 06:36 | Antigravity / Collins | CREATE / UPDATE | `LIVE.md`, `AGENTS.md` | Authored comprehensive live presentation runbook (`LIVE.md`) containing: 3 quick-start commands, exact test account cheat sheet for all 4 verdicts (FEKI, HALISI, HAIJULIKANI, /pay lookups), real external Instagram scanning with Tier-3 fallback, 90-second stage choreography, phone notification setup, and emergency failover protocols. |
 
 ---
 
