@@ -111,6 +111,7 @@ export const api = {
   getScan: (scanId: string) => request(`check/${encodeURIComponent(scanId)}`, CheckResult),
   verifyPayment: (value: string) => request("verify/payment", PaymentLookup, { search: { value } }),
   getMerchant: (slug: string) => request(`merchants/${encodeURIComponent(slug)}`, MerchantPublic),
+  listMerchants: () => request("merchants", MerchantPublic.array()),
   createMerchant: (data: MerchantCreate, logo: File) => {
     const form = new FormData();
     form.set("data", JSON.stringify(data));
@@ -142,5 +143,6 @@ export const qk = {
   threat: (id: string) => ["threat", id] as const,
   stats: (merchantId?: string) => ["stats", merchantId ?? "global"] as const,
   merchant: (slug: string) => ["merchant", slug] as const,
+  merchants: () => ["merchants"] as const,
   alerts: (merchantId: string) => ["alerts", merchantId] as const,
 };

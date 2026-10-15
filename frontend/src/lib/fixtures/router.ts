@@ -186,6 +186,10 @@ export function resolveFixture(
     return lookup ? { status: 200, body: lookup } : err(422, "INVALID_INPUT", "Enter a Kenyan phone number or a 5 to 7 digit till.");
   }
 
+  if (a === "merchants" && !b && m === "GET") {
+    return { status: 200, body: fixtures().merchants };
+  }
+
   if (a === "merchants" && !b && m === "POST") {
     // multipart onboarding can't be scored offline
     return err(503, "ENGINE_OFFLINE", "Onboarding needs the live Halisi engine to fingerprint your logo.");
