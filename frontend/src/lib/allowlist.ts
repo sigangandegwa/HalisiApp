@@ -42,7 +42,7 @@ export function classify(
       // Public: this is signup. src/app/api/halisi/[...path]/route.ts signs a session for the
       // merchant it just created, so registering and being logged into your own dashboard is the
       // same request — there's no separate account system to gate this behind.
-      if (a === "merchants" && m === "POST") return { access: "public", upstream: v1(path) };
+      if (a === "merchants" && (m === "POST" || m === "GET")) return { access: "public", upstream: v1(path) };
       return null;
     case 2:
       if (a === "check" && m === "GET") return { access: "public", upstream: v1(path) };

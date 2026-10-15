@@ -93,7 +93,12 @@ export default function DashboardPage() {
                 <div>
                    <span className="type-caption text-fg-3 block mb-1">Official Handles</span>
                    <div className="type-data text-fg space-y-1">
-                      {merchantHandles.map(h => <div key={h}>@{h}</div>)}
+                      {merchant?.official_handles.map((h, i) => (
+                        <div key={`${h.platform}-${h.handle}-${i}`} className="flex items-center gap-2">
+                          <span>@{h.handle}</span>
+                          <span className="text-xs text-fg-3 uppercase">({h.platform})</span>
+                        </div>
+                      ))}
                    </div>
                 </div>
                 {payment && (

@@ -185,8 +185,8 @@ export function ScanSequence({
           <Rise instant={instant} delay={BEAT.rise + 120} data-area="reasons">
             <h3 className="type-caption mb-4 text-fg-2">{t("reasons.title")}</h3>
             <ul className="grid gap-3">
-              {reasons.map((r) => (
-                <li key={r.code} className="flex gap-3 border-t border-line pt-3">
+              {reasons.map((r, i) => (
+                <li key={`${r.code}-${i}`} className="flex gap-3 border-t border-line pt-3">
                   <span
                     aria-hidden="true"
                     className={cn("mt-2 size-2 shrink-0 rounded-full", r.severity === "high" ? "bg-feki" : "bg-caution")}
