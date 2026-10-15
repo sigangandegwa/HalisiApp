@@ -25,6 +25,28 @@ MOBILE_UA = (
     "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/126.0 Mobile Safari/537.36"
 )
+CRAWLER_UA = "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+_CRAWLER_DOMAINS = (
+    "instagram.com",
+    "facebook.com",
+    "tiktok.com",
+    "twitter.com",
+    "x.com",
+    "threads.net",
+    "cdninstagram.com",
+    "fbcdn.net",
+)
+
+
+def get_default_user_agent(url: str) -> str:
+    """Return crawler UA for social media platforms to extract full OpenGraph metadata,
+    and mobile UA for standard web destinations."""
+    host = (urlsplit(url).hostname or "").lower()
+    if any(host == d or host.endswith("." + d) for d in _CRAWLER_DOMAINS):
+        return CRAWLER_UA
+    return MOBILE_UA
+
+
 MAX_REDIRECTS = 3
 MAX_HTML_BYTES = 2 * 1024 * 1024
 _LOGIN_MARKERS = ("/accounts/login", "/login", "login.php", "checkpoint")
@@ -113,11 +135,20 @@ def profile_from_opengraph(tags: dict[str, str], platform: str, handle: str, url
     bio: str | None = description or None
 
     match = _IG_DESCRIPTION.search(description)
+    if not match and tags.get("description"):
+        match = _IG_DESCRIPTION.search(tags["description"])
     if match:
         followers, posts = parse_count(match.group(1)), parse_count(match.group(3))
         display_name = match.group("name")
         rest = description[match.end() :].strip(' :-–"')
         bio = rest or None
+
+    meta_desc = tags.get("description") or ""
+    if meta_desc and "on Instagram:" in meta_desc:
+        ig_quote = re.search(r'on Instagram:\s*["“\'](.*?)["”\']\s*$', meta_desc, re.DOTALL)
+        if ig_quote:
+            bio = ig_quote.group(1).strip() or bio
+
     title_match = _TITLE_HANDLE.match(title)
     if not display_name and title_match:
         display_name = title_match.group("name").strip() or None
@@ -164,11 +195,12 @@ async def safe_get(
     for _ in range(MAX_REDIRECTS + 1):
         if not await is_public_url(current, resolver=resolver):
             raise FetchError("blocked_url")
+        req_headers = {"User-Agent": get_default_user_agent(current), **(headers or {})}
         try:
             async with client.stream(
                 "GET",
                 current,
-                headers={"User-Agent": MOBILE_UA, **(headers or {})},
+                headers=req_headers,
                 follow_redirects=False,
                 timeout=timeout,
             ) as response:
@@ -193,7 +225,7 @@ async def safe_get(
 
 
 async def fetch_image(
-    client: httpx.AsyncClient, url: str, *, timeout: float = 8.0, resolver: Resolver = system_resolver
+    client: httpx.AsyncClient, url: str, *, timeout: float = 10.0, resolver: Resolver = system_resolver
 ) -> bytes:
     """Download an avatar/logo: SSRF-guarded, <= 5 MB, ``content-type: image/*``. Raises FetchError."""
     _, response, body = await safe_get(
@@ -212,8 +244,8 @@ async def fetch_opengraph(
     platform: str,
     handle: str,
     *,
-    timeout: float = 5.0,
-    image_timeout: float = 8.0,
+    timeout: float = 10.0,
+    image_timeout: float = 10.0,
     resolver: Resolver = system_resolver,
 ) -> FetchedProfile:
     """Tier 2: fetch a profile page's OpenGraph tags and its avatar. Raises FetchError on any failure,
