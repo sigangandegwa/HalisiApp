@@ -32,6 +32,13 @@ async def _merchant_or_404(repo: Repository, merchant_id: UUID) -> None:
         raise NotFoundError("Merchant not found.")
 
 
+@router.get("/merchants", response_model=list[PublicMerchant])
+async def list_registered_merchants(repo: Annotated[Repository, Depends(get_repo)]) -> list[PublicMerchant]:
+    """List all registered merchants in the database."""
+    merchants = await repo.list_merchants()
+    return [public_merchant(m) for m in merchants]
+
+
 @router.get("/merchants/{slug}", response_model=PublicMerchant, responses={404: {"model": ErrorResponse}})
 async def get_public_merchant(slug: str, repo: Annotated[Repository, Depends(get_repo)]) -> PublicMerchant:
     """Public verified profile (``/v/[slug]``)."""
