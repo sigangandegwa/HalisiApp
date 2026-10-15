@@ -156,7 +156,7 @@ def build_merchant(
     """Assemble a new MerchantRecord from onboarding data (numbers canonicalised)."""
     now = created_at or utcnow()
     phones = [p for p in (canonical_phone(n) for n in data.phone_numbers) if p]
-    number = data.mpesa_number
+    number = (data.mpesa_number or "").strip() or None
     if number:
         number = canonical_phone(number) if data.mpesa_type == "pochi" else canonical_till(number) or number
     handles = [

@@ -6,7 +6,7 @@ import { Certificate } from "@/components/certificate/certificate";
 import type { MerchantCreate, MpesaType } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, CheckCircle2, ExternalLink, ShieldCheck, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ExternalLink, ShieldCheck, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useI18n } from "@/lib/i18n/provider";
@@ -30,7 +30,39 @@ export default function OnboardingPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: () => api.createMerchant(data as MerchantCreate, logoFile!),
+    mutationFn: async () => {
+      if (!logoFile) throw new Error("Please upload an official logo.");
+      const bName = (data.business_name ?? "").trim();
+      if (bName.length < 2) throw new Error("Business name must be at least 2 characters.");
+      const sSlug = (data.slug ?? "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/^-+|-+$/g, "");
+      if (sSlug.length < 3) throw new Error("Slug must be at least 3 characters.");
+
+      const cleanedHandles = (data.handles ?? [])
+        .filter((h) => h.handle && h.handle.trim().length > 0)
+        .map((h) => ({
+          platform: h.platform,
+          handle: h.handle.trim().replace(/^@/, ""),
+        }));
+
+      const mpesaNum = data.mpesa_type !== "none" && data.mpesa_number?.trim() ? data.mpesa_number.trim() : null;
+      const mpesaAcc = data.mpesa_type !== "none" && data.mpesa_account_name?.trim() ? data.mpesa_account_name.trim() : null;
+
+      const payload: MerchantCreate = {
+        business_name: bName,
+        slug: sSlug,
+        aliases: data.aliases ?? [],
+        category: data.category ?? null,
+        location: data.location ?? null,
+        established_on: data.established_on ?? null,
+        mpesa_type: data.mpesa_type ?? "none",
+        mpesa_number: mpesaNum,
+        mpesa_account_name: mpesaAcc,
+        phone_numbers: data.phone_numbers ?? [],
+        handles: cleanedHandles,
+      };
+
+      return api.createMerchant(payload, logoFile);
+    },
     onSuccess: () => {
       refetchMerchants();
     },
@@ -42,55 +74,75 @@ export default function OnboardingPage() {
   if (createMutation.isSuccess) {
     const merchant = createMutation.data;
     return (
-      <div className="max-w-2xl mx-auto space-y-8 py-10 flex flex-col items-center animate-in fade-in">
-        <div className="flex flex-col items-center text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-pill bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm font-medium">
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Successfully Registered</span>
+      <div className="theme-night world-night min-h-dvh bg-bg text-fg">
+        <div className="page-wrap py-10 sm:py-14">
+          <div className="max-w-2xl mx-auto space-y-8 flex flex-col items-center animate-in fade-in">
+            <div className="flex flex-col items-center text-center space-y-3">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-pill bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm font-medium">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Successfully Registered</span>
+              </div>
+              <h1 className="type-display-l text-fg">{merchant.business_name}</h1>
+              <p className="type-lede text-fg-2 max-w-md">
+                Your business is now stored in the database and protected against impersonation. Your customers can verify your official payment and handles instantly.
+              </p>
+            </div>
+
+            <div className="w-full">
+              <Certificate merchant={merchant} url={`https://halisi.app/v/${merchant.slug}`} t={t} />
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+              <Link
+                href="/dashboard"
+                className="bg-fg text-bg hover:bg-fg/90 px-8 py-3 rounded-pill type-caption transition-all duration-100 ease-out active:scale-[0.96]"
+              >
+                Go to your dashboard
+              </Link>
+              <Link
+                href={`/v/${merchant.slug}`}
+                target="_blank"
+                className="border border-line-strong text-fg hover:border-fg px-8 py-3 rounded-pill type-caption transition-all duration-100 ease-out active:scale-[0.96] inline-flex items-center gap-2"
+              >
+                View Public Certificate <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  createMutation.reset();
+                  setStep(1);
+                  setData({ handles: [], mpesa_type: "none", phone_numbers: [] });
+                  setLogoFile(null);
+                  setView("directory");
+                }}
+                className="border border-line text-fg-2 hover:text-fg px-6 py-3 rounded-pill type-caption transition-all duration-100 ease-out active:scale-[0.96] cursor-pointer"
+              >
+                View in Directory
+              </button>
+            </div>
           </div>
-          <h1 className="type-display-l text-fg">{merchant.business_name}</h1>
-          <p className="type-lede text-fg-2 max-w-md">
-            Your business is now stored in the database and protected against impersonation. Your customers can verify your official payment and handles instantly.
-          </p>
-        </div>
-
-        <div className="w-full">
-          <Certificate merchant={merchant} url={`https://halisi.app/v/${merchant.slug}`} t={t} />
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-          <Link href="/dashboard" className="bg-fg text-bg hover:bg-fg/90 px-8 py-3 rounded-pill type-caption transition-colors">
-            Go to your dashboard
-          </Link>
-          <Link
-            href={`/v/${merchant.slug}`}
-            target="_blank"
-            className="border border-line-strong text-fg hover:border-fg px-8 py-3 rounded-pill type-caption transition-colors inline-flex items-center gap-2"
-          >
-            View Public Certificate <ExternalLink className="w-3.5 h-3.5" />
-          </Link>
-          <button
-            type="button"
-            onClick={() => {
-              createMutation.reset();
-              setStep(1);
-              setData({ handles: [], mpesa_type: "none", phone_numbers: [] });
-              setLogoFile(null);
-              setView("directory");
-            }}
-            className="border border-line text-fg-2 hover:text-fg px-6 py-3 rounded-pill type-caption transition-colors"
-          >
-            View in Directory
-          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10">
-      {/* Header and View Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-6">
+    <div className="theme-night world-night min-h-dvh bg-bg text-fg">
+      <div className="page-wrap py-10 sm:py-14">
+        {/* Back to Dashboard Navigation */}
+        <div className="max-w-2xl mx-auto mb-6">
+          <Link
+            href="/dashboard"
+            className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-pill border border-line bg-fg/[0.03] text-fg-2 hover:text-fg hover:border-line-strong hover:bg-fg/[0.06] text-xs font-medium transition-all duration-100 ease-out active:scale-[0.96]"
+          >
+            <ArrowLeft className="size-3.5 transition-transform duration-100 group-hover:-translate-x-0.5" />
+            <span>Back to Dashboard</span>
+          </Link>
+        </div>
+
+        <div className="max-w-2xl mx-auto space-y-10">
+          {/* Header and View Switcher */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-6">
         <div>
           <h1 className="type-display-m text-fg">
             {view === "register" ? "Register Business" : "Registered Businesses"}
@@ -210,7 +262,17 @@ export default function OnboardingPage() {
                 <label className="type-caption text-fg-2 block mb-2">Business Name</label>
                 <Input
                   value={data.business_name || ""}
-                  onChange={(e) => setData({ ...data, business_name: e.target.value })}
+                  onChange={(e) => {
+                    const bName = e.target.value;
+                    const autoSlug = bName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                    setData((prev) => ({
+                      ...prev,
+                      business_name: bName,
+                      slug: !prev.slug || prev.slug === prev.business_name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+                        ? autoSlug
+                        : prev.slug,
+                    }));
+                  }}
                   placeholder="e.g. Nairobi Sneaker Vault"
                 />
               </div>
@@ -222,7 +284,7 @@ export default function OnboardingPage() {
                   </span>
                   <Input
                     value={data.slug || ""}
-                    onChange={(e) => setData({ ...data, slug: e.target.value })}
+                    onChange={(e) => setData({ ...data, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-") })}
                     placeholder="nairobi-sneaker-vault"
                     className="rounded-l-none"
                   />
@@ -338,6 +400,15 @@ export default function OnboardingPage() {
                 </div>
               )}
 
+              {createMutation.isError && (
+                <div className="p-3.5 rounded-doc bg-red-950/40 border border-red-500/40 text-red-300 text-sm">
+                  <p className="font-medium mb-0.5">Registration failed</p>
+                  <p className="text-xs text-red-200">
+                    {(createMutation.error as Error)?.message || "Please check your details and try again."}
+                  </p>
+                </div>
+              )}
+
               <div className="flex gap-4 pt-6">
                 <Button variant="secondary" onClick={back} className="w-1/3">
                   Back
@@ -354,6 +425,8 @@ export default function OnboardingPage() {
           )}
         </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }
