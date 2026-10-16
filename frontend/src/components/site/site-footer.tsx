@@ -24,6 +24,7 @@ export function SiteFooter({ t }: { t: T }) {
           <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2">
             <Link href="/" className="hover:text-fg">{t("nav.check")}</Link>
             <Link href="/pay" className="hover:text-fg">{t("nav.pay")}</Link>
+            <Link href="/onboarding" className="hover:text-fg">{t("nav.business")}</Link>
             <Link href="/report" className="hover:text-fg">{t("nav.report")}</Link>
             <Link href="/login" className="hover:text-fg">{t("nav.login")}</Link>
           </nav>

@@ -45,6 +45,8 @@ export function classify(
       if (a === "merchants" && (m === "POST" || m === "GET")) return { access: "public", upstream: v1(path) };
       return null;
     case 2:
+      if (a === "auth" && b === "login" && m === "POST") return { access: "public", upstream: v1(path) };
+      if (a === "auth" && b === "logout" && (m === "POST" || m === "DELETE")) return { access: "public", upstream: v1(path) };
       if (a === "check" && m === "GET") return { access: "public", upstream: v1(path) };
       if (a === "verify" && b === "payment" && m === "GET") return { access: "public", upstream: v1(path) };
       if (a === "merchants" && m === "GET") return { access: "public", upstream: v1(path) };

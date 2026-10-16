@@ -129,15 +129,24 @@ export default function OnboardingPage() {
   return (
     <div className="theme-night world-night min-h-dvh bg-bg text-fg">
       <div className="page-wrap py-10 sm:py-14">
-        {/* Back to Dashboard Navigation */}
-        <div className="max-w-2xl mx-auto mb-6">
+        {/* Navigation header */}
+        <div className="max-w-2xl mx-auto mb-8 flex items-center justify-between">
           <Link
-            href="/dashboard"
+            href="/"
             className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-pill border border-line bg-fg/[0.03] text-fg-2 hover:text-fg hover:border-line-strong hover:bg-fg/[0.06] text-xs font-medium transition-all duration-100 ease-out active:scale-[0.96]"
           >
             <ArrowLeft className="size-3.5 transition-transform duration-100 group-hover:-translate-x-0.5" />
-            <span>Back to Dashboard</span>
+            <span>Back to Home</span>
           </Link>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-xs text-fg-3 hover:text-fg transition-colors"
+            >
+              Already registered? <span className="underline text-fg font-medium">Log in</span>
+            </Link>
+          </div>
         </div>
 
         <div className="max-w-2xl mx-auto space-y-10">

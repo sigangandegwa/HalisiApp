@@ -5,7 +5,7 @@ import { KpiTile } from "@/components/merchant/kpi-tile";
 import { ThreatRow } from "@/components/merchant/threat-row";
 import { api, qk } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { Shield, ShieldAlert } from "lucide-react";
+import { ExternalLink, Shield, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { paymentParts } from "@/lib/format";
 import { Seal } from "@/components/brand/seal";
@@ -110,10 +110,13 @@ export default function DashboardPage() {
              </div>
              
              <Link 
-               href="/dashboard/badge" 
-               className="mt-8 w-full block bg-bg-3 hover:bg-bg-2 text-fg py-3 rounded-pill text-sm font-medium transition-colors border border-line text-center"
+               href={`/v/${merchant?.slug || merchantSlug}`}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="mt-8 w-full inline-flex items-center justify-center gap-2 bg-bg-3 hover:bg-bg-2 text-fg py-3 rounded-pill text-sm font-medium transition-all duration-100 ease-out active:scale-[0.96] border border-line text-center group"
              >
-               Get your badge
+               <span>View Public Certificate &amp; Badge</span>
+               <ExternalLink className="size-3.5 opacity-60 transition-opacity group-hover:opacity-100" />
              </Link>
            </div>
         </div>

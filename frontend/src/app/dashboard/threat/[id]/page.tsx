@@ -48,9 +48,12 @@ export default function ThreatDetailPage() {
 
   return (
     <div className="space-y-12">
-      <div className="flex flex-col gap-6">
-        <Link href="/dashboard" className="flex items-center gap-2 text-fg-2 hover:text-fg type-caption w-fit transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back to dashboard
+        <Link
+          href="/dashboard"
+          className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-pill border border-line bg-fg/[0.03] text-fg-2 hover:text-fg hover:border-line-strong hover:bg-fg/[0.06] text-xs font-medium transition-all duration-100 ease-out active:scale-[0.96] w-fit"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-100 group-hover:-translate-x-0.5" />
+          <span>Back to dashboard</span>
         </Link>
         
         <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-line">
@@ -92,7 +95,6 @@ export default function ThreatDetailPage() {
               </button>
            </div>
         </header>
-      </div>
 
       <div className="result-grid">
          <section data-area="compare" className="space-y-6">

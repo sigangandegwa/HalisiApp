@@ -11,6 +11,11 @@ export async function proxy(request: NextRequest) {
   const { pathname, search, searchParams } = request.nextUrl;
   const session = await verifySession(request.cookies.get(SESSION_COOKIE)?.value);
 
+  // Unauthenticated visitors accessing onboarding should reach the registration wizard directly
+  if (pathname === "/dashboard/onboarding" && !session) {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
   if (isMerchantPage(pathname) && !session) {
     const login = new URL("/login", request.url);
     login.searchParams.set("next", pathname + search);

@@ -16,7 +16,7 @@ import { LanguageToggle } from "./language-toggle";
 const LINKS: { href: string; key: MessageKey; match: (p: string) => boolean }[] = [
   { href: "/", key: "nav.check", match: (p) => p === "/" || p.startsWith("/check") },
   { href: "/pay", key: "nav.pay", match: (p) => p.startsWith("/pay") },
-  { href: "/#business", key: "nav.business", match: (p) => p.startsWith("/v/") },
+  { href: "/onboarding", key: "nav.business", match: (p) => p.startsWith("/onboarding") || p.startsWith("/v/") },
   { href: "/report", key: "nav.report", match: (p) => p.startsWith("/report") },
 ];
 
