@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     demo_mode: bool = False
     api_key: str = DEFAULT_API_KEY
+    dashboard_passcode: str = "halisi-demo"
     cors_origins: str = "http://localhost:3000"
     public_check_rate_limit: str = "10/minute"
     verify_payment_rate_limit: str = "20/minute"

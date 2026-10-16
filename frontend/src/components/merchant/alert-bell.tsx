@@ -24,7 +24,7 @@ export function AlertBell() {
   return (
     <button 
       onClick={() => setOpen(true)}
-      className="relative p-2 rounded-full hover:bg-bg-2 transition-colors focus-visible outline-none"
+      className="relative p-2 rounded-full hover:bg-fg/5 transition-all duration-100 ease-out active:scale-[0.96] focus-visible outline-none cursor-pointer"
       aria-label="Alerts"
     >
       <Bell className="w-5 h-5 text-fg-2" />

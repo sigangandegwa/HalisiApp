@@ -13,18 +13,20 @@ import { randomUUID } from "node:crypto";
 import {
   CheckRequest,
   MarkRead,
+  MerchantCreate,
   ReportCreate,
   SimulatorRequest,
   ThreatUpdate,
   type Alert,
   type CheckResult,
+  type MerchantCreated,
   type PaymentLookup,
   type Stats,
   type ThreatStatus,
   type ThreatSummary,
 } from "@/lib/schemas";
 import { canonicalPhone, canonicalTill, looksLikePayment, maskPhone, parseTarget } from "@/lib/format";
-import { fixtures, simulatorFixtures, type FixtureAlert, type FixtureThreat } from "./index";
+import { fixtures, simulatorFixtures, type FixtureAlert, type FixtureMerchant, type FixtureThreat } from "./index";
 
 export interface FixtureResponse {
   status: number;
@@ -38,6 +40,7 @@ interface DemoStore {
   extraAlerts: FixtureAlert[];
   extraScans: Map<string, CheckResult>;
   playbookLog: Map<string, Record<string, unknown>[]>;
+  extraMerchants: Map<string, FixtureMerchant>;
 }
 
 const globalStore = globalThis as unknown as { __halisiDemoStore?: DemoStore };
@@ -48,7 +51,11 @@ const store: DemoStore = (globalStore.__halisiDemoStore ??= {
   extraAlerts: [],
   extraScans: new Map(),
   playbookLog: new Map(),
+  extraMerchants: new Map(),
 });
+if (!store.extraMerchants) {
+  store.extraMerchants = new Map();
+}
 
 /** Handles whose manual-input result was precomputed by the real engine (scripts/make_fixtures.py). */
 const MANUAL_DEMO_HANDLES = new Set(["sneakervault_resale_ke"]);
@@ -103,6 +110,11 @@ function publicAlert(alert: FixtureAlert): Alert {
   return copy as Alert;
 }
 
+export function allMerchants(): FixtureMerchant[] {
+  const base = fixtures().merchants.filter((m) => !store.extraMerchants.has(m.id));
+  return [...base, ...store.extraMerchants.values()];
+}
+
 function findScan(id: string): CheckResult | undefined {
   return fixtures().checks.find((c) => c.scan_id === id) ?? store.extraScans.get(id);
 }
@@ -114,6 +126,24 @@ function paymentLookup(value: string): PaymentLookup | null {
   if (!normalized) return null;
   const known = fixtures().payments.find((p) => p.normalized === normalized);
   if (known) return known;
+
+  const matched = allMerchants().find((m) => {
+    if (!m.payment.number) return false;
+    const n = canonicalPhone(m.payment.number) ?? canonicalTill(m.payment.number);
+    return n === normalized;
+  });
+  if (matched) {
+    return {
+      kind: phone ? "phone" : "till",
+      normalized,
+      display: phone ? maskPhone(phone) : normalized,
+      status: "official",
+      merchant: matched,
+      report_count: 0,
+      linked_threats: 0,
+    };
+  }
+
   return {
     kind: phone ? "phone" : "till",
     normalized,
@@ -156,6 +186,51 @@ export function resolveFixture(
     return { status: 200, body: { status: "offline", version: "fixtures", demo_mode: true, engine: { hash: "fixtures" }, llm: "templates", db: "memory" } };
   }
 
+  if (a === "auth" && b === "login" && m === "POST") {
+    const creds = body as { identifier?: string; passcode?: string } | null;
+    const expected = process.env.DASHBOARD_PASSCODE || "halisi-demo";
+    if (!creds?.passcode || creds.passcode !== expected) {
+      return err(401, "INVALID_PASSCODE", "That passcode isn't right.");
+    }
+    const merchants = allMerchants();
+    let merchant: FixtureMerchant | undefined;
+    if (creds.identifier?.trim()) {
+      const q = creds.identifier.trim().toLowerCase().replace(/^@+/, "");
+      merchant =
+        merchants.find(
+          (x) =>
+            x.slug.toLowerCase() === q ||
+            x.business_name.toLowerCase() === q ||
+            x.id.toLowerCase() === q ||
+            x.official_handles.some((h) => h.handle.toLowerCase().replace(/^@+/, "") === q),
+        ) ??
+        merchants.find(
+          (x) =>
+            x.business_name.toLowerCase().includes(q) ||
+            x.slug.toLowerCase().includes(q),
+        );
+      if (!merchant) {
+        return err(404, "NOT_FOUND", `No verified merchant matches "${creds.identifier}".`);
+      }
+    } else {
+      merchant = merchants.find((x) => x.slug === "nairobi-sneaker-vault") ?? merchants[0];
+    }
+    if (!merchant) return err(404, "NOT_FOUND", "No merchants available.");
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        merchant_id: merchant.id,
+        merchant_slug: merchant.slug,
+        business_name: merchant.business_name,
+      },
+    };
+  }
+
+  if (a === "auth" && b === "logout") {
+    return { status: 200, body: { ok: true } };
+  }
+
   if (a === "check" && m === "POST") {
     const parsed = CheckRequest.safeParse(body);
     if (!parsed.success) return err(422, "INVALID_INPUT", "Send a link or a handle.");
@@ -187,16 +262,77 @@ export function resolveFixture(
   }
 
   if (a === "merchants" && !b && m === "GET") {
-    return { status: 200, body: fixtures().merchants };
+    return { status: 200, body: allMerchants() };
   }
 
   if (a === "merchants" && !b && m === "POST") {
-    // multipart onboarding can't be scored offline
-    return err(503, "ENGINE_OFFLINE", "Onboarding needs the live Halisi engine to fingerprint your logo.");
+    const parsed = MerchantCreate.safeParse(body);
+    if (!parsed.success) {
+      return err(422, "INVALID_INPUT", `Invalid merchant data: ${parsed.error.issues.map((i) => i.message).join(", ")}`);
+    }
+    const data = parsed.data;
+    const existing = allMerchants().find((x) => x.slug === data.slug);
+    if (existing) {
+      return err(409, "SLUG_TAKEN", `Slug '${data.slug}' is already registered.`);
+    }
+
+    const merchantId = randomUUID();
+    const at = nowIso();
+    const handles = data.handles.map((h) => {
+      const cleanHandle = h.handle.replace(/^@/, "").toLowerCase();
+      return {
+        platform: h.platform,
+        handle: cleanHandle,
+        url: `https://${h.platform}.com/${cleanHandle}`,
+      };
+    });
+
+    const newMerchant: FixtureMerchant = {
+      id: merchantId,
+      business_name: data.business_name,
+      slug: data.slug,
+      logo_url: `/media/${data.slug}-logo.png`,
+      category: data.category ?? null,
+      location: data.location ?? null,
+      established_on: data.established_on ?? null,
+      is_verified: true,
+      official_handles: handles,
+      payment: {
+        type: data.mpesa_type,
+        number: data.mpesa_number ?? null,
+        account_name: data.mpesa_account_name ?? null,
+      },
+      verified_since: at,
+    };
+
+    store.extraMerchants.set(merchantId, newMerchant);
+
+    if (!fixtures().stats.merchants[merchantId]) {
+      fixtures().stats.merchants[merchantId] = {
+        pages_scanned: 0,
+        threats_detected: 0,
+        impersonations_blocked_7d: 0,
+        merchants_protected: 1,
+        median_detection_ms: 0,
+        top_platforms: [],
+        active_threats: 0,
+        resolved: 0,
+        customers_warned_estimate: 0,
+      };
+    }
+
+    const created: MerchantCreated = {
+      ...newMerchant,
+      logo_phash: "a1b2c3d4e5f60718",
+      logo_dhash: "1807f6e5d4c3b2a1",
+      clip: false,
+    };
+
+    return { status: 201, body: created };
   }
 
   if (a === "merchants" && b && !c && m === "GET") {
-    const merchant = fixtures().merchants.find((x) => x.slug === b || x.id === b);
+    const merchant = allMerchants().find((x) => x.slug === b || x.id === b);
     return merchant ? { status: 200, body: merchant } : err(404, "NOT_FOUND", "No verified business with that name.");
   }
 

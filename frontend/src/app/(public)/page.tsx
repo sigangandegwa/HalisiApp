@@ -88,7 +88,7 @@ export default async function Home() {
               </span>
             </h2>
             <p className="mt-6 max-w-[42ch] text-lede text-fg-2">{t("business.body")}</p>
-            <Link href="/login" className={`${buttonVariants({ variant: "primary", size: "lg" })} mt-8`}>
+            <Link href="/onboarding" className={`${buttonVariants({ variant: "primary", size: "lg" })} mt-8`}>
               {t("business.cta")}
               <ArrowRight className="size-5" strokeWidth={1.5} aria-hidden="true" />
             </Link>

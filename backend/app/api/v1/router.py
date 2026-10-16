@@ -2,11 +2,12 @@
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import check, merchants, reports, threats
+from app.api.v1.endpoints import auth, check, merchants, reports, threats
 from app.channels.telegram import router as telegram_router
 from app.channels.ussd import router as ussd_router
 
 router = APIRouter()
+router.include_router(auth.router, prefix="/auth", tags=["auth"])
 router.include_router(check.router)
 router.include_router(merchants.router)
 router.include_router(threats.router)

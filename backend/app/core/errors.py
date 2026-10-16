@@ -69,6 +69,12 @@ class Unauthorized(HalisiError):
     status_code, code, message = 401, "UNAUTHORIZED", "A valid API key is required."
 
 
+class UnauthorizedError(HalisiError):
+    """401: invalid merchant passcode or unauthorized access."""
+
+    status_code, code, message = 401, "INVALID_PASSCODE", "Invalid merchant passcode."
+
+
 class RateLimited(HalisiError):
     """429."""
 

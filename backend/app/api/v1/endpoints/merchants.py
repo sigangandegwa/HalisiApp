@@ -24,7 +24,14 @@ from app.services.check import CheckService
 from app.services.serializers import public_merchant, threat_summary
 
 router = APIRouter(tags=["merchants"])
-ALLOWED_LOGO_TYPES = {"image/png", "image/jpeg", "image/webp"}
+ALLOWED_LOGO_TYPES = {
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/webp",
+    "image/pjpeg",
+    "image/x-png",
+}
 
 
 async def _merchant_or_404(repo: Repository, merchant_id: UUID) -> None:
@@ -67,7 +74,7 @@ async def onboard_merchant(
         payload = MerchantCreate.model_validate(json.loads(data))
     except (json.JSONDecodeError, ValidationError) as exc:
         raise InvalidInput(f"Invalid merchant data: {str(exc)[:200]}") from exc
-    if logo.content_type not in ALLOWED_LOGO_TYPES:
+    if (logo.content_type or "").lower() not in ALLOWED_LOGO_TYPES:
         raise InvalidImage("The logo must be a PNG, JPEG or WebP image.")
     raw = await logo.read(MAX_IMAGE_BYTES + 1)
     if len(raw) > MAX_IMAGE_BYTES:

@@ -102,18 +102,59 @@ async function handle(req: NextRequest, ctx: Ctx): Promise<Response> {
   }
 
   let json: unknown = undefined;
-  if (body && body.byteLength > 0 && contentType?.includes("application/json")) {
-    try {
-      json = JSON.parse(new TextDecoder().decode(body));
-    } catch {
-      return error(422, "INVALID_INPUT", "Malformed JSON.", { [FIXTURE_HEADER]: "1" });
+  if (body && body.byteLength > 0) {
+    if (contentType?.includes("application/json")) {
+      try {
+        json = JSON.parse(new TextDecoder().decode(body));
+      } catch {
+        return error(422, "INVALID_INPUT", "Malformed JSON.", { [FIXTURE_HEADER]: "1" });
+      }
+    } else if (contentType?.includes("multipart/form-data")) {
+      try {
+        const dummyReq = new Request("http://localhost", {
+          method: "POST",
+          headers: { "content-type": contentType },
+          body,
+        });
+        const formData = await dummyReq.formData();
+        const dataField = formData.get("data");
+        if (typeof dataField === "string") {
+          json = JSON.parse(dataField);
+        } else if (dataField instanceof Blob) {
+          json = JSON.parse(await dataField.text());
+        }
+      } catch {
+        return error(422, "INVALID_INPUT", "Malformed multipart form data.", { [FIXTURE_HEADER]: "1" });
+      }
     }
   }
   const fx = resolveFixture(req.method, path, search, json);
-  return NextResponse.json(fx.body, {
+  const res = NextResponse.json(fx.body, {
     status: fx.status,
     headers: { "cache-control": "no-store", [FIXTURE_HEADER]: "1" },
   });
+
+  if (path.length === 1 && path[0] === "merchants" && req.method === "POST" && fx.status === 201) {
+    try {
+      const created = fx.body as { id?: unknown; slug?: unknown };
+      const mid = created && typeof created === "object" && "id" in created ? String(created.id) : null;
+      const slug = created && typeof created === "object" && "slug" in created ? String(created.slug) : null;
+      if (mid && slug) {
+        const token = await signSession({ mid, slug });
+        res.cookies.set(SESSION_COOKIE, token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" && !req.nextUrl.hostname.match(/^(localhost|127\.0\.0\.1)$/),
+          sameSite: "lax",
+          path: "/",
+          maxAge: SESSION_TTL_SECONDS,
+        });
+      }
+    } catch {
+      // Malformed body or SESSION_SECRET not configured
+    }
+  }
+
+  return res;
 }
 
 export const GET = handle;
