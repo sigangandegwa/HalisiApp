@@ -38,3 +38,5 @@ backend/media/
 # OS / editors
 .DS_Store
 Thumbs.db
+Restructure.md
+docs/ANALYSIS.md
