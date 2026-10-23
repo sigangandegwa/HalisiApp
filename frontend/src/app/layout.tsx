@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { InkFilterDefs } from "@/components/brand/stamp";
 import { OfflineChip } from "@/components/offline-chip";
 import { Providers } from "@/components/providers";
@@ -9,13 +9,30 @@ import "./globals.css";
 
 // Variable names are deliberately distinct from the Tailwind theme names (--font-sans etc.),
 // otherwise `--font-sans: var(--font-sans)` resolves to itself and the font never applies.
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
-const fraunces = Fraunces({
+// Local fonts ensure zero network dependencies during production build.
+const geistSans = localFont({
+  src: [
+    { path: "../assets/fonts/Geist-Medium.woff", weight: "500", style: "normal" },
+    { path: "../assets/fonts/Geist-SemiBold.woff", weight: "600", style: "normal" },
+  ],
+  variable: "--font-geist-sans",
+  display: "swap",
+});
+
+const geistMono = localFont({
+  src: [
+    { path: "../assets/fonts/GeistMono-Medium.woff", weight: "500", style: "normal" },
+  ],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
+
+const fraunces = localFont({
+  src: [
+    { path: "../assets/fonts/Fraunces-SemiBold.woff", weight: "600", style: "normal" },
+    { path: "../assets/fonts/Fraunces-Italic-500.woff", weight: "500", style: "italic" },
+  ],
   variable: "--font-fraunces",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz", "SOFT"],
   display: "swap",
 });
 

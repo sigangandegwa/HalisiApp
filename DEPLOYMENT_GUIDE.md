@@ -58,16 +58,30 @@ The backend runs entirely on an NVIDIA Brev GPU instance to utilize CLIP embeddi
 
 ---
 
-## Phase 3: Frontend Setup (Vercel)
+## Phase 3: Frontend Setup (Netlify or Vercel)
 
-1. **Create Vercel Project**: Import your GitHub repository into a new Vercel project.
-2. **Configure Environment Variables**: In the Vercel project settings, add the following variables:
-   - `HALISI_API_URL`: Your ngrok static domain (e.g., `https://<your-name>.ngrok-free.app`)
-   - `HALISI_API_KEY`: The exact same secure random string used in your Brev `.env`
-   - `DASHBOARD_PASSCODE`: A secure passcode for accessing the merchant dashboard
-   - `SESSION_SECRET`: A 32-character random string used for session encryption
-   - `DEMO_FALLBACK=false`: Ensure the app routes to your live backend.
-3. **Deploy**: Trigger a deployment. Vercel will automatically run `npm run build`, outputting the compiled Next.js App Router application.
+### Option A: Netlify (Recommended)
+1. **Import Repository**: In [Netlify Dashboard](https://app.netlify.com/), click **Add new site > Import an existing project**, and select the `HalisiApp` GitHub repository.
+2. **Build Settings**: Automatically detected from `netlify.toml`:
+   - **Base directory**: `frontend`
+   - **Build command**: `npm run build`
+   - **Publish directory**: `.next`
+   - **Plugin**: `@netlify/plugin-nextjs` (installed automatically)
+3. **Configure Environment Variables**:
+   In **Site configuration > Environment variables**, add:
+   - `NEXT_PUBLIC_SITE_URL`: Your live Netlify domain (e.g. `https://halisi.netlify.app`)
+   - `HALISI_API_URL`: Your ngrok / backend URL (or omit for self-contained offline demo fixtures)
+   - `HALISI_API_KEY`: API key matching your backend
+   - `DASHBOARD_PASSCODE`: `halisi-demo` (or your custom admin passcode)
+   - `SESSION_SECRET`: 32+ character random secret string
+   - `SHOW_DEMO_PASSCODE`: `true` (displays passcode hint on `/login` for judges)
+   - `DEMO_FALLBACK`: `true` (guarantees 100% uptime with pre-seeded demo fixtures if the backend is unreachable)
+4. **Deploy Site**: Click **Deploy site**. The build runs cleanly with local fonts and zero external network bottlenecks.
+
+### Option B: Vercel
+1. **Create Vercel Project**: Import your GitHub repository into a new Vercel project (set Root Directory to `frontend`).
+2. **Configure Environment Variables**: Add the same variables as above (`HALISI_API_URL`, `HALISI_API_KEY`, `DASHBOARD_PASSCODE`, `SESSION_SECRET`, `DEMO_FALLBACK`).
+3. **Deploy**: Trigger a deployment. Vercel runs `npm run build`, outputting the compiled Next.js App Router application.
 
 ---
 
