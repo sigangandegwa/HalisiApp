@@ -155,6 +155,7 @@ function HowCrop({
     );
   }
   if (step === "2") {
+    if (!books?.consumer_warning) return null;
     return (
       <div className={frame} aria-hidden="true">
         <div className="flex items-center justify-between">
@@ -165,8 +166,8 @@ function HowCrop({
           </span>
         </div>
         <div className="theme-paper mt-3 rounded-doc bg-paper p-4 text-ink">
-          <p className="font-semibold">{books?.consumer_warning.title}</p>
-          <p className="mt-2 line-clamp-4 text-ink-2">{books?.consumer_warning.body}</p>
+          <p className="font-semibold">{books.consumer_warning.title}</p>
+          <p className="mt-2 line-clamp-4 text-ink-2">{books.consumer_warning.body}</p>
         </div>
       </div>
     );

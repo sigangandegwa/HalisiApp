@@ -36,7 +36,22 @@ import playbooksHand from "./playbooks.json";
 import statsHand from "./stats.json";
 import threatsHand from "./threats.json";
 
-const FIXTURE_DIR = path.join(process.cwd(), "src", "lib", "fixtures");
+function resolveFixtureDir(): string {
+  const candidates = [
+    path.join(process.cwd(), "src", "lib", "fixtures"),
+    path.join(process.cwd(), "frontend", "src", "lib", "fixtures"),
+  ];
+  for (const dir of candidates) {
+    try {
+      if (fs.existsSync(/*turbopackIgnore: true*/ dir)) return dir;
+    } catch {
+      // ignore
+    }
+  }
+  return path.join(process.cwd(), "src", "lib", "fixtures");
+}
+
+const FIXTURE_DIR = resolveFixtureDir();
 export const SEED_DIR = path.join(FIXTURE_DIR, "seed");
 const DERIVED_DIR = path.join(FIXTURE_DIR, "derived");
 

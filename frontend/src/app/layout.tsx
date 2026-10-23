@@ -36,12 +36,20 @@ const fraunces = localFont({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+function getMetadataBase(): URL {
+  const env = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").trim();
+  const validUrl = /^https?:\/\//i.test(env) ? env : `https://${env}`;
+  try {
+    return new URL(validUrl);
+  } catch {
+    return new URL("http://localhost:3000");
+  }
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getI18n();
   return {
-    metadataBase: new URL(siteUrl),
+    metadataBase: getMetadataBase(),
     title: { default: t("meta.title"), template: "%s · Halisi" },
     description: t("meta.description"),
     applicationName: "Halisi",
