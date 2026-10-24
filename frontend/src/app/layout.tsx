@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Big_Shoulders, Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import { InkFilterDefs } from "@/components/brand/stamp";
 import { OfflineChip } from "@/components/offline-chip";
 import { Providers } from "@/components/providers";
@@ -7,32 +7,59 @@ import { Toaster } from "@/components/ui/sonner";
 import { getI18n } from "@/lib/i18n/server";
 import "./globals.css";
 
+// Local fonts ensure zero network dependencies during production build (Netlify).
 // Variable names are deliberately distinct from the Tailwind theme names (--font-sans etc.),
 // otherwise `--font-sans: var(--font-sans)` resolves to itself and the font never applies.
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
-// Monumental condensed capitals: the verdict words and every display headline.
-const bigShoulders = Big_Shoulders({
-  variable: "--font-big-shoulders",
-  subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  display: "swap",
-});
-// The single editorial voice: one italic word per headline.
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+const geistSans = localFont({
+  src: [
+    { path: "../assets/fonts/Geist-Medium.woff", weight: "500", style: "normal" },
+    { path: "../assets/fonts/Geist-SemiBold.woff", weight: "600", style: "normal" },
+  ],
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const geistMono = localFont({
+  src: [{ path: "../assets/fonts/GeistMono-Medium.woff", weight: "500", style: "normal" }],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
+
+// Monumental condensed capitals: the verdict words and every display headline.
+const bigShoulders = localFont({
+  src: [
+    { path: "../assets/fonts/BigShoulders-700.woff2", weight: "700", style: "normal" },
+    { path: "../assets/fonts/BigShoulders-800.woff2", weight: "800", style: "normal" },
+    { path: "../assets/fonts/BigShoulders-900.woff2", weight: "900", style: "normal" },
+  ],
+  variable: "--font-big-shoulders",
+  display: "swap",
+});
+
+// The single editorial voice: one italic word per headline.
+const instrument = localFont({
+  src: [
+    { path: "../assets/fonts/InstrumentSerif-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/InstrumentSerif-Italic.woff2", weight: "400", style: "italic" },
+  ],
+  variable: "--font-instrument",
+  display: "swap",
+});
+
+function getMetadataBase(): URL {
+  const env = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").trim();
+  const validUrl = /^https?:\/\//i.test(env) ? env : `https://${env}`;
+  try {
+    return new URL(validUrl);
+  } catch {
+    return new URL("http://localhost:3000");
+  }
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getI18n();
   return {
-    metadataBase: new URL(siteUrl),
+    metadataBase: getMetadataBase(),
     title: { default: t("meta.title"), template: "%s · Halisi" },
     description: t("meta.description"),
     applicationName: "Halisi",

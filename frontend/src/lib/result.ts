@@ -12,8 +12,11 @@ export function availableSignals(result: CheckResult): number {
 
 /** Public origin. NEXT_PUBLIC_SITE_URL wins on both server and client so SSR and hydration agree. */
 export function siteUrl(): string {
-  const env = process.env.NEXT_PUBLIC_SITE_URL;
-  if (env) return env.replace(/\/+$/, "");
+  const env = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (env) {
+    const formatted = /^https?:\/\//i.test(env) ? env : `https://${env}`;
+    return formatted.replace(/\/+$/, "");
+  }
   if (typeof window !== "undefined") return window.location.origin;
   return "http://localhost:3000";
 }

@@ -2,11 +2,27 @@
  * Shared pieces for next/og images (share cards, certificate OG, badges). Server-only.
  * Fonts are committed WOFF files (OFL: Fraunces, Geist, Geist Mono) so rendering needs no network.
  */
+import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { rosette } from "@/lib/guilloche";
 
-const FONT_DIR = path.join(process.cwd(), "src", "assets", "fonts");
+function resolveFontDir(): string {
+  const candidates = [
+    path.join(process.cwd(), "src", "assets", "fonts"),
+    path.join(process.cwd(), "frontend", "src", "assets", "fonts"),
+  ];
+  for (const dir of candidates) {
+    try {
+      if (fs.existsSync(/*turbopackIgnore: true*/ dir)) return dir;
+    } catch {
+      // ignore
+    }
+  }
+  return path.join(process.cwd(), "src", "assets", "fonts");
+}
+
+const FONT_DIR = resolveFontDir();
 
 export const INK = "#12130F";
 export const PAPER = "#F2EEE3";
