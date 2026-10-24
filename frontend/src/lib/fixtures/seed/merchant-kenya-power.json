@@ -1,0 +1,39 @@
+{
+  "id": "bcdcb96c-6657-5cdd-924f-4b5df1f43f8d",
+  "business_name": "Kenya Power (KPLC)",
+  "slug": "kenya-power",
+  "logo_url": null,
+  "category": "Utility - electricity",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "kenyapower",
+      "url": "https://instagram.com/kenyapower"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "kenyapower",
+      "url": "https://tiktok.com/@kenyapower"
+    },
+    {
+      "platform": "facebook",
+      "handle": "kenyapowerltd",
+      "url": "https://facebook.com/kenyapowerltd"
+    },
+    {
+      "platform": "x",
+      "handle": "kenyapower",
+      "url": "https://x.com/kenyapower"
+    }
+  ],
+  "payment": {
+    "type": "paybill",
+    "number": "888880",
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

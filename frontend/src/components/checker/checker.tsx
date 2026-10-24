@@ -15,16 +15,22 @@ import { VERDICTS } from "@/lib/verdict";
 import { CheckerInput } from "./checker-input";
 import { ExampleChips, type Example } from "./example-chips";
 import { ManualFallback } from "./manual-fallback";
-import { ModeSwitch } from "./mode-switch";
-import { ScanSequence } from "./scan-sequence";
+import { ResultCase } from "./result-case";
+import { ScanConsole } from "./scan-console";
+import { VerdictTakeover } from "./verdict-takeover";
 
-type Stage = "idle" | "pending" | "reveal" | "done";
+/** idle -> pending (console) -> takeover (the verdict floods the screen) -> reveal (evidence) -> done */
+type Stage = "idle" | "pending" | "takeover" | "reveal" | "done";
 
+/** Time-paced activity lines (honest: they describe what Halisi does, they don't measure progress). */
 const STEPS: { at: number; key: MessageKey }[] = [
-  { at: 600, key: "scan.opening" },
-  { at: 1600, key: "scan.logo" },
-  { at: 2800, key: "scan.payment" },
+  { at: 0, key: "scan.opening" },
+  { at: 1100, key: "scan.bio" },
+  { at: 2100, key: "scan.logo" },
+  { at: 3300, key: "scan.payment" },
+  { at: 4800, key: "scan.verdict" },
 ];
+const STEP_KEYS = STEPS.map((s) => s.key);
 const SLOW_AFTER_MS = 8000;
 
 export function scrollToElement(el: HTMLElement | null, reduced: boolean) {
@@ -54,17 +60,17 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
   const [result, setResult] = useState<CheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [manual, setManual] = useState<{ request: CheckRequest; message: string | null } | null>(null);
-  const [step, setStep] = useState<MessageKey | null>(null);
+  const [step, setStep] = useState(0);
   const [slow, setSlow] = useState(false);
   const [runId, setRunId] = useState(0);
   const [announce, setAnnounce] = useState("");
 
   const mutation = useMutation({ mutationFn: (req: CheckRequest) => api.check(req) });
 
-  // Honest, time-paced step labels while the API works (only shown after 600 ms).
+  // Honest, time-paced console lines while the API works.
   useEffect(() => {
     if (stage !== "pending") return;
-    const timers = STEPS.map((s) => window.setTimeout(() => setStep(s.key), s.at));
+    const timers = STEPS.map((s, i) => window.setTimeout(() => setStep(i), s.at));
     timers.push(window.setTimeout(() => setSlow(true), SLOW_AFTER_MS));
     return () => timers.forEach(clearTimeout);
   }, [stage, runId]);
@@ -97,7 +103,7 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
       setError(null);
       setManual(null);
       setResult(null);
-      setStep(null);
+      setStep(0);
       setSlow(false);
       setAnnounce("");
       setStage("pending");
@@ -114,10 +120,16 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
         setResult(res);
         const meta = VERDICTS[res.verdict];
         // The verdict is announced immediately; the animation never delays information.
-        setAnnounce(`${t(meta.word)} ${t(meta.sub)}. ${t(meta.line, { business: res.matched_merchant?.business_name ?? "" })}`);
-        setStage("reveal");
+        const lineKey = res.verdict === "suspicious" && !res.matched_merchant ? "line.suspicious.nobody" : meta.line;
+        setAnnounce(`${t(meta.word)} ${t(meta.sub)}. ${t(lineKey, { business: res.matched_merchant?.business_name ?? "" })}`);
         window.history.replaceState(null, "", `/check/${res.scan_id}`);
-        requestAnimationFrame(() => scrollToElement(resultRef.current, reduced));
+        if (reduced) {
+          // No takeover under reduced motion: the evidence is simply there.
+          setStage("reveal");
+          requestAnimationFrame(() => scrollToElement(resultRef.current, reduced));
+        } else {
+          setStage("takeover");
+        }
       } catch (err) {
         fail(err, request);
       }
@@ -174,13 +186,13 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
     });
   }, [reduced]);
 
-  const collapsed = stage === "pending" || stage === "reveal";
+  const collapsed = stage === "pending" || stage === "takeover" || stage === "reveal";
   const busy = stage === "pending";
+  const consoleTarget = value.trim() || "…";
 
   return (
     <>
-      <div className={cn("grid gap-5", inputClassName)}>
-        <ModeSwitch mode="link" />
+      <div className={cn("grid gap-3", inputClassName)}>
         <CheckerInput
           ref={inputRef}
           value={value}
@@ -195,9 +207,9 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
             else setValue(text);
           }}
           collapsed={collapsed}
-          pendingLabel={busy ? (step ? t(step) : null) : null}
           error={error}
         />
+        {busy ? <ScanConsole target={consoleTarget} steps={STEP_KEYS} active={step} /> : null}
         {busy && slow ? (
           <p className="-mt-3 text-small text-fg-2">
             {t("scan.slow")}{" "}
@@ -232,13 +244,23 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
                 onSubmit={(m) => void run({ ...manual.request, manual: m })}
               />
             </motion.div>
-          ) : result ? (
+          ) : result && (stage === "reveal" || stage === "done") ? (
             <motion.div key={`${result.scan_id}-${runId}`} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2, ease: bezier("quart") }}>
-              <ScanSequence result={result} onDone={() => setStage("done")} onAgain={reset} />
+              <ResultCase result={result} onAgain={reset} />
             </motion.div>
           ) : null}
         </AnimatePresence>
       </div>
+
+      {result && stage === "takeover" ? (
+        <VerdictTakeover
+          result={result}
+          onDone={() => {
+            setStage("reveal");
+            requestAnimationFrame(() => scrollToElement(resultRef.current, reduced));
+          }}
+        />
+      ) : null}
     </>
   );
 }

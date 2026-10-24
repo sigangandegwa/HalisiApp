@@ -11,6 +11,9 @@ ThreatSource = Literal["public_checker", "scheduled", "community_report", "simul
 ScanSource = Literal["public_checker", "scheduled", "simulator", "seed"]
 InputKind = Literal["url", "handle", "phone", "till"]
 MpesaType = Literal["till", "paybill", "pochi", "none"]
+# curated = seeded by Halisi from public sources; verified = proved control of an official handle
+# (code in its bio); claimed = self-declared. Only curated/verified merchants take part in scoring.
+VerificationStatus = Literal["curated", "verified", "claimed"]
 AlertKind = Literal["new_threat", "score_increase", "resolved"]
 ReportStatus = Literal["pending", "confirmed", "rejected"]
 Language = Literal["en", "sw"]

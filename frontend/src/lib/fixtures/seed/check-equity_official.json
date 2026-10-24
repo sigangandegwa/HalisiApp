@@ -1,0 +1,54 @@
+{
+  "scan_id": "b71c3824-bbe2-59df-a0d2-895ff7d56b68",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "equitygroup",
+    "display_name": null,
+    "url": "https://instagram.com/equitygroup",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "b98ff61d-d167-593b-bae3-14d2f295d20e",
+    "business_name": "Equity Bank Kenya",
+    "slug": "equity-bank-kenya",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "equitygroup",
+        "url": "https://instagram.com/equitygroup"
+      },
+      {
+        "platform": "facebook",
+        "handle": "keequitybank",
+        "url": "https://facebook.com/keequitybank"
+      },
+      {
+        "platform": "x",
+        "handle": "keequitybank",
+        "url": "https://x.com/keequitybank"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "247247",
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Pay only via Paybill 247247 through @equitygroup.",
+    "text_sw": "Lipa tu kwa Paybill 247247. Ukurasa rasmi ni @equitygroup."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

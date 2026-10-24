@@ -1,0 +1,39 @@
+{
+  "id": "df51dd04-a774-5ce6-9c31-b7610c732da8",
+  "business_name": "Naivas Supermarket",
+  "slug": "naivas-supermarket",
+  "logo_url": null,
+  "category": "Supermarket",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "naivas_supermarket",
+      "url": "https://instagram.com/naivas_supermarket"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "naivas",
+      "url": "https://tiktok.com/@naivas"
+    },
+    {
+      "platform": "facebook",
+      "handle": "naivassupermarkets",
+      "url": "https://facebook.com/naivassupermarkets"
+    },
+    {
+      "platform": "x",
+      "handle": "naivas_kenya",
+      "url": "https://x.com/naivas_kenya"
+    }
+  ],
+  "payment": {
+    "type": "none",
+    "number": null,
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

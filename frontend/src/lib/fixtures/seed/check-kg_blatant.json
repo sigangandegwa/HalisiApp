@@ -44,7 +44,7 @@
       "score": 90.0,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 6/64 · dHash distance 8/64 · CLIP similarity 0.88"
+      "evidence": "pHash distance 6/64 · dHash distance 8/64"
     },
     {
       "key": "identity",
@@ -127,5 +127,5 @@
     "text_sw": "Lipa tu kwa Paybill 400200 (KILIMANI GLOW). Ukurasa rasmi ni @kilimaniglow."
   },
   "threat_id": "7d1975e3-848c-5ae4-b1c3-ca43aa489f34",
-  "elapsed_ms": 2
+  "elapsed_ms": 3
 }

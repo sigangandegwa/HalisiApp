@@ -1,0 +1,29 @@
+{
+  "id": "d83bf535-14c1-5eb4-b573-659a9d1c8428",
+  "business_name": "DStv Kenya (MultiChoice)",
+  "slug": "dstv-kenya",
+  "logo_url": null,
+  "category": "Pay-TV",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "dstv_kenya",
+      "url": "https://instagram.com/dstv_kenya"
+    },
+    {
+      "platform": "x",
+      "handle": "dstv_kenya",
+      "url": "https://x.com/dstv_kenya"
+    }
+  ],
+  "payment": {
+    "type": "paybill",
+    "number": "444900",
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

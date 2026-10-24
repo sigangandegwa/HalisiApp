@@ -1,0 +1,59 @@
+{
+  "scan_id": "1915de63-6152-5783-bdc6-7d9df262acd8",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "kenyapower",
+    "display_name": null,
+    "url": "https://instagram.com/kenyapower",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "bcdcb96c-6657-5cdd-924f-4b5df1f43f8d",
+    "business_name": "Kenya Power (KPLC)",
+    "slug": "kenya-power",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "kenyapower",
+        "url": "https://instagram.com/kenyapower"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "kenyapower",
+        "url": "https://tiktok.com/@kenyapower"
+      },
+      {
+        "platform": "facebook",
+        "handle": "kenyapowerltd",
+        "url": "https://facebook.com/kenyapowerltd"
+      },
+      {
+        "platform": "x",
+        "handle": "kenyapower",
+        "url": "https://x.com/kenyapower"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "888880",
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Pay only via Paybill 888880 through @kenyapower.",
+    "text_sw": "Lipa tu kwa Paybill 888880. Ukurasa rasmi ni @kenyapower."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

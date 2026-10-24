@@ -55,6 +55,20 @@ LANGUAGE_REASON_MIN: Final = 40.0               # one strong scam phrase ("lipa 
 REASON_HIGH_SEVERITY: Final = 85.0
 META_TAKEDOWN_THRESHOLD: Final = 95.0           # score >= this triggers automated takedown (TSK-038)
 
+# --- Standalone (zero-merchant) scoring: STANDALONE v1 (TSK-043, docs/PRODUCT_V2.md section 4) ---
+# A personal number or a "Pochi la biashara" line in a bio is normal for Kenyan SMEs, so payment and
+# account signals only AMPLIFY an advance-payment demand; they never raise a page on their own.
+STANDALONE_ADVANCE_BASE: Final = 30.0           # >= 1 advance-payment phrase ("lipa kwanza")
+STANDALONE_ADVANCE_EXTRA: Final = 5.0           # a second, different advance-payment phrase
+STANDALONE_URGENCY: Final = 15.0                # urgency / no-refund phrases ("offer ends today")
+STANDALONE_PERSONAL_PAYMENT: Final = 20.0       # asks for a personal phone / Pochi, not a till or paybill
+STANDALONE_ACCOUNT: Final = 15.0                # new account or very little activity
+STANDALONE_ACCOUNT_MIN: Final = 60.0            # account sub-score needed to count as an amplifier
+STANDALONE_CAP: Final = 84.0                    # without a confirmed report: stays below the FEKI band
+STANDALONE_CONFIDENCE_BASE: Final = 0.4
+STANDALONE_CONFIDENCE_STEP: Final = 0.2         # per available signal group (language, payment, account)
+STANDALONE_CONFIDENCE_MAX: Final = 0.9          # no reference page to compare: never fully certain
+
 
 # --- Remediation channels (remediation.py, TSK-009) -------------------------------------------
 VERIFIED_ON: Final[str | None] = "2026-10-11"

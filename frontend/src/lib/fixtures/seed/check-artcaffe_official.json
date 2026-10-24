@@ -1,0 +1,54 @@
+{
+  "scan_id": "6dda3378-1107-5834-acaa-e1b8f7ba45a7",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "artcaffekenya",
+    "display_name": null,
+    "url": "https://instagram.com/artcaffekenya",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "2a73a0b4-454e-5998-8674-46d16b2f3452",
+    "business_name": "Artcaffe Coffee & Bakery",
+    "slug": "artcaffe-coffee-bakery",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "artcaffekenya",
+        "url": "https://instagram.com/artcaffekenya"
+      },
+      {
+        "platform": "facebook",
+        "handle": "artcaffekenya",
+        "url": "https://facebook.com/artcaffekenya"
+      },
+      {
+        "platform": "x",
+        "handle": "artcaffekenya",
+        "url": "https://x.com/artcaffekenya"
+      }
+    ],
+    "payment": {
+      "type": "none",
+      "number": null,
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Contact Artcaffe Coffee & Bakery only through @artcaffekenya.",
+    "text_sw": "Wasiliana na Artcaffe Coffee & Bakery kupitia @artcaffekenya pekee."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

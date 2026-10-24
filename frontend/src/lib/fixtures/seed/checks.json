@@ -7,7 +7,7 @@
     "platform": "instagram",
     "url": "https://instagram.com/pwanifashionhouse",
     "verdict": "no_match",
-    "score": 15.68,
+    "score": 24.3,
     "kind": "competitor",
     "merchant_slug": null
   },
@@ -18,10 +18,10 @@
     "handle": "kilimanibeautybar",
     "platform": "instagram",
     "url": "https://instagram.com/kilimanibeautybar",
-    "verdict": "suspicious",
-    "score": 40.47,
+    "verdict": "no_match",
+    "score": 22.87,
     "kind": "competitor",
-    "merchant_slug": "nairobi-sneaker-vault"
+    "merchant_slug": null
   },
   {
     "key": "nsv_competitor",
@@ -31,7 +31,7 @@
     "platform": "instagram",
     "url": "https://instagram.com/nairobisneakerhub",
     "verdict": "no_match",
-    "score": 35.19,
+    "score": 24.09,
     "kind": "competitor",
     "merchant_slug": null
   },
@@ -103,7 +103,7 @@
     "platform": "instagram",
     "url": "https://instagram.com/pwanlthreads",
     "verdict": "impersonation",
-    "score": 97.78,
+    "score": 90.0,
     "kind": "subtle",
     "merchant_slug": "pwani-threads"
   },
@@ -142,5 +142,113 @@
     "score": 0.0,
     "kind": "official",
     "merchant_slug": "pwani-threads"
+  },
+  {
+    "key": "kplc_official",
+    "file": "check-kplc_official.json",
+    "scan_id": "1915de63-6152-5783-bdc6-7d9df262acd8",
+    "handle": "kenyapower",
+    "platform": "instagram",
+    "url": "https://instagram.com/kenyapower",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "kenya-power"
+  },
+  {
+    "key": "kcb_official",
+    "file": "check-kcb_official.json",
+    "scan_id": "80523cd0-d48a-5608-9647-15c25fb8f6ce",
+    "handle": "kcbkenya",
+    "platform": "instagram",
+    "url": "https://instagram.com/kcbkenya",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "kcb-bank-kenya"
+  },
+  {
+    "key": "equity_official",
+    "file": "check-equity_official.json",
+    "scan_id": "b71c3824-bbe2-59df-a0d2-895ff7d56b68",
+    "handle": "equitygroup",
+    "platform": "instagram",
+    "url": "https://instagram.com/equitygroup",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "equity-bank-kenya"
+  },
+  {
+    "key": "dstv_official",
+    "file": "check-dstv_official.json",
+    "scan_id": "fc7d9171-457f-513a-a061-d3e7ea00d7f4",
+    "handle": "dstv_kenya",
+    "platform": "instagram",
+    "url": "https://instagram.com/dstv_kenya",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "dstv-kenya"
+  },
+  {
+    "key": "naivas_official",
+    "file": "check-naivas_official.json",
+    "scan_id": "1501c2a4-d255-5f6d-8a57-295f7403bb11",
+    "handle": "naivas_supermarket",
+    "platform": "instagram",
+    "url": "https://instagram.com/naivas_supermarket",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "naivas-supermarket"
+  },
+  {
+    "key": "quickmart_official",
+    "file": "check-quickmart_official.json",
+    "scan_id": "267db2f2-75a8-5af7-be3d-a2264a1ea10a",
+    "handle": "quickmartkenya",
+    "platform": "instagram",
+    "url": "https://instagram.com/quickmartkenya",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "quickmart-kenya"
+  },
+  {
+    "key": "javahouse_official",
+    "file": "check-javahouse_official.json",
+    "scan_id": "be08426b-20ec-5722-a6a2-9ea476f6be4f",
+    "handle": "javahouseafrica",
+    "platform": "instagram",
+    "url": "https://instagram.com/javahouseafrica",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "java-house-kenya"
+  },
+  {
+    "key": "artcaffe_official",
+    "file": "check-artcaffe_official.json",
+    "scan_id": "6dda3378-1107-5834-acaa-e1b8f7ba45a7",
+    "handle": "artcaffekenya",
+    "platform": "instagram",
+    "url": "https://instagram.com/artcaffekenya",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "artcaffe-coffee-bakery"
+  },
+  {
+    "key": "safaricom_official",
+    "file": "check-safaricom_official.json",
+    "scan_id": "2ed3f7b3-cb98-5fd0-9f87-714c455ed6b9",
+    "handle": "safaricomplc_",
+    "platform": "instagram",
+    "url": "https://instagram.com/safaricomplc_",
+    "verdict": "official",
+    "score": 0.0,
+    "kind": "official",
+    "merchant_slug": "safaricom-plc"
   }
 ]

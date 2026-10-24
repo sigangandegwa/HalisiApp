@@ -1,0 +1,26 @@
+{
+  "merchant_id": "90b68053-1db4-5cd1-b3a3-f641f311aebc",
+  "variants_generated": 234,
+  "probed": 40,
+  "resolved": 2,
+  "unreachable": 38,
+  "budget_exhausted": true,
+  "findings": [
+    {
+      "platform": "instagram",
+      "handle": "safaricomplc",
+      "verdict": "suspicious",
+      "score": 71.11,
+      "scan_id": "f68f8ba5-7b8f-420b-ba5d-82d62f642ad6",
+      "threat_id": "ed8531ff-96bd-53e1-8594-380eb5fb63a6"
+    },
+    {
+      "platform": "instagram",
+      "handle": "safaricomplc_ke",
+      "verdict": "suspicious",
+      "score": 71.11,
+      "scan_id": "5c0f878d-4bec-42bb-a794-8054f61b3570",
+      "threat_id": "d72f7ddb-90ce-541b-b2ef-5aa514fbe20d"
+    }
+  ]
+}

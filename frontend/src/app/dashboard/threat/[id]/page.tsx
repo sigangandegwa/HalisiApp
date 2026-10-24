@@ -4,7 +4,7 @@ import { useAlertDrawer } from "@/components/merchant/alert-context";
 import { api, qk } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { VerdictStamp } from "@/components/checker/verdict-stamp";
+import type { ThreatStatus } from "@/lib/schemas";
 import { HandleDiff } from "@/components/merchant/handle-diff";
 import { CompareSlider } from "@/components/merchant/compare-slider";
 import { HashGrid } from "@/components/checker/hash-grid";
@@ -32,7 +32,7 @@ export default function ThreatDetailPage() {
   });
 
   const updateStatus = useMutation({
-    mutationFn: (status: any) => api.updateThreat(id, status),
+    mutationFn: (status: ThreatStatus) => api.updateThreat(id, status),
     onSuccess: () => {
        queryClient.invalidateQueries({ queryKey: qk.threat(id) });
        queryClient.invalidateQueries({ queryKey: qk.threats(merchantId) });
@@ -59,7 +59,9 @@ export default function ThreatDetailPage() {
         <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-line">
            <div>
               <div className="flex items-center gap-4 mb-2">
-                 <VerdictStamp verdict={isHighRisk ? "impersonation" : "suspicious"} size="sm" />
+                 <span className={`font-display text-5xl leading-none font-black uppercase ${isHighRisk ? "text-fake" : "text-warn"}`}>
+                    {isHighRisk ? "FEKI" : "ONYO"}
+                 </span>
                  <span className={`type-data text-2xl ${isHighRisk ? 'text-[var(--color-feki)]' : 'text-[var(--color-caution)]'}`}>
                     {threat.score}%
                  </span>
@@ -73,7 +75,7 @@ export default function ThreatDetailPage() {
            <div className="flex flex-col items-start lg:items-end gap-3">
               <div className="flex gap-2">
                  {/* Stepper MVP */}
-                 {["detected", "advisory_sent", "takedown_filed", "resolved"].map(step => (
+                 {(["detected", "advisory_sent", "takedown_filed", "resolved"] as const).map(step => (
                     <button 
                        key={step}
                        onClick={() => updateStatus.mutate(step)}

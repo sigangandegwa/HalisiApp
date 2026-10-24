@@ -1,0 +1,18 @@
+{
+  "merchant_id": "df51dd04-a774-5ce6-9c31-b7610c732da8",
+  "variants_generated": 320,
+  "probed": 40,
+  "resolved": 1,
+  "unreachable": 39,
+  "budget_exhausted": true,
+  "findings": [
+    {
+      "platform": "instagram",
+      "handle": "naivassupermarket",
+      "verdict": "impersonation",
+      "score": 70.0,
+      "scan_id": "ab7761b5-04c3-4705-bb41-9ec4dff4153d",
+      "threat_id": "7f140f7f-c9c7-5dcf-9f2d-0b3ec63c0769"
+    }
+  ]
+}

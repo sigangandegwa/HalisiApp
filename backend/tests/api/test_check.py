@@ -144,6 +144,32 @@ def test_scam_page_resembling_nobody_is_no_match_with_language_reason(client: Te
     assert [r["code"] for r in data["reasons"]] == ["SCAM_LANGUAGE"]
 
 
+def test_scam_shop_with_no_original_is_onyo_without_naming_anyone(client: TestClient) -> None:
+    """The commonest scam: a new shop that imitates nobody. Advance-payment demand + a personal number."""
+    data = check(
+        client,
+        handle="quick_loans_254",
+        manual={"bio": "Lipa kwanza! Pay before delivery. Send money to 0798 555 444. Offer ends today"},
+    )
+    assert data["verdict"] == "suspicious" and data["matched_merchant"] is None
+    assert data["threat_id"] is None and data["safe_action"] is None
+    codes = [r["code"] for r in data["reasons"]]
+    assert "SCAM_LANGUAGE" in codes and "POCHI_REQUEST" in codes
+    flat = str(data)
+    assert "798555444" not in flat and "0798 *** 444" in flat       # third-party number stays masked
+    assert not any(name in flat for name in ("Nairobi Sneaker Vault", "Kilimani Glow", "Pwani Threads"))
+
+
+def test_honest_small_shop_with_a_pochi_line_stays_unknown(client: TestClient) -> None:
+    """A personal number or Pochi in a bio is normal for Kenyan sellers: never ONYO on that alone."""
+    data = check(
+        client,
+        handle="mama_njeri_bakes",
+        manual={"bio": "Cakes & cupcakes, Kasarani. Pochi la biashara 0711 222 333. Delivery countrywide"},
+    )
+    assert data["verdict"] == "no_match" and data["reasons"] == []
+
+
 def test_check_persists_scan_and_threat(client: TestClient, auth: dict[str, str]) -> None:
     data = check(client, handle="nairobisneakervau1t")
     threat = client.get(f"/api/v1/threats/{data['threat_id']}", headers=auth).json()

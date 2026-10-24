@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Check, Flag, Link2, RotateCcw, Search } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { officialHandle, resultUrl, whatsappUrl } from "@/lib/result";
 import type { CheckResult } from "@/lib/schemas";
@@ -70,49 +70,55 @@ export function ShareActions({
   if (result.target.url) report.set("url", result.target.url);
   else if (result.target.handle) report.set("handle", result.target.handle);
 
+  const quiet =
+    "inline-flex h-12 cursor-pointer items-center gap-2 font-medium text-fg-2 transition-colors duration-(--dur-ui) ease-quart hover:text-fg [&_svg]:size-[1.05rem]";
+
+  // One big button for the thing worth doing (warn a friend), then quiet text actions.
   return (
-    <div className={cn("flex flex-wrap items-center gap-2.5", className)}>
+    <div className={cn("grid gap-2", className)}>
       <a
         href={whatsappUrl(message)}
         target="_blank"
         rel="noopener noreferrer"
-        className={buttonVariants({ variant: result.verdict === "impersonation" ? "primary" : "secondary", size: "md" })}
+        className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}
       >
-        <WhatsAppGlyph className="size-[1.05rem]" />
+        <WhatsAppGlyph className="size-[1.2rem]" />
         {t("share.whatsapp")}
       </a>
-      <Button
-        variant="secondary"
-        size="md"
-        onClick={async () => {
-          if (await copyText(url)) {
-            setCopied(true);
-            window.setTimeout(() => setCopied(false), 1800);
-          }
-        }}
-        aria-live="polite"
-      >
-        {copied ? <Check className="size-[1.05rem]" strokeWidth={1.75} /> : <Link2 className="size-[1.05rem]" strokeWidth={1.5} />}
-        {copied ? t("share.copied") : t("share.copy")}
-      </Button>
-      {result.verdict !== "official" ? (
-        <Link href={`/report?${report.toString()}`} className={buttonVariants({ variant: "ghost", size: "md" })}>
-          <Flag className="size-[1.05rem]" strokeWidth={1.5} />
-          {t("share.report")}
-        </Link>
-      ) : null}
-      {onReplay ? (
-        <Button variant="ghost" size="md" onClick={onReplay}>
-          <RotateCcw className="size-[1.05rem]" strokeWidth={1.5} />
-          {t("share.replay")}
-        </Button>
-      ) : null}
-      {onAgain ? (
-        <Button variant="ghost" size="md" onClick={onAgain}>
-          <Search className="size-[1.05rem]" strokeWidth={1.5} />
-          {t("share.again")}
-        </Button>
-      ) : null}
+      <div className="flex flex-wrap items-center gap-x-6">
+        <button
+          type="button"
+          className={quiet}
+          onClick={async () => {
+            if (await copyText(url)) {
+              setCopied(true);
+              window.setTimeout(() => setCopied(false), 1800);
+            }
+          }}
+          aria-live="polite"
+        >
+          {copied ? <Check strokeWidth={1.75} /> : <Link2 strokeWidth={1.5} />}
+          {copied ? t("share.copied") : t("share.copy")}
+        </button>
+        {result.verdict !== "official" ? (
+          <Link href={`/report?${report.toString()}`} className={quiet}>
+            <Flag strokeWidth={1.5} />
+            {t("share.report")}
+          </Link>
+        ) : null}
+        {onReplay ? (
+          <button type="button" className={quiet} onClick={onReplay}>
+            <RotateCcw strokeWidth={1.5} />
+            {t("share.replay")}
+          </button>
+        ) : null}
+        {onAgain ? (
+          <button type="button" className={quiet} onClick={onAgain}>
+            <Search strokeWidth={1.5} />
+            {t("share.again")}
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }

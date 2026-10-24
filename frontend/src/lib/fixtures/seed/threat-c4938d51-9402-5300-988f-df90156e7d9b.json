@@ -44,7 +44,7 @@
       "score": 100.0,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 4/64 · dHash distance 4/64 · CLIP similarity 0.71"
+      "evidence": "pHash distance 4/64 · dHash distance 4/64"
     },
     {
       "key": "identity",
@@ -127,7 +127,7 @@
     "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
   },
   "threat_id": "c4938d51-9402-5300-988f-df90156e7d9b",
-  "elapsed_ms": 2,
+  "elapsed_ms": 4,
   "status": "detected",
   "status_history": [
     {

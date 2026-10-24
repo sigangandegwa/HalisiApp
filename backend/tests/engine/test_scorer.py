@@ -173,7 +173,8 @@ def test_unavailable_signals_are_renormalised_out():
     assert result.confidence == 0.35
 
 
-def test_resemblance_gate_caps_unrelated_scammy_pages():
+def test_resemblance_gate_keeps_unrelated_scammy_pages_off_every_merchant():
+    """G1 still stops attribution to a merchant; the page is scored on its own merits instead (ONYO)."""
     target = TargetProfile(
         platform="instagram",
         handle="mombasa_fashion_house",
@@ -181,10 +182,11 @@ def test_resemblance_gate_caps_unrelated_scammy_pages():
         payment=PaymentEvidence(phones=["+254798999111"], pochi_phrasing=True),
     )
     result = score_against_all(target, MERCHANTS, CTX)
-    assert result.verdict == "no_match"
-    assert result.score <= 39
+    assert result.verdict == "suspicious"
     assert result.merchant is None
-    assert [r.code for r in result.reasons] == ["SCAM_LANGUAGE"]     # merchant-independent reasons only
+    assert result.score == 55.0                      # 30 + 5 (second phrase) + 20 (personal payment)
+    assert [r.code for r in result.reasons] == ["SCAM_LANGUAGE", "POCHI_REQUEST"]
+    assert "S1" in result.rules and "G1" not in result.rules
 
 
 def test_community_confirmed_number_sets_a_floor():
@@ -206,8 +208,74 @@ def test_best_matching_merchant_wins():
     assert score_against_all(target, MERCHANTS, CTX).merchant is GLOW
 
 
-def test_no_registered_merchants_is_no_match():
-    assert score_against_all(BLATANT, [], CTX).verdict == "no_match"
+def test_no_registered_merchants_scores_the_page_on_its_own():
+    result = score_against_all(BLATANT, [], CTX)
+    assert result.verdict == "suspicious" and result.merchant is None
+    plain = TargetProfile(platform="instagram", handle="x_shop")
+    assert score_against_all(plain, [], CTX).verdict == "no_match"
+
+
+# --- standalone / zero-merchant scoring (TSK-043) -------------------------------------------------
+
+def standalone(**kwargs):
+    base = {"platform": "instagram", "handle": "mombasa_fashion_house"}
+    return score_against_all(TargetProfile(**{**base, **kwargs}), [], CTX)
+
+
+def test_personal_number_and_pochi_alone_never_raise_a_page():
+    """Honest Kenyan SMEs list a personal line or Pochi la Biashara: that is not a scam signal."""
+    result = standalone(
+        bio="Pochi la biashara 0711 222 333. DM for price. Limited stock. Delivery countrywide",
+        payment=PaymentEvidence(phones=["+254711222333"], pochi_phrasing=True),
+        account_created_on=date(2026, 9, 20),
+        post_count=4,
+    )
+    assert result.verdict == "no_match" and result.score == 0.0
+
+
+def test_a_lone_advance_payment_phrase_is_not_enough():
+    result = standalone(bio="Lipa kwanza then we deliver")
+    assert result.verdict == "no_match" and result.score == 30.0
+    assert [r.code for r in result.reasons] == ["SCAM_LANGUAGE"]       # still explained, just not escalated
+
+
+def test_advance_demand_plus_one_amplifier_is_suspicious():
+    new_account = standalone(bio="Lipa kwanza then we deliver", account_created_on=date(2026, 9, 20))
+    assert new_account.verdict == "suspicious" and new_account.score == 45.0
+    urgent = standalone(bio="Pay before delivery. Offer ends today")
+    assert urgent.verdict == "suspicious" and urgent.score == 45.0
+
+
+def test_standalone_never_reaches_impersonation_without_a_report():
+    result = standalone(
+        bio="Lipa kwanza. Pay before delivery. Offer ends today. No refunds",
+        payment=PaymentEvidence(phones=["+254798999111"], pochi_phrasing=True),
+        account_created_on=date(2026, 9, 25),
+    )
+    assert result.verdict == "suspicious" and result.score == 84.0       # capped
+    assert result.merchant is None and result.confidence == 0.9
+
+
+def test_confirmed_reported_number_is_enough_on_its_own():
+    ctx = replace(CTX, confirmed_reported=frozenset({"+254733000111"}))
+    target = TargetProfile(
+        platform="instagram", handle="plain_shop", payment=PaymentEvidence(phones=["0733 000 111"])
+    )
+    result = score_against_all(target, [], ctx)
+    assert result.verdict == "suspicious" and result.score == 85.0
+    assert "S2" in result.rules
+    assert [r.code for r in result.reasons] == ["COMMUNITY_REPORTED"]
+
+
+def test_standalone_reasons_never_name_a_business_and_are_bilingual():
+    result = standalone(bio="Lipa kwanza. Offer ends today", account_created_on=date(2026, 9, 20))
+    assert result.reasons and all(r.text and r.text_sw for r in result.reasons)
+    assert "Nairobi Sneaker Vault" not in str([(r.text, r.text_sw) for r in result.reasons])
+
+
+def test_unrelated_shop_with_phrases_still_beats_a_merchant_only_when_it_imitates_nobody():
+    """A page that does imitate a merchant keeps the merchant verdict (FEKI), not the standalone one."""
+    assert score_against_all(BLATANT, MERCHANTS, CTX).verdict == "impersonation"
 
 
 def test_thresholds_come_from_context():

@@ -1,0 +1,34 @@
+{
+  "merchant_id": "22d3547a-f603-5b6e-a6af-c8d78ffb2ce3",
+  "variants_generated": 146,
+  "probed": 42,
+  "resolved": 3,
+  "unreachable": 39,
+  "budget_exhausted": true,
+  "findings": [
+    {
+      "platform": "instagram",
+      "handle": "pwanithreads_official_ke",
+      "verdict": "impersonation",
+      "score": 97.0,
+      "scan_id": "bc02b7c4-98b9-574e-94d7-e86d7ba9a3a1",
+      "threat_id": "aee7afbd-7d25-5114-a2f1-5e47b5b2dc11"
+    },
+    {
+      "platform": "instagram",
+      "handle": "pwanlthreads",
+      "verdict": "impersonation",
+      "score": 90.0,
+      "scan_id": "2f4c3d57-9801-51b8-ab20-7ae58e138ef0",
+      "threat_id": "b0a85e20-8d51-5fb7-8d55-0763eeb977fe"
+    },
+    {
+      "platform": "instagram",
+      "handle": "pwani_threads",
+      "verdict": "impersonation",
+      "score": 90.0,
+      "scan_id": "09dba5ed-9bd3-46d9-8c73-b7fe81826eeb",
+      "threat_id": "5f7eb6db-17d1-544f-b55d-ea684874518c"
+    }
+  ]
+}

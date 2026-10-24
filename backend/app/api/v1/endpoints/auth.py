@@ -4,7 +4,6 @@ import os
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, Field
 
 from app.api.deps import get_repo, get_settings
 from app.core.config import Settings

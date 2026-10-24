@@ -1,9 +1,9 @@
 {
-  "pages_scanned": 12,
+  "pages_scanned": 21,
   "threats_detected": 6,
   "impersonations_blocked_7d": 0,
-  "merchants_protected": 3,
-  "median_detection_ms": 2,
+  "merchants_protected": 12,
+  "median_detection_ms": 0,
   "top_platforms": [
     {
       "platform": "instagram",

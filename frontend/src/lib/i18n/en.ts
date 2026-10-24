@@ -3,7 +3,11 @@
  * Required verdict wording lives under `line.*`. Never phrase a result as "safe".
  * `{name}` placeholders are filled by `t(key, { name })`. `*word*` marks the italic accent.
  */
-export const en = {
+import { enMerchant } from "./en-merchant";
+import { enMisc } from "./en-misc";
+import { enOnboard } from "./en-onboard";
+
+const enBase = {
   "meta.title": "Halisi · Is this shop page the real business?",
   "meta.description": "Paste an Instagram, Facebook or TikTok link. Halisi checks it against verified Kenyan businesses in seconds.",
 
@@ -18,17 +22,19 @@ export const en = {
   "nav.home": "Halisi home",
   "lang.label": "Language",
 
-  "hero.eyebrow": "Brand-impersonation checker for Kenyan shoppers",
-  "hero.line1": "Before you pay,",
-  "hero.line2": "make sure it’s",
-  "hero.word": "halisi",
-  "hero.sub": "Paste an Instagram, Facebook or TikTok link. Halisi checks it against verified Kenyan businesses in seconds.",
-  "hero.aside": "Halisi (Swahili): genuine, authentic, the real thing.",
+  "hero.eyebrow": "Halisi · Scam check for Kenyan social commerce",
+  "hero.line1": "Check before",
+  "hero.line2": "you",
+  "hero.word": "lipa",
+  "hero.sub": "Paste a shop’s link, @handle, till or phone number. In seconds Halisi tells you whether it’s the real business, a clone, or carries the signs of a scam.",
+  "hero.aside": "Halisi (Swahili): genuine, the real thing.",
+  "hero.scroll": "How it decides",
+  "hero.counter": "{n} pages checked so far",
 
   "checker.tab.link": "Link",
   "checker.tab.pay": "Till / Phone",
   "checker.label": "Page link or @handle",
-  "checker.placeholder": "instagram.com/… or @handle",
+  "checker.placeholder": "Link, @handle, till or phone number",
   "checker.submit": "Check",
   "checker.checking": "Checking",
   "checker.paste": "Paste link",
@@ -48,8 +54,16 @@ export const en = {
   "chip.lookalike": "A look-alike",
 
   "scan.opening": "Opening page…",
+  "scan.bio": "Reading the bio…",
   "scan.logo": "Comparing logo…",
   "scan.payment": "Checking payment details…",
+  "scan.verdict": "Reaching a verdict…",
+  "console.case": "Case",
+  "console.target": "Target",
+  "console.engine": "Halisi engine",
+  "takeover.evidence": "See the evidence",
+  "takeover.skip": "Skip",
+  "takeover.hint": "Tap or press Esc",
   "scan.slow": "This is taking longer than usual.",
   "scan.slowAction": "Paste the bio instead",
   "scan.skip": "Skip",
@@ -57,23 +71,25 @@ export const en = {
   "scan.report": "Forensic report",
   "scan.scan": "Scan",
 
-  "verdict.official.word": "AUTHENTIC.",
+  // The stamp word is Swahili in both languages (the brand speaks Swahili); the sub-line follows the locale.
+  "verdict.official.word": "HALISI.",
   "verdict.official.sub": "Official page",
-  "verdict.impersonation.word": "FAKE.",
+  "verdict.impersonation.word": "FEKI.",
   "verdict.impersonation.sub": "Impersonator detected",
-  "verdict.suspicious.word": "CAUTION.",
-  "verdict.suspicious.sub": "Proceed with caution",
-  "verdict.no_match.word": "UNVERIFIED.",
-  "verdict.no_match.sub": "Not a Halisi-verified page",
-  "verdict.error.word": "ERROR.",
+  "verdict.suspicious.word": "ONYO.",
+  "verdict.suspicious.sub": "High-risk signals",
+  "verdict.no_match.word": "HAIJULIKANI.",
+  "verdict.no_match.sub": "No signals either way",
+  "verdict.error.word": "HITILAFU.",
   "verdict.error.sub": "Check failed",
 
   "line.official": "This is the official page of {business}.",
   "line.impersonation": "This page is impersonating {business}. Don’t send money.",
   "line.suspicious": "Some signs don’t add up. Confirm through {business}’s official page before paying.",
+  "line.suspicious.nobody": "This page shows signs common in scams. Don’t pay up front: confirm the seller another way first.",
   "line.no_match": "This page doesn’t match any Halisi-verified business.",
   "line.no_match.note": "That doesn’t mean it’s safe. Before you pay someone new, check their number.",
-  "line.score": "Impersonation score {score} / 100",
+  "line.score": "Risk score {score} / 100",
   "line.confidence": "Based on {n} of 5 signals",
 
   "safe.official.title": "Pay only through the official channel.",
@@ -116,6 +132,10 @@ export const en = {
 
   "reasons.title": "What we found",
   "reasons.none": "No warning signs on this page.",
+  "reasons.more": "{n} more",
+  "reasons.less": "Show fewer",
+  "result.showEvidence": "Show the evidence",
+  "result.hideEvidence": "Hide the evidence",
 
   "manual.title": "We couldn’t open that page.",
   "manual.body": "Paste its bio and upload its profile picture, and we’ll check them instead.",
@@ -160,26 +180,47 @@ export const en = {
   "proof.protected": "Businesses protected",
   "proof.note": "Live counts from the Halisi API.",
 
+  "verdicts.eyebrow": "Four possible answers",
+  "verdicts.title1": "Every check ends in one",
+  "verdicts.title2": "word.",
+  "verdicts.official": "The page or number belongs to a business Halisi has verified. Pay only through its official channel.",
+  "verdicts.impersonation": "It imitates a verified business: the logo, the name or the payment details give it away. Don’t send money.",
+  "verdicts.suspicious": "It imitates nobody we know, but it shows signs common in scams: money up front, a personal number, a brand-new account.",
+  "verdicts.no_match": "Nothing for or against. That is not the same as safe: confirm before you pay someone new.",
+  "verdicts.example": "Example: {handle}",
+
+  "limits.eyebrow": "What Halisi can and can’t see",
+  "limits.title1": "Honest about",
+  "limits.title2": "the limits.",
+  "limits.body": "Halisi doesn’t crawl Instagram. It sees what people check and report, plus the look-alikes it watches for on behalf of verified businesses. Every check makes the next one sharper.",
+  "limits.see.title": "It can see",
+  "limits.see.body": "Public bios, profile pictures and the payment numbers written in them.",
+  "limits.cant.title": "It can’t see",
+  "limits.cant.body": "Private accounts, direct messages, or who really owns an M-Pesa number.",
+  "limits.never.title": "It never says",
+  "limits.never.body": "“Safe.” The best answer is HALISI: a business we have verified.",
+
   "business.eyebrow": "For businesses",
-  "business.title1": "Get Halisi",
-  "business.title2": "Verified.",
-  "business.body": "Give your customers one place to confirm it’s really you: your official handles and your till, on a certificate they can scan.",
+  "business.title1": "Your name,",
+  "business.title2": "protected.",
+  "business.body": "Prove you own your official handle with a code in your bio. Halisi then watches for look-alikes, alerts you the moment one is checked, and prepares the takedown, the Safaricom report and the customer warning.",
   "business.cta": "Protect my business",
+  "business.note": "You review and send every report. Halisi never files on your behalf.",
 
   "how.eyebrow": "How protection works",
   "how.1.title": "Detect",
-  "how.1.body": "A live alert in your Halisi dashboard as soon as a clone of your page is checked.",
-  "how.2.title": "Warn",
-  "how.2.body": "An AI-drafted customer warning in English and Swahili, ready to post to your story.",
-  "how.3.title": "Take down",
-  "how.3.body": "A report kit for Instagram, Safaricom and KE-CIRT/CC, with the evidence already attached.",
+  "how.1.body": "A live alert the moment a look-alike of your page is checked or reported.",
+  "how.2.title": "Prepare",
+  "how.2.body": "A platform report, a Safaricom report and a customer warning in English and Swahili, with the evidence attached.",
+  "how.3.title": "Submit",
+  "how.3.body": "You review and send. Halisi never files for you and never claims a platform acted.",
 
   "footer.tagline": "Protect your customers. Protect your name.",
   "footer.taglineSub": "",
   "footer.taglineLang": "en",
   "footer.credit": "Built by Chiromo Tech Club, University of Nairobi.",
   "footer.privacy": "Halisi keeps a record of the pages checked and their results so results can be shared. We don’t ask who you are. Third-party phone numbers are masked on public pages.",
-  "footer.demo": "All businesses in this demo are fictional.",
+  "footer.demo": "Clone pages in this demo are fictional. Brand details come from the brands’ own public channels.",
 
   "pay.eyebrow": "Check before you pay",
   "pay.title1": "Is this number",
@@ -302,5 +343,8 @@ export const en = {
   "sim.live": "Computed live by the detection engine",
   "sim.offline": "Precomputed (engine unreachable)",
 } as const;
+
+/** Base strings plus one module per area, so areas can be edited without touching each other. */
+export const en = { ...enBase, ...enMerchant, ...enOnboard, ...enMisc } as const;
 
 export type MessageKey = keyof typeof en;

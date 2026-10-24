@@ -1,4 +1,4 @@
-"""Alert dispatcher (in-app alerts TSK-012, Africa's Talking SMS alerts TSK-041).
+"""Alert dispatcher (in-app alerts, TSK-012).
 
 Rules:
 * threat created with composite >= threshold                       -> ``new_threat``
@@ -7,7 +7,9 @@ Rules:
 * de-duplication: at most one alert per threat per ``ALERT_DEDUP_HOURS`` unless the score rose
 * ``false_positive`` threats never alert
 * title/body never contain phone numbers (notifications can show on lock screens)
-* critical threats (score >= 90 or kind == "new_threat") trigger Africa's Talking SMS to merchant phones
+
+SMS and automated Meta takedowns were archived (docs/PRODUCT_V2.md section 9): alerts are in-app only,
+and takedowns are prepared by the merchant from the Strike Console, never filed automatically.
 """
 
 import re
@@ -15,18 +17,11 @@ import uuid
 from datetime import datetime, timedelta
 from uuid import UUID
 
-from app.alerts.sms import send_threat_sms
-from app.core.config import Settings, get_settings
-from app.core.logging import log_event
 from app.core.repository import Repository, utcnow
-from app.engine.constants import META_TAKEDOWN_THRESHOLD
-from app.engine.payment import mask_phone
-from app.ingestion.meta_rights import maybe_submit_meta_takedown
 from app.schemas.alert import AlertCreate, AlertRecord
 from app.schemas.threat import ThreatRecord
 
 SCORE_RISE = 10.0
-CRITICAL_SMS_SCORE = 90.0
 _PHONE_LIKE = re.compile(r"\+?\d[\d\s*-]{6,}\d")
 
 
@@ -58,23 +53,8 @@ async def dispatch_threat_alert(
     threshold: float,
     dedup_hours: float,
     now: datetime | None = None,
-    settings: Settings | None = None,
 ) -> AlertRecord | None:
     """Write at most one ``merchant_alerts`` row for a threat upsert. Returns the alert or None."""
-    # Automated Meta Rights Manager takedown for 95+ score threats (TSK-038)
-    if after.composite_score >= META_TAKEDOWN_THRESHOLD and after.source != "seed":
-        cfg = settings or get_settings()
-        if cfg.meta_rights_manager_enabled:
-            try:
-                await maybe_submit_meta_takedown(repo, after, settings=cfg)
-            except Exception as exc:  # noqa: BLE001
-                log_event(
-                    "meta_takedown_dispatch_error",
-                    threat_id=str(after.id),
-                    handle=after.target_handle,
-                    error=str(exc),
-                )
-
     kind = decide_kind(before, after, threshold)
     if kind is None:
         return None
@@ -100,28 +80,6 @@ async def dispatch_threat_alert(
             created_at=now,
         )
     )
-
-    # Critical threat SMS dispatch via Africa's Talking (TSK-041)
-    if after.composite_score >= CRITICAL_SMS_SCORE or kind == "new_threat":
-        merchant = await repo.get_merchant(after.merchant_id)
-        if merchant is not None and merchant.phone_numbers:
-            cfg = settings or get_settings()
-            for phone in merchant.phone_numbers:
-                try:
-                    await send_threat_sms(
-                        phone,
-                        merchant.business_name,
-                        after.target_handle,
-                        after.composite_score,
-                        settings=cfg,
-                    )
-                except Exception as exc:
-                    log_event(
-                        "sms_dispatch_error",
-                        merchant_id=str(after.merchant_id),
-                        phone=mask_phone(phone),
-                        error=str(exc),
-                    )
 
     return alert
 

@@ -1,0 +1,54 @@
+{
+  "scan_id": "2ed3f7b3-cb98-5fd0-9f87-714c455ed6b9",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "safaricomplc_",
+    "display_name": null,
+    "url": "https://instagram.com/safaricomplc_",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "90b68053-1db4-5cd1-b3a3-f641f311aebc",
+    "business_name": "Safaricom PLC",
+    "slug": "safaricom-plc",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "safaricomplc_",
+        "url": "https://instagram.com/safaricomplc_"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "safaricomplc",
+        "url": "https://tiktok.com/@safaricomplc"
+      },
+      {
+        "platform": "x",
+        "handle": "safaricomplc",
+        "url": "https://x.com/safaricomplc"
+      }
+    ],
+    "payment": {
+      "type": "none",
+      "number": null,
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Contact Safaricom PLC only through @safaricomplc_.",
+    "text_sw": "Wasiliana na Safaricom PLC kupitia @safaricomplc_ pekee."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

@@ -83,9 +83,10 @@ def _onboard(client: TestClient, auth: dict[str, str], **overrides: object):
     )
 
 
-def test_onboarding_computes_hashes_and_makes_the_handle_official(
+def test_onboarding_computes_hashes_and_creates_an_inert_claim(
     client: TestClient, auth: dict[str, str]
 ) -> None:
+    """A new merchant is only *claimed*: it gets a bio code and takes no part in scoring (TSK-044)."""
     created = _onboard(client, auth)
     assert created.status_code == 201, created.text
     body = created.json()
@@ -93,13 +94,17 @@ def test_onboarding_computes_hashes_and_makes_the_handle_official(
     assert body["official_handles"][0]["handle"] == "eastlandsbooknook"
     assert body["logo_url"].startswith("/media/")
     assert client.get(body["logo_url"]).status_code == 200
-    check = client.post("/api/v1/check", json={"handle": "eastlandsbooknook"}).json()
-    assert check["verdict"] == "official"
+    assert body["verification_status"] == "claimed" and body["is_verified"] is False
+    assert body["verification_code"].startswith("halisi-") and body["verified_since"] is None
+    assert "verification_code" not in client.get("/api/v1/merchants/eastlands-book-nook").json()
+
+    own = client.post("/api/v1/check", json={"handle": "eastlandsbooknook"}).json()
+    assert own.get("verdict") != "official"                   # a claim is not proof
     clone = client.post(
         "/api/v1/check",
         json={"handle": "eastlandsbooknook_official", "manual": {"bio": "Send money to 0798 555 444"}},
     ).json()
-    assert clone["matched_merchant"]["slug"] == "eastlands-book-nook"
+    assert clone["matched_merchant"] is None                  # and cannot be impersonated yet
 
 
 def test_onboarding_rejects_bad_input(client: TestClient, auth: dict[str, str]) -> None:

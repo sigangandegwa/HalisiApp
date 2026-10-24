@@ -33,9 +33,7 @@ def test_reported_number_is_masked(client: TestClient) -> None:
     assert data["merchant"] is None
     assert data["report_count"] == 2
     assert data["linked_threats"] == 1
-    assert data["daraja"] is not None
-    assert data["daraja"]["is_valid"] is True
-    assert data["daraja"]["account_name"] == "JOHN KAMAU NJOROGE"
+    assert "daraja" not in data                      # Halisi never states who owns a number
 
 
 def test_wa_me_link_is_accepted(client: TestClient) -> None:
@@ -88,9 +86,9 @@ def test_pending_report_does_not_flip_status_but_confirmed_does_and_o3_applies(c
 
 def test_global_stats_are_counts(client: TestClient) -> None:
     stats = client.get("/api/v1/stats").json()
-    assert stats["pages_scanned"] == 12  # 9 seeded pages + 3 official checks
+    assert stats["pages_scanned"] == 21  # 9 seeded pages + 12 official checks (3 fictional + 9 curated)
     assert stats["threats_detected"] == 6
-    assert stats["merchants_protected"] == 3
+    assert stats["merchants_protected"] == 12
     assert stats["impersonations_blocked_7d"] == 6
     assert stats["top_platforms"] == [{"platform": "instagram", "count": 6}]
     assert stats["active_threats"] is None

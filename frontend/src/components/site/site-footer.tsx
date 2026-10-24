@@ -1,36 +1,25 @@
 import Link from "next/link";
-import { Microprint } from "@/components/brand/microprint";
 import { Wordmark } from "@/components/brand/wordmark";
 import type { T } from "@/lib/i18n";
 
-/** Footer (FRONTEND.md 6.1.7): microprint rule, tagline, credit, privacy note. */
+/** The footer says three things: who we are, where to go, and what we keep. Nothing else. */
 export function SiteFooter({ t }: { t: T }) {
   return (
-    <footer className="mt-auto border-t border-line">
-      <Microprint className="py-1.5" />
-      <div className="page-grid gap-y-10 pt-14 pb-10 md:pt-20">
-        <div className="col-span-12 md:col-span-7">
-          <p className="type-display-m max-w-[16ch] italic" style={{ fontVariationSettings: '"SOFT" 100' }} lang={t("footer.taglineLang")}>
-            {t("footer.tagline")}
-          </p>
-          {t("footer.taglineSub") ? <p className="mt-3 text-fg-2">{t("footer.taglineSub")}</p> : null}
+    <footer className="border-t border-line">
+      <div className="page-wrap grid gap-10 py-14 md:grid-cols-[1fr_auto] md:items-end md:py-20">
+        <div className="grid gap-6">
+          <Wordmark className="text-[1.25rem]" />
+          <p className="max-w-[44ch] text-small text-fg-3">{t("footer.privacy")}</p>
+          <p className="max-w-[44ch] text-small text-fg-3">{t("footer.demo")}</p>
         </div>
-        <div className="col-span-12 grid gap-4 text-small text-fg-2 md:col-span-4 md:col-start-9">
-          <p className="measure">{t("footer.privacy")}</p>
-          <p>{t("footer.demo")}</p>
-        </div>
-        <div className="col-span-12 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-small text-fg-3">
-          <Wordmark className="text-fg" />
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2">
-            <Link href="/" className="hover:text-fg">{t("nav.check")}</Link>
-            <Link href="/pay" className="hover:text-fg">{t("nav.pay")}</Link>
-            <Link href="/onboarding" className="hover:text-fg">{t("nav.business")}</Link>
-            <Link href="/report" className="hover:text-fg">{t("nav.report")}</Link>
-            <Link href="/login" className="hover:text-fg">{t("nav.login")}</Link>
-          </nav>
-          <p>{t("footer.credit")}</p>
-        </div>
+        <nav aria-label="Footer" className="grid gap-1 text-[1.0625rem] md:justify-items-end">
+          <Link href="/pay" className="inline-flex h-11 items-center hover:text-fg-2">{t("nav.pay")}</Link>
+          <Link href="/report" className="inline-flex h-11 items-center hover:text-fg-2">{t("nav.report")}</Link>
+          <Link href="/onboarding" className="inline-flex h-11 items-center hover:text-fg-2">{t("nav.business")}</Link>
+          <Link href="/login" className="inline-flex h-11 items-center hover:text-fg-2">{t("nav.login")}</Link>
+        </nav>
       </div>
+      <p className="page-wrap pb-8 font-mono text-[0.6875rem] tracking-[0.08em] text-fg-3 uppercase">{t("footer.credit")}</p>
     </footer>
   );
 }

@@ -1,11 +1,12 @@
 """Merchant models: DB records (schema v2.2 ``merchants`` + ``merchant_handles``) and API shapes."""
 
 from datetime import date, datetime
+from typing import Any
 from uuid import UUID
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
-from app.schemas.common import HANDLE_PATTERN, BaseSchema, MpesaType, Platform
+from app.schemas.common import HANDLE_PATTERN, BaseSchema, MpesaType, Platform, Verdict, VerificationStatus
 
 
 class MerchantHandle(BaseSchema):
@@ -79,9 +80,26 @@ class MerchantRecord(BaseSchema):
     mpesa_account_name: str | None = None
     phone_numbers: list[str] = Field(default_factory=list)
     is_verified: bool = False
+    verification_status: VerificationStatus = "claimed"
+    verification_code: str | None = None
+    verified_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
     official_handles: list[MerchantHandle] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _derive_status(cls, data: Any) -> Any:
+        """Rows written before schema v2.3 have only ``is_verified``: those are Halisi-seeded (curated)."""
+        if isinstance(data, dict) and not data.get("verification_status"):
+            data = {**data, "verification_status": "curated" if data.get("is_verified") else "claimed"}
+        return data
+
+    @model_validator(mode="after")
+    def _sync_is_verified(self) -> "MerchantRecord":
+        """``is_verified`` is derived: true exactly for curated and verified merchants."""
+        self.is_verified = self.verification_status in ("curated", "verified")
+        return self
 
 
 class PublicMerchant(BaseSchema):
@@ -95,6 +113,7 @@ class PublicMerchant(BaseSchema):
     location: str | None = None
     established_on: date | None = None
     is_verified: bool
+    verification_status: VerificationStatus = "claimed"
     official_handles: list[MerchantHandle]
     payment: MerchantPayment
     verified_since: datetime | None = None
@@ -112,8 +131,60 @@ class MatchedMerchant(BaseSchema):
 
 
 class MerchantCreated(PublicMerchant):
-    """``POST /merchants`` response: the merchant plus its computed logo hashes."""
+    """``POST /merchants`` response: the merchant, its logo hashes and the bio code that proves ownership."""
 
     logo_phash: str
     logo_dhash: str
     clip: bool = False
+    verification_code: str | None = None
+
+
+class WatchlistHandle(BaseSchema):
+    """One official handle and the look-alikes Halisi would watch for (generated, not confirmed to exist)."""
+
+    platform: Platform
+    handle: str
+    variants: list[str]
+
+
+class Watchlist(BaseSchema):
+    """``GET /merchants/{id}/watchlist``."""
+
+    merchant_id: UUID
+    handles: list[WatchlistHandle]
+
+
+class WatchlistFinding(BaseSchema):
+    """A look-alike that exists and scored as impersonation or suspicious for this merchant."""
+
+    platform: str
+    handle: str
+    verdict: Verdict
+    score: float
+    scan_id: UUID
+    threat_id: UUID | None = None
+
+
+class WatchlistScan(BaseSchema):
+    """``POST /merchants/{id}/watchlist/scan``. ``unreachable``: could not be read, which is not "safe"."""
+
+    merchant_id: UUID
+    variants_generated: int
+    probed: int
+    resolved: int
+    unreachable: int
+    budget_exhausted: bool = False
+    findings: list[WatchlistFinding] = Field(default_factory=list)
+
+
+class VerificationState(BaseSchema):
+    """``GET /merchants/{id}/verification`` and the result of ``POST .../verification/check``."""
+
+    status: VerificationStatus
+    is_verified: bool
+    verification_code: str | None = None      # only while ``claimed``
+    handles_to_check: list[MerchantHandle] = Field(default_factory=list)
+    checked: list[str] = Field(default_factory=list)   # "platform:handle" fetched on this attempt
+    found_on: str | None = None                        # "platform:handle" where the code was found
+    verified_at: datetime | None = None
+    instructions: str | None = None

@@ -1,0 +1,39 @@
+{
+  "id": "9775b32e-9258-5ccf-9546-4bd03136b5bf",
+  "business_name": "KCB Bank Kenya",
+  "slug": "kcb-bank-kenya",
+  "logo_url": null,
+  "category": "Bank",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "kcbkenya",
+      "url": "https://instagram.com/kcbkenya"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "kcb_kenya",
+      "url": "https://tiktok.com/@kcb_kenya"
+    },
+    {
+      "platform": "facebook",
+      "handle": "kcbinkenya",
+      "url": "https://facebook.com/kcbinkenya"
+    },
+    {
+      "platform": "x",
+      "handle": "kcbinkenya",
+      "url": "https://x.com/kcbinkenya"
+    }
+  ],
+  "payment": {
+    "type": "paybill",
+    "number": "522522",
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

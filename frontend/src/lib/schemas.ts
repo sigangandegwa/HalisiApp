@@ -129,6 +129,10 @@ export type CheckResult = z.infer<typeof CheckResult>;
 
 // --- 5.4 public merchant profile ------------------------------------------------------------
 
+/** curated = Halisi-seeded from public sources · verified = bio code proven · claimed = self-declared (inert). */
+export const VerificationStatus = z.enum(["curated", "verified", "claimed"]);
+export type VerificationStatus = z.infer<typeof VerificationStatus>;
+
 export const MerchantPublic = z.object({
   /** 5.11: now returned by the API (the dashboard needs it for /merchants/{id}/...) */
   id: z.string().optional(),
@@ -139,23 +143,18 @@ export const MerchantPublic = z.object({
   location: nullableString,
   established_on: nullableString,
   is_verified: z.boolean(),
+  /** 5.12: absent on older fixtures; treat a missing value as curated when `is_verified`, else claimed. */
+  verification_status: VerificationStatus.optional(),
   official_handles: z.array(OfficialHandle),
   payment: MerchantPayment,
   verified_since: nullableString,
 });
 export type MerchantPublic = z.infer<typeof MerchantPublic>;
 
-export const DarajaValidation = z.object({
-  is_valid: z.boolean(),
-  account_name: z.string().nullable().optional(),
-  account_type: z.string().nullable().optional(),
-  kyc_status: z.string().nullable().optional(),
-  source: z.string(),
-  error_message: z.string().nullable().optional(),
-  operator: z.string().optional(),
-});
-export type DarajaValidation = z.infer<typeof DarajaValidation>;
-
+/**
+ * Halisi states what it knows about a number, never who owns it: the simulated Daraja account-holder
+ * name was removed from the API on 2026-10-22 (BACKEND.md 5.12).
+ */
 export const PaymentLookup = z.object({
   kind: z.string(), // "phone" | "till" | "paybill"
   normalized: z.string(),
@@ -164,7 +163,6 @@ export const PaymentLookup = z.object({
   merchant: MerchantPublic.nullable().optional().transform((v) => v ?? null),
   report_count: z.number().int(),
   linked_threats: z.number().int(),
-  daraja: DarajaValidation.nullable().optional(),
 });
 export type PaymentLookup = z.infer<typeof PaymentLookup>;
 
@@ -190,8 +188,56 @@ export const MerchantCreated = MerchantPublic.extend({
   logo_phash: nullableString,
   logo_dhash: nullableString,
   clip: z.boolean().optional(),
+  /** 5.12: the one-time code to put in an official bio. Present because a new merchant is `claimed`. */
+  verification_code: nullableString,
 });
 export type MerchantCreated = z.infer<typeof MerchantCreated>;
+
+// --- 5.12 verification + watchlist ---------------------------------------------------------------
+
+export const VerificationState = z.object({
+  status: VerificationStatus,
+  is_verified: z.boolean(),
+  verification_code: nullableString,
+  handles_to_check: z.array(OfficialHandle).default([]),
+  checked: z.array(z.string()).default([]),
+  found_on: nullableString,
+  verified_at: nullableString,
+  instructions: nullableString,
+});
+export type VerificationState = z.infer<typeof VerificationState>;
+
+export const WatchlistHandle = z.object({
+  platform: z.string(),
+  handle: z.string(),
+  variants: z.array(z.string()),
+});
+export const Watchlist = z.object({ merchant_id: z.string(), handles: z.array(WatchlistHandle) });
+export type Watchlist = z.infer<typeof Watchlist>;
+
+export const WatchlistFinding = z.object({
+  platform: z.string(),
+  handle: z.string(),
+  verdict: Verdict,
+  score: z.number(),
+  scan_id: z.string(),
+  threat_id: nullableString,
+});
+export const WatchlistScan = z.object({
+  merchant_id: z.string(),
+  variants_generated: z.number().int(),
+  probed: z.number().int(),
+  resolved: z.number().int(),
+  unreachable: z.number().int(),
+  budget_exhausted: z.boolean().default(false),
+  findings: z.array(WatchlistFinding).default([]),
+});
+export type WatchlistScan = z.infer<typeof WatchlistScan>;
+
+/** Display status of a merchant, tolerant of older fixtures that lack `verification_status`. */
+export function merchantStatus(m: { is_verified: boolean; verification_status?: VerificationStatus }): VerificationStatus {
+  return m.verification_status ?? (m.is_verified ? "curated" : "claimed");
+}
 
 // --- 5.6 threats ----------------------------------------------------------------------------
 

@@ -1,8 +1,8 @@
 {
   "scan_id": "cb9cc7f0-3ed3-5980-8705-4eb1dea569fe",
   "verdict": "no_match",
-  "score": 15.68,
-  "confidence": 1.0,
+  "score": 24.3,
+  "confidence": 0.7,
   "target": {
     "platform": "instagram",
     "handle": "pwanifashionhouse",
@@ -21,16 +21,16 @@
       "label": "Logo match",
       "score": 0.0,
       "weight": 0.3,
-      "available": true,
-      "evidence": "pHash distance 32/64 · dHash distance 40/64 · CLIP similarity 0.60"
+      "available": false,
+      "evidence": "No data"
     },
     {
       "key": "identity",
       "label": "Name & handle",
-      "score": 29.7,
+      "score": 35.03,
       "weight": 0.25,
       "available": true,
-      "evidence": "'pwanifashionhouse' resembles 'pwanithreads' (30% similar)"
+      "evidence": "'pwanifashionhouse' resembles 'safaricom' (35% similar)"
     },
     {
       "key": "payment",
@@ -61,5 +61,5 @@
   "hashes": null,
   "safe_action": null,
   "threat_id": null,
-  "elapsed_ms": 2
+  "elapsed_ms": 4
 }

@@ -5,7 +5,6 @@ app uses a MemoryRepository seeded through the real engine and makes no network 
 """
 
 import asyncio
-import contextlib
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -26,9 +25,6 @@ from app.core.security import RateLimiter, Resolver, system_resolver
 from app.engine.embeddings import ClipEmbedder
 from app.engine.hasher import compute_hashes
 from app.ingestion import mock_seeder
-from app.ingestion.daraja import DarajaClient
-from app.ingestion.meta_rights import MetaRightsManagerClient
-from app.ingestion.takedown_tracker import tracker_loop
 from app.schemas.simulator import EngineHealth, HealthResponse
 from app.services.check import CheckService
 from app.services.remediation import LlmClient, NimClient
@@ -98,8 +94,6 @@ def create_app(
         app.state.repo = repository
         app.state.clip = engine
         app.state.http = http
-        app.state.daraja = DarajaClient(settings, http=http)
-        app.state.meta_rights = MetaRightsManagerClient(settings, http_client=http)
         app.state.check_service = service
         app.state.rate_limiter = RateLimiter()
         app.state.hash_status = _hash_self_test()
@@ -114,16 +108,9 @@ def create_app(
             assets = await asyncio.to_thread(mock_seeder.write_assets)
             await mock_seeder.seed_repository(repository, service, now=utcnow(), assets=assets)
 
-        tracker: asyncio.Task[None] | None = None
-        if settings.enable_takedown_tracker and not settings.demo_mode:
-            tracker = asyncio.create_task(tracker_loop(repository, http, settings.takedown_check_hours))
         try:
             yield
         finally:
-            if tracker is not None:
-                tracker.cancel()
-                with contextlib.suppress(asyncio.CancelledError):
-                    await tracker
             await http.aclose()
 
     app = FastAPI(

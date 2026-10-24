@@ -9,7 +9,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, Form, Query, UploadFile
 from pydantic import ValidationError
 
-from app.api.deps import ApiKey, get_check_service, get_repo, get_settings
+from app.api.deps import ApiKey, CheckLimit, get_check_service, get_repo, get_settings
 from app.core.config import Settings
 from app.core.errors import ConflictError, InvalidImage, InvalidInput, NotFoundError
 from app.core.repository import Conflict, Repository, utcnow
@@ -18,10 +18,20 @@ from app.engine.constants import MAX_IMAGE_BYTES
 from app.ingestion.fixtures.logos import png_bytes
 from app.schemas.alert import AlertOut, AlertsResponse, MarkReadRequest, MarkReadResponse
 from app.schemas.common import ErrorResponse, ThreatStatus
-from app.schemas.merchant import LogoFeatures, MerchantCreate, MerchantCreated, PublicMerchant
+from app.schemas.merchant import (
+    LogoFeatures,
+    MerchantCreate,
+    MerchantCreated,
+    PublicMerchant,
+    VerificationState,
+    Watchlist,
+    WatchlistScan,
+)
 from app.schemas.threat import ThreatSummary
 from app.services.check import CheckService
 from app.services.serializers import public_merchant, threat_summary
+from app.services.verification import check_verification, new_code, verification_state
+from app.services.watchlist import build_watchlist, scan_watchlist
 
 router = APIRouter(tags=["merchants"])
 ALLOWED_LOGO_TYPES = {
@@ -99,6 +109,8 @@ async def onboard_merchant(
                 embedding=list(features.embedding) if features.embedding else None,
             ),
             logo_url=f"/media/{filename}",
+            verification_status="claimed",
+            verification_code=new_code(),
         )
     except Conflict as exc:
         raise ConflictError(exc.message, code=exc.code) from exc
@@ -108,7 +120,82 @@ async def onboard_merchant(
         logo_phash=features.phash,
         logo_dhash=features.dhash,
         clip=features.embedding is not None,
+        verification_code=record.verification_code,
     )
+
+
+@router.get(
+    "/merchants/{merchant_id}/verification",
+    response_model=VerificationState,
+    dependencies=[ApiKey],
+    responses={404: {"model": ErrorResponse}},
+)
+async def get_verification(
+    merchant_id: UUID, repo: Annotated[Repository, Depends(get_repo)]
+) -> VerificationState:
+    """Where the merchant stands (claimed / verified / curated) and the code to put in their bio."""
+    merchant = await repo.get_merchant(merchant_id)
+    if merchant is None:
+        raise NotFoundError("Merchant not found.")
+    return verification_state(merchant)
+
+
+@router.post(
+    "/merchants/{merchant_id}/verification/check",
+    response_model=VerificationState,
+    dependencies=[ApiKey, CheckLimit],
+    responses={404: {"model": ErrorResponse}, 422: {"model": ErrorResponse}, 429: {"model": ErrorResponse}},
+)
+async def check_merchant_verification(
+    merchant_id: UUID,
+    repo: Annotated[Repository, Depends(get_repo)],
+    service: Annotated[CheckService, Depends(get_check_service)],
+) -> VerificationState:
+    """Look for the merchant's Halisi code in the bio of its official handles.
+
+    422 ``VERIFICATION_CODE_NOT_FOUND`` means "not there yet"; the merchant can retry after editing.
+    Already verified or curated merchants get their state back unchanged.
+    """
+    merchant = await repo.get_merchant(merchant_id)
+    if merchant is None:
+        raise NotFoundError("Merchant not found.")
+    return await check_verification(repo, service, merchant)
+
+
+@router.get(
+    "/merchants/{merchant_id}/watchlist",
+    response_model=Watchlist,
+    dependencies=[ApiKey],
+    responses={404: {"model": ErrorResponse}},
+)
+async def get_watchlist(merchant_id: UUID, repo: Annotated[Repository, Depends(get_repo)]) -> Watchlist:
+    """The look-alike handles Halisi would watch for. Generated locally; nothing is fetched."""
+    merchant = await repo.get_merchant(merchant_id)
+    if merchant is None:
+        raise NotFoundError("Merchant not found.")
+    return build_watchlist(merchant)
+
+
+@router.post(
+    "/merchants/{merchant_id}/watchlist/scan",
+    response_model=WatchlistScan,
+    dependencies=[ApiKey, CheckLimit],
+    responses={404: {"model": ErrorResponse}, 429: {"model": ErrorResponse}},
+)
+async def scan_merchant_watchlist(
+    merchant_id: UUID,
+    repo: Annotated[Repository, Depends(get_repo)],
+    service: Annotated[CheckService, Depends(get_check_service)],
+) -> WatchlistScan:
+    """Probe the look-alikes that exist and report the ones that imitate this merchant.
+
+    Hits are scored, stored as threats and alerted like any public check. Only curated/verified
+    merchants can be impersonated, so a ``claimed`` merchant gets an empty result.
+    """
+    merchant = await repo.get_merchant(merchant_id)
+    if merchant is None:
+        raise NotFoundError("Merchant not found.")
+    return await scan_watchlist(service, merchant)
 
 
 @router.get(

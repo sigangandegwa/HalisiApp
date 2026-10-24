@@ -322,6 +322,22 @@ Fields: `data` (JSON: business_name, slug, aliases[], category, location, establ
 - **5.10** clone handles: `suffix` -> `<handle>_official`, `homoglyph` -> first `o`->`0` (else `l`->`1`, `i`->`1`...), `underscore` -> business name joined by `_`. The avatar is a real edit of the stored logo pixels and is returned as a small `data:image/png;base64` URL. Repeating the same tweaks re-scores the same handle (no new alert, by design).
 - Asset URLs are relative (`/seed/<file>.png`, `/media/<file>.png`). The backend serves both; the frontend copies `src/lib/fixtures/seed/assets/` to `public/seed/`.
 
+### 5.12 Product v2 contract changes (2026-10-22, TSK-043/044/045/046/047; spec: docs/PRODUCT_V2.md)
+
+Additive unless marked **removed**.
+
+- **Verdicts** (`official` / `impersonation` / `suspicious` / `no_match`): unchanged enum. `suspicious` is now also returned for a page that imitates **nobody** (display name: ONYO) when `matched_merchant` is `null`, `threat_id` is `null` and `safe_action` is `null`. It is never `impersonation` without a verified merchant. Rules: PRODUCT_V2.md section 4, heuristic `STANDALONE` v1 (AGENTS.md section 7.2).
+- **5.4 / 5.5** `PublicMerchant` gains `verification_status`: `curated` (Halisi-seeded from public sources) · `verified` (bio code proven) · `claimed` (self-declared). `is_verified` is true exactly for `curated` and `verified`; `verified_since` uses `verified_at`.
+- **5.5** `POST /merchants` now creates a **`claimed`** merchant and returns `verification_code` (`halisi-xxxxxx`) in addition to the 5.5 fields. A claimed merchant is stored but **inert**: it is excluded from scoring, the official-handle short-circuit and `/verify/payment` "official". A handle held only by a claimed merchant is released if someone else registers it (a squatter cannot lock out the real owner); a handle held by a curated/verified merchant still returns 409 `HANDLE_TAKEN`.
+- **New** `GET /merchants/{id}/verification` (API key) -> `{status, is_verified, verification_code?, handles_to_check[], checked[], found_on?, verified_at?, instructions?}`. `verification_code` is only present while `claimed`.
+- **New** `POST /merchants/{id}/verification/check` (API key, rate-limited): fetches the declared official handles (instagram, tiktok, facebook, x) and, if the code is in a bio, sets `verified`. 422 `VERIFICATION_CODE_NOT_FOUND` otherwise. Idempotent for already verified/curated merchants. Manual `/check` input is never used as proof.
+- **New** `GET /merchants/{id}/watchlist` (API key) -> `{merchant_id, handles: [{platform, handle, variants[]}]}`: generated look-alikes, nothing fetched.
+- **New** `POST /merchants/{id}/watchlist/scan` (API key, rate-limited) -> `{merchant_id, variants_generated, probed, resolved, unreachable, budget_exhausted, findings: [{platform, handle, verdict, score, scan_id, threat_id}]}`. Known profiles are free; live fetches share a budget of 40. `unreachable` is not "safe".
+- **5.3 removed**: `daraja` is no longer in `VerifyPaymentResult`. The simulated resolver invented account-holder names for real numbers. Halisi states what it knows about a number, never who owns it.
+- **Archived (no longer routed)**: `/channels/telegram/webhook`, `/channels/ussd`. Code and tests live in `backend/app/archived/` and `backend/tests/archived/`. SMS and automated Meta takedown hooks were removed from the alert dispatcher: alerts are in-app only.
+- **Seed**: 9 curated real brands (public data, `backend/app/ingestion/fixtures/curated_brands.json`) join the 3 fictional merchants. `merchant.logo_*` may be `null` for a curated brand with no usable logo.
+- **Database**: schema v2.3 adds `merchants.verification_status`, `verification_code`, `verified_at`. **Run the v2.3 upgrade block in `database/schema.sql` on the deployed Supabase before deploying this backend.**
+
 **Type generation:** the frontend runs `npx openapi-typescript <API>/openapi.json -o src/lib/api-types.ts`. Give every endpoint a `response_model` so the OpenAPI output is exact.
 
 ---

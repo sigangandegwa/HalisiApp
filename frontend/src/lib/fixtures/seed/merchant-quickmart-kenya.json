@@ -1,0 +1,39 @@
+{
+  "id": "62d69652-9c13-5ffa-84d5-bffae1007fa2",
+  "business_name": "Quickmart Kenya",
+  "slug": "quickmart-kenya",
+  "logo_url": null,
+  "category": "Supermarket",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "quickmartkenya",
+      "url": "https://instagram.com/quickmartkenya"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "quickmartkenya",
+      "url": "https://tiktok.com/@quickmartkenya"
+    },
+    {
+      "platform": "facebook",
+      "handle": "quickmartkenyaofficial",
+      "url": "https://facebook.com/quickmartkenyaofficial"
+    },
+    {
+      "platform": "x",
+      "handle": "quickmartkenya",
+      "url": "https://x.com/quickmartkenya"
+    }
+  ],
+  "payment": {
+    "type": "none",
+    "number": null,
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

@@ -46,6 +46,7 @@ from app.services.check import CheckService
 from app.services.payments import verify_payment
 from app.services.remediation import generate_playbooks
 from app.services.serializers import public_merchant, threat_detail, threat_summary
+from app.services.watchlist import build_watchlist, scan_watchlist
 
 SEED_NAMESPACE = uuid.UUID("1d7c6f7e-3f51-5b8e-a5f4-6a2d1c9b0e42")
 SEED_NOW = datetime(2026, 9, 27, 9, 0, tzinfo=UTC)  # fixed clock for exported fixtures
@@ -158,6 +159,52 @@ MERCHANTS: tuple[MerchantSeed, ...] = (
         ],
     ),
 )
+
+
+CURATED_FILE = BACKEND_DIR / "app" / "ingestion" / "fixtures" / "curated_brands.json"
+
+
+@dataclass(frozen=True)
+class CuratedSeed:
+    """One real brand, seeded from public data only (docs/PRODUCT_V2.md section 8).
+
+    The logo hashes were computed offline from the brand's own website logo; ``None`` when no usable
+    logo was found, in which case the visual dimension is simply unavailable for this brand.
+    """
+
+    key: str
+    data: MerchantCreate
+    phash: str | None
+    dhash: str | None
+
+
+def load_curated_brands(path: Path = CURATED_FILE) -> tuple[CuratedSeed, ...]:
+    """Read ``curated_brands.json``. Payment fields are used exactly as published; nothing is inferred."""
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    out: list[CuratedSeed] = []
+    for brand in raw["brands"]:
+        mpesa = brand.get("mpesa") or {}
+        logo = brand.get("logo") or {}
+        out.append(
+            CuratedSeed(
+                key=brand["key"],
+                data=MerchantCreate(
+                    business_name=brand["business_name"],
+                    slug=brand["slug"],
+                    aliases=brand.get("aliases", []),
+                    category=brand.get("category"),
+                    mpesa_type=mpesa.get("type") or "none",
+                    mpesa_number=mpesa.get("number"),
+                    handles=[MerchantHandle(**h) for h in brand.get("handles", [])],
+                ),
+                phash=logo.get("phash"),
+                dhash=logo.get("dhash"),
+            )
+        )
+    return tuple(out)
+
+
+CURATED: tuple[CuratedSeed, ...] = load_curated_brands()
 
 
 def _blatant(logo: Callable[[], Image.Image]) -> Callable[[], Image.Image]:
@@ -360,6 +407,14 @@ async def seed_repository(
             is_verified=True,
             created_at=now - timedelta(days=m.created_days_ago),
         )
+    for c in CURATED:
+        merchants[c.key] = await repo.create_merchant(
+            c.data,
+            LogoFeatures(phash=c.phash, dhash=c.dhash) if c.phash and c.dhash else None,
+            merchant_id=seed_id("merchant", c.key),
+            verification_status="curated",
+            created_at=now - timedelta(days=30),
+        )
     service.merchants.invalidate()
 
     targets = {t.key: t for t in TARGETS}
@@ -421,6 +476,16 @@ async def seed_repository(
         )
         await service.persist(outcome)
         checks[f"{m.key}_official"] = outcome.result
+    for c in CURATED:
+        handle = c.data.handles[0]
+        outcome = await service.check(
+            CheckRequest(handle=handle.handle, platform=handle.platform),
+            source="seed",
+            scan_id=seed_id("scan", f"{c.key}_official"),
+            now=now - timedelta(hours=6),
+        )
+        await service.persist(outcome)
+        checks[f"{c.key}_official"] = outcome.result
 
     for r in REPORTS:  # link reports to the threats they describe (now that the threats exist)
         target = targets[r.target_key]
@@ -458,9 +523,18 @@ def _write_json(directory: Path, name: str, payload: Any) -> None:
 
 
 async def export_fixtures(
-    repo: Repository, seed: SeedResult, settings: Settings, directory: Path, assets: dict[str, bytes]
+    repo: Repository,
+    seed: SeedResult,
+    settings: Settings,
+    directory: Path,
+    assets: dict[str, bytes],
+    service: CheckService | None = None,
 ) -> list[str]:
-    """Write every API-contract fixture + assets + README into ``directory``. Returns the file names."""
+    """Write every API-contract fixture + assets + README into ``directory``. Returns the file names.
+
+    With a ``service``, also records each merchant's look-alike watchlist scan (real engine output,
+    replayed offline by the frontend).
+    """
     if directory.exists():
         shutil.rmtree(directory)
     (directory / "assets").mkdir(parents=True)
@@ -540,17 +614,48 @@ async def export_fixtures(
             f"alerts-{slug}.json",
             f"stats-{slug}.json",
         ]
+    for c in CURATED:
+        record = seed.merchants[c.key]
+        _write_json(directory, f"merchant-{record.slug}.json", public_merchant(record))
+        files.append(f"merchant-{record.slug}.json")
     _write_json(directory, "stats.json", await repo.stats(None))
     files.append("stats.json")
 
     lookups: dict[str, VerifyPaymentResult] = {}
-    values = [*(m.data.mpesa_number or "" for m in MERCHANTS), *(r.phone for r in REPORTS), "889900"]
-    for value in dict.fromkeys(values):
+    values = [
+        *(m.data.mpesa_number or "" for m in MERCHANTS),
+        *(c.data.mpesa_number or "" for c in CURATED),
+        *(r.phone for r in REPORTS),
+        "889900",
+    ]
+    for value in dict.fromkeys(v for v in values if v):
         lookups[value] = await verify_payment(repo, value)
     _write_json(directory, "verify-payment.json", {k: v.model_dump(mode="json") for k, v in lookups.items()})
     files.append("verify-payment.json")
+    files += await _export_watchlists(seed, directory, service)
     (directory / "README.md").write_text(_readme(files), encoding="utf-8")
     return sorted(files)
+
+
+async def _export_watchlists(seed: SeedResult, directory: Path, service: CheckService | None) -> list[str]:
+    """``watchlist-<slug>.json`` per merchant, plus ``watchlist-scan-<slug>.json`` when a service is given.
+
+    Scan findings are re-pointed at the seeded scan of the same handle, so ids are deterministic and
+    every finding links to a result the offline demo can open.
+    """
+    scan_by_handle = {r.target.handle: r.scan_id for r in seed.checks.values() if r.target.handle}
+    written: list[str] = []
+    for record in seed.merchants.values():
+        _write_json(directory, f"watchlist-{record.slug}.json", build_watchlist(record))
+        written.append(f"watchlist-{record.slug}.json")
+        if service is None:
+            continue
+        scan = await scan_watchlist(service, record)
+        for finding in scan.findings:
+            finding.scan_id = scan_by_handle.get(finding.handle, finding.scan_id)
+        _write_json(directory, f"watchlist-scan-{record.slug}.json", scan)
+        written.append(f"watchlist-scan-{record.slug}.json")
+    return written
 
 
 def _readme(files: list[str]) -> str:
@@ -584,20 +689,21 @@ async def _run(target: str, reset: bool, export: bool) -> int:
         for key, result in seed.checks.items():
             print(f"{key:18} {result.verdict:14} {result.score:6.2f}  confidence {result.confidence:.2f}")
         if export:
-            files = await export_fixtures(repo, seed, settings, FRONTEND_EXPORT_DIR, assets)
+            files = await export_fixtures(repo, seed, settings, FRONTEND_EXPORT_DIR, assets, service)
             print(f"Exported {len(files)} fixture files to {FRONTEND_EXPORT_DIR}")
     return 0
 
 
 async def _reset_supabase(repo: SupabaseRepository) -> None:
     """Delete only seed rows (by deterministic id / natural key)."""
-    merchant_ids = [str(seed_id("merchant", m.key)) for m in MERCHANTS]
+    keys = [m.key for m in MERCHANTS] + [c.key for c in CURATED]
+    merchant_ids = [str(seed_id("merchant", key)) for key in keys]
     await repo.delete_rows("merchant_alerts", "merchant_id", merchant_ids)
     await repo.delete_rows(
         "scans",
         "id",
         [str(seed_id("scan", t.key)) for t in TARGETS]
-        + [str(seed_id("scan", f"{m.key}_official")) for m in MERCHANTS],
+        + [str(seed_id("scan", f"{key}_official")) for key in keys],
     )
     await repo.delete_rows("community_reports", "id", [str(seed_id("report", r.key)) for r in REPORTS])
     await repo.delete_rows("threats", "merchant_id", merchant_ids)

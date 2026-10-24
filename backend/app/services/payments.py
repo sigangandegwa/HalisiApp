@@ -2,24 +2,21 @@
 
 from app.core.errors import InvalidInput
 from app.core.repository import Repository
-from app.ingestion.daraja import DarajaClient
 from app.ingestion.url_parser import UnsupportedInput, parse_input
 from app.schemas.report import VerifyPaymentResult
 from app.services.serializers import display_number, public_merchant
 
 
-async def verify_payment(
-    repo: Repository, value: str, daraja: DarajaClient | None = None
-) -> VerifyPaymentResult:
+async def verify_payment(repo: Repository, value: str) -> VerifyPaymentResult:
     """Look a phone / till / wa.me link up.
 
-    * ``official``: registered to a Halisi merchant (the merchant's public profile is returned)
+    * ``official``: registered to a curated or verified Halisi merchant (public profile returned)
     * ``reported``: at least one **confirmed** community report, or listed on an active impersonation
       threat. Pending reports alone don't flip the status (one person can't brand a number a scam),
       but they are counted in ``report_count``.
     * ``unknown``: "not registered with Halisi". Never phrase it as "safe".
 
-    Enriched with live or simulated Safaricom Daraja M-Pesa account validation (TSK-039).
+    There is no Safaricom lookup: Halisi never states who owns a number, only what it knows about it.
 
     Raises InvalidInput for anything that isn't a Kenyan mobile number or a 5-7 digit till/paybill.
     """
@@ -43,9 +40,6 @@ async def verify_payment(
     else:
         status = "unknown"
 
-    client = daraja or DarajaClient()
-    daraja_res = await client.validate_account(number, kind=kind)
-
     return VerifyPaymentResult(
         kind=kind,
         normalized=number,
@@ -54,5 +48,4 @@ async def verify_payment(
         merchant=public_merchant(facts.merchant) if facts.merchant else None,
         report_count=facts.report_count,
         linked_threats=facts.linked_threats,
-        daraja=daraja_res,
     )

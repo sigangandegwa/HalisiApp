@@ -8,7 +8,9 @@ from app.schemas.common import BaseSchema
 class LoginRequest(BaseSchema):
     """POST /auth/login request body."""
 
-    identifier: str | None = Field(default=None, description="Merchant slug, business name, or official handle")
+    identifier: str | None = Field(
+        default=None, description="Merchant slug, business name, or official handle"
+    )
     passcode: str = Field(..., description="Merchant dashboard passcode")
 
 

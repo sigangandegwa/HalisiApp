@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { Big_Shoulders, Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { InkFilterDefs } from "@/components/brand/stamp";
 import { OfflineChip } from "@/components/offline-chip";
 import { Providers } from "@/components/providers";
@@ -11,11 +11,19 @@ import "./globals.css";
 // otherwise `--font-sans: var(--font-sans)` resolves to itself and the font never applies.
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+// Monumental condensed capitals: the verdict words and every display headline.
+const bigShoulders = Big_Shoulders({
+  variable: "--font-big-shoulders",
   subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  display: "swap",
+});
+// The single editorial voice: one italic word per headline.
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
   style: ["normal", "italic"],
-  axes: ["opsz", "SOFT"],
   display: "swap",
 });
 
@@ -34,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: [{ color: "#F2EEE3" }],
+  themeColor: [{ color: "#07070A" }],
   width: "device-width",
   initialScale: 1,
 };
@@ -42,7 +50,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { locale, messages, t } = await getI18n();
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} ${bigShoulders.variable} ${instrument.variable}`} suppressHydrationWarning>
       <body className="min-h-dvh">
         <a
           href="#content"
