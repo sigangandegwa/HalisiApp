@@ -1,0 +1,202 @@
+{
+  "_note": "Curated anchors (TSK-046, docs/PRODUCT_V2.md section 8). PUBLIC data only: every handle and payment channel below was published by the brand itself or confirmed on its official account, and was collected on 2026-10-22. A null means 'not published / not confirmed': it is never guessed. Logo hashes are computed from the logo on the brand's own website; the image itself is not stored. Re-verify against the live profile before a public demo. Confidence 'medium' means at least one handle came from a search result rather than the brand's own site.",
+  "collected_on": "2026-10-22",
+  "brands": [
+    {
+      "key": "kplc",
+      "business_name": "Kenya Power (KPLC)",
+      "slug": "kenya-power",
+      "category": "Utility - electricity",
+      "aliases": ["Kenya Power", "KPLC"],
+      "website": "https://www.kplc.co.ke",
+      "handles": [
+        {"platform": "instagram", "handle": "kenyapower"},
+        {"platform": "tiktok", "handle": "kenyapower"},
+        {"platform": "facebook", "handle": "kenyapowerltd"},
+        {"platform": "x", "handle": "kenyapower"}
+      ],
+      "mpesa": {
+        "type": "paybill",
+        "number": "888880",
+        "note": "Prepaid tokens; the account is the meter number. KPLC also publishes other paybills for postpaid bills and new connections; only this one is seeded.",
+        "source_url": "https://kplc.co.ke/faq/prepaid-meters"
+      },
+      "logo": {"source_url": "https://www.kplc.co.ke/images/logo.png", "phash": "a3d18c66f309d467", "dhash": "000c4c480d8c5513"},
+      "sources": ["https://www.kplc.co.ke", "https://kplc.co.ke/faq/prepaid-meters", "https://x.com/KenyaPower/status/1726906383818527010"],
+      "confidence": "high"
+    },
+    {
+      "key": "kcb",
+      "business_name": "KCB Bank Kenya",
+      "slug": "kcb-bank-kenya",
+      "category": "Bank",
+      "aliases": ["KCB Bank", "KCB Kenya"],
+      "website": "https://ke.kcbgroup.com",
+      "handles": [
+        {"platform": "instagram", "handle": "kcbkenya"},
+        {"platform": "tiktok", "handle": "kcb_kenya"},
+        {"platform": "facebook", "handle": "kcbinkenya"},
+        {"platform": "x", "handle": "kcbinkenya"}
+      ],
+      "mpesa": {
+        "type": "paybill",
+        "number": "522522",
+        "note": "Deposit to a KCB account; the account is the full KCB account number.",
+        "source_url": "https://ke.kcbgroup.com/products/kcb-m-benki"
+      },
+      "logo": {"source_url": "https://ke.kcbgroup.com/imgs/kcb-bank.png", "phash": "c726b8d84726b8d9", "dhash": "00c000c4c400c400"},
+      "sources": ["https://ke.kcbgroup.com/products/kcb-m-benki", "https://x.com/KCBInKenya/status/1404464526498598917"],
+      "confidence": "high"
+    },
+    {
+      "key": "equity",
+      "business_name": "Equity Bank Kenya",
+      "slug": "equity-bank-kenya",
+      "category": "Bank",
+      "aliases": ["Equity Bank", "Equity Bank Kenya"],
+      "website": "https://equitygroupholdings.com/ke/",
+      "handles": [
+        {"platform": "instagram", "handle": "equitygroup"},
+        {"platform": "facebook", "handle": "keequitybank"},
+        {"platform": "x", "handle": "keequitybank"}
+      ],
+      "mpesa": {
+        "type": "paybill",
+        "number": "247247",
+        "note": "The account is the Equity account number. Confirmed from Equity's own X posts and search snippets of its site, not from a page read directly.",
+        "source_url": "https://equitygroupholdings.com/ke/pay-send-money/personal/cards/equity-card/"
+      },
+      "logo": null,
+      "sources": ["https://equitygroupholdings.com/ke/", "https://x.com/KeEquityBank/status/1899731979228119145"],
+      "confidence": "medium",
+      "caveat": "The Instagram handle is Equity Group's, not a Kenya-specific account."
+    },
+    {
+      "key": "dstv",
+      "business_name": "DStv Kenya (MultiChoice)",
+      "slug": "dstv-kenya",
+      "category": "Pay-TV",
+      "aliases": ["DStv Kenya", "MultiChoice Kenya"],
+      "website": "https://www.dstv.com/en-ke",
+      "handles": [
+        {"platform": "instagram", "handle": "dstv_kenya"},
+        {"platform": "x", "handle": "dstv_kenya"}
+      ],
+      "mpesa": {
+        "type": "paybill",
+        "number": "444900",
+        "note": "The account is the smartcard (IUC) number. Source is the official @DStv_Kenya reply on X, not the dstv.com page.",
+        "source_url": "https://x.com/DStv_Kenya/status/1636433562583875598"
+      },
+      "logo": null,
+      "sources": ["https://www.dstv.com/en-ke", "https://x.com/DStv_Kenya/status/1636433562583875598"],
+      "confidence": "high"
+    },
+    {
+      "key": "naivas",
+      "business_name": "Naivas Supermarket",
+      "slug": "naivas-supermarket",
+      "category": "Supermarket",
+      "aliases": ["Naivas", "Naivas Supermarkets"],
+      "website": "https://naivas.online",
+      "handles": [
+        {"platform": "instagram", "handle": "naivas_supermarket"},
+        {"platform": "tiktok", "handle": "naivas"},
+        {"platform": "facebook", "handle": "naivassupermarkets"},
+        {"platform": "x", "handle": "naivas_kenya"}
+      ],
+      "mpesa": {
+        "type": "none",
+        "number": null,
+        "note": "Naivas publishes no customer till or paybill (customers pay by M-Pesa QR/prompt at the cashier). A paybill listed by third-party sites could not be verified and is deliberately NOT seeded.",
+        "source_url": "https://www.tiktok.com/@naivas/video/7513958002479648056"
+      },
+      "logo": {"source_url": "https://corporate.naivas.info/wp-content/uploads/2025/08/footer-logo.png", "phash": "ecc9933624c9db32", "dhash": "01840383ac2a0000"},
+      "sources": ["https://corporate.naivas.info/"],
+      "confidence": "medium",
+      "caveat": "The TikTok handle is inferred from a TikTok post URL; the site lists no TikTok link."
+    },
+    {
+      "key": "quickmart",
+      "business_name": "Quickmart Kenya",
+      "slug": "quickmart-kenya",
+      "category": "Supermarket",
+      "aliases": ["Quickmart", "Quickmart Kenya"],
+      "website": "https://www.quickmart.co.ke",
+      "handles": [
+        {"platform": "instagram", "handle": "quickmartkenya"},
+        {"platform": "tiktok", "handle": "quickmartkenya"},
+        {"platform": "facebook", "handle": "quickmartkenyaofficial"},
+        {"platform": "x", "handle": "quickmartkenya"}
+      ],
+      "mpesa": {
+        "type": "none",
+        "number": null,
+        "note": "No store till or paybill is published. The paybill that appears in search results is for IPO share applications, not store payments, and is not seeded.",
+        "source_url": null
+      },
+      "logo": null,
+      "sources": ["https://www.quickmart.co.ke", "https://corporate.quickmart.co.ke/"],
+      "confidence": "medium"
+    },
+    {
+      "key": "javahouse",
+      "business_name": "Java House Kenya",
+      "slug": "java-house-kenya",
+      "category": "Restaurant / coffee",
+      "aliases": ["Java House", "Java House Africa"],
+      "website": "https://javahouseafrica.com",
+      "handles": [
+        {"platform": "instagram", "handle": "javahouseafrica"},
+        {"platform": "tiktok", "handle": "javahouseafrica_"},
+        {"platform": "facebook", "handle": "javahouseafrica"},
+        {"platform": "x", "handle": "javahouseafrica"}
+      ],
+      "mpesa": {"type": "none", "number": null, "note": "No payment number published.", "source_url": null},
+      "logo": null,
+      "sources": ["https://javahouseafrica.com/"],
+      "confidence": "high"
+    },
+    {
+      "key": "artcaffe",
+      "business_name": "Artcaffe Coffee & Bakery",
+      "slug": "artcaffe-coffee-bakery",
+      "category": "Restaurant / bakery",
+      "aliases": ["Artcaffe", "Artcaffe Kenya"],
+      "website": "https://artcaffe.co.ke",
+      "handles": [
+        {"platform": "instagram", "handle": "artcaffekenya"},
+        {"platform": "facebook", "handle": "artcaffekenya"},
+        {"platform": "x", "handle": "artcaffekenya"}
+      ],
+      "mpesa": {"type": "none", "number": null, "note": "No payment number published.", "source_url": null},
+      "logo": null,
+      "sources": ["https://artcaffe.co.ke/"],
+      "confidence": "medium",
+      "caveat": "The X handle came from a search result; the site does not link it."
+    },
+    {
+      "key": "safaricom",
+      "business_name": "Safaricom PLC",
+      "slug": "safaricom-plc",
+      "category": "Telecom / M-Pesa",
+      "aliases": ["Safaricom", "Safaricom PLC"],
+      "website": "https://www.safaricom.co.ke",
+      "handles": [
+        {"platform": "instagram", "handle": "safaricomplc_"},
+        {"platform": "tiktok", "handle": "safaricomplc"},
+        {"platform": "x", "handle": "safaricomplc"}
+      ],
+      "mpesa": {
+        "type": "none",
+        "number": null,
+        "note": "Safaricom publishes the Buy Goods and Paybill payment flows, not a consumer number of its own.",
+        "source_url": "https://www.safaricom.co.ke/main-mpesa/m-pesa-services/lipa-na-m-pesa/pay-to-paybill"
+      },
+      "logo": null,
+      "sources": ["https://www.instagram.com/safaricomplc_/", "https://www.tiktok.com/@safaricomplc", "https://x.com/SafaricomPLC"],
+      "confidence": "medium",
+      "caveat": "safaricom.co.ke returned 403 to our fetch, so handles come from search results rather than the site footer."
+    }
+  ]
+}

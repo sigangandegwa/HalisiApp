@@ -4,8 +4,11 @@
  * Brand/verdict words (HALISI, FEKI, TAHADHARI, HAIJULIKANI) are the same in both languages.
  */
 import type { MessageKey } from "./en";
+import { swMerchant } from "./sw-merchant";
+import { swMisc } from "./sw-misc";
+import { swOnboard } from "./sw-onboard";
 
-export const sw = {
+const swBase = {
   "meta.title": "Halisi · Je, ukurasa huu ni wa biashara halisi?",
   "meta.description": "Bandika kiungo cha Instagram, Facebook au TikTok. Halisi itakilinganisha na biashara za Kenya zilizothibitishwa kwa sekunde chache.",
 
@@ -20,17 +23,19 @@ export const sw = {
   "nav.home": "Mwanzo wa Halisi",
   "lang.label": "Lugha",
 
-  "hero.eyebrow": "Kikagua utapeli wa majina ya biashara, kwa wanunuzi wa Kenya",
-  "hero.line1": "Kabla ya kulipa,",
-  "hero.line2": "hakikisha ni",
-  "hero.word": "halisi",
-  "hero.sub": "Bandika kiungo cha Instagram, Facebook au TikTok. Halisi itakilinganisha na biashara za Kenya zilizothibitishwa kwa sekunde chache.",
+  "hero.eyebrow": "Halisi · Kikagua utapeli kwa biashara za mitandaoni Kenya",
+  "hero.line1": "Kagua kabla",
+  "hero.line2": "ya",
+  "hero.word": "kulipa",
+  "hero.sub": "Bandika kiungo cha duka, @jina, till au namba ya simu. Kwa sekunde chache Halisi inakuambia kama ni biashara halisi, ya kuiga, au ina dalili za utapeli.",
   "hero.aside": "Halisi: kweli, asilia, yenyewe.",
+  "hero.scroll": "Jinsi inavyoamua",
+  "hero.counter": "Kurasa {n} zimekaguliwa hadi sasa",
 
   "checker.tab.link": "Kiungo",
   "checker.tab.pay": "Till / Simu",
   "checker.label": "Kiungo cha ukurasa au @jina",
-  "checker.placeholder": "instagram.com/… au @jina",
+  "checker.placeholder": "Kiungo, @jina, till au namba ya simu",
   "checker.submit": "Kagua",
   "checker.checking": "Inakagua",
   "checker.paste": "Bandika kiungo",
@@ -50,8 +55,16 @@ export const sw = {
   "chip.lookalike": "Unaofanana",
 
   "scan.opening": "Tunafungua ukurasa…",
+  "scan.bio": "Tunasoma wasifu…",
   "scan.logo": "Tunalinganisha nembo…",
   "scan.payment": "Tunakagua maelezo ya malipo…",
+  "scan.verdict": "Tunafikia uamuzi…",
+  "console.case": "Kesi",
+  "console.target": "Lengo",
+  "console.engine": "Injini ya Halisi",
+  "takeover.evidence": "Tazama ushahidi",
+  "takeover.skip": "Ruka",
+  "takeover.hint": "Gusa au bonyeza Esc",
   "scan.slow": "Inachukua muda kuliko kawaida.",
   "scan.slowAction": "Bandika maelezo ya ukurasa badala yake",
   "scan.skip": "Ruka",
@@ -63,19 +76,20 @@ export const sw = {
   "verdict.official.sub": "Ukurasa rasmi",
   "verdict.impersonation.word": "FEKI.",
   "verdict.impersonation.sub": "Ukurasa wa kuiga",
-  "verdict.suspicious.word": "TAHADHARI.",
-  "verdict.suspicious.sub": "Endelea kwa tahadhari",
+  "verdict.suspicious.word": "ONYO.",
+  "verdict.suspicious.sub": "Dalili za hatari kubwa",
   "verdict.no_match.word": "HAIJULIKANI.",
-  "verdict.no_match.sub": "Haujathibitishwa na Halisi",
+  "verdict.no_match.sub": "Hakuna dalili upande wowote",
   "verdict.error.word": "HITILAFU.",
   "verdict.error.sub": "Ukaguzi haukufaulu",
 
   "line.official": "Huu ni ukurasa rasmi wa {business}.",
   "line.impersonation": "Ukurasa huu unaiga {business}. Usitume pesa.",
   "line.suspicious": "Kuna dalili zisizoeleweka. Thibitisha kupitia ukurasa rasmi wa {business} kabla ya kulipa.",
+  "line.suspicious.nobody": "Ukurasa huu una dalili za kawaida za utapeli. Usilipe kabla ya kupokea: thibitisha muuzaji kwa njia nyingine kwanza.",
   "line.no_match": "Ukurasa huu haulingani na biashara yoyote iliyothibitishwa na Halisi.",
   "line.no_match.note": "Hii haimaanishi kuwa ni salama. Kabla ya kumlipa mtu mpya, kagua namba yake.",
-  "line.score": "Alama ya kuiga {score} / 100",
+  "line.score": "Alama ya hatari {score} / 100",
   "line.confidence": "Kulingana na ishara {n} kati ya 5",
 
   "safe.official.title": "Lipa kupitia njia rasmi pekee.",
@@ -118,6 +132,10 @@ export const sw = {
 
   "reasons.title": "Tulichopata",
   "reasons.none": "Hakuna dalili za hatari kwenye ukurasa huu.",
+  "reasons.more": "{n} zaidi",
+  "reasons.less": "Onyesha chache",
+  "result.showEvidence": "Onyesha ushahidi",
+  "result.hideEvidence": "Ficha ushahidi",
 
   "manual.title": "Hatukuweza kufungua ukurasa huo.",
   "manual.body": "Bandika maelezo ya ukurasa (bio) na upakie picha yake ya wasifu, tutazikagua.",
@@ -163,25 +181,45 @@ export const sw = {
   "proof.note": "Takwimu za moja kwa moja kutoka API ya Halisi.",
 
   "business.eyebrow": "Kwa biashara",
-  "business.title1": "Pata cheti cha",
-  "business.title2": "Halisi.",
-  "business.body": "Wape wateja wako mahali pamoja pa kuthibitisha kuwa ni wewe kweli: akaunti zako rasmi na till yako, kwenye cheti wanachoweza kuskani.",
+  "business.title1": "Jina lako,",
+  "business.title2": "limelindwa.",
+  "business.body": "Thibitisha kuwa akaunti rasmi ni yako kwa kuweka msimbo kwenye wasifu wako. Kisha Halisi inatafuta akaunti za kuiga, inakuarifu mara moja inapokaguliwa, na kukuandalia ombi la kuondoa, ripoti ya Safaricom na onyo kwa wateja.",
   "business.cta": "Linda biashara yangu",
+  "business.note": "Wewe ndiye unayepitia na kutuma kila ripoti. Halisi haiwasilishi kwa niaba yako.",
+
+  "verdicts.eyebrow": "Majibu manne yanayowezekana",
+  "verdicts.title1": "Kila ukaguzi huisha kwa",
+  "verdicts.title2": "neno moja.",
+  "verdicts.official": "Ukurasa au namba ni ya biashara iliyothibitishwa na Halisi. Lipa kupitia njia yake rasmi pekee.",
+  "verdicts.impersonation": "Unaiga biashara iliyothibitishwa: nembo, jina au maelezo ya malipo yanaufichua. Usitume pesa.",
+  "verdicts.suspicious": "Hauigi biashara tunayoijua, lakini una dalili za kawaida za utapeli: pesa kabla ya bidhaa, namba ya binafsi, akaunti mpya kabisa.",
+  "verdicts.no_match": "Hakuna dalili za kuunga wala kupinga. Hiyo si sawa na salama: thibitisha kabla ya kumlipa mtu mpya.",
+  "verdicts.example": "Mfano: {handle}",
+  "limits.eyebrow": "Halisi inachoweza na isichoweza kuona",
+  "limits.title1": "Wazi kuhusu",
+  "limits.title2": "mipaka.",
+  "limits.body": "Halisi haipekui Instagram yote. Inaona kile watu wanachokagua na kuripoti, pamoja na akaunti za kuiga inazozitafuta kwa niaba ya biashara zilizothibitishwa. Kila ukaguzi hufanya unaofuata kuwa makini zaidi.",
+  "limits.see.title": "Inaweza kuona",
+  "limits.see.body": "Wasifu wa umma, picha za wasifu na namba za malipo zilizoandikwa humo.",
+  "limits.cant.title": "Haiwezi kuona",
+  "limits.cant.body": "Akaunti za faragha, ujumbe wa moja kwa moja, au mmiliki halisi wa namba ya M-Pesa.",
+  "limits.never.title": "Haisemi kamwe",
+  "limits.never.body": "“Salama.” Jibu bora ni HALISI: biashara tuliyoithibitisha.",
 
   "how.eyebrow": "Jinsi ulinzi unavyofanya kazi",
   "how.1.title": "Gundua",
-  "how.1.body": "Tahadhari ya papo hapo kwenye dashibodi yako ya Halisi mara ukurasa unaoiga wako unapokaguliwa.",
-  "how.2.title": "Onya",
-  "how.2.body": "Onyo kwa wateja lililoandaliwa na AI kwa Kiingereza na Kiswahili, tayari kuweka kwenye story yako.",
-  "how.3.title": "Ondoa",
-  "how.3.body": "Kifurushi cha ripoti kwa Instagram, Safaricom na KE-CIRT/CC, pamoja na ushahidi wote.",
+  "how.1.body": "Tahadhari ya papo hapo mara ukurasa unaoiga wako unapokaguliwa au kuripotiwa.",
+  "how.2.title": "Andaa",
+  "how.2.body": "Ripoti kwa jukwaa, ripoti kwa Safaricom na onyo kwa wateja kwa Kiingereza na Kiswahili, pamoja na ushahidi.",
+  "how.3.title": "Wasilisha",
+  "how.3.body": "Unapitia na kutuma mwenyewe. Halisi haiwasilishi kwa niaba yako wala haidai jukwaa limechukua hatua.",
 
   "footer.tagline": "Linda wateja wako. Linda jina lako.",
   "footer.taglineSub": "Protect your customers. Protect your name.",
   "footer.taglineLang": "sw",
   "footer.credit": "Imetengenezwa na Chiromo Tech Club, Chuo Kikuu cha Nairobi.",
   "footer.privacy": "Halisi huhifadhi rekodi ya kurasa zilizokaguliwa na matokeo yake ili matokeo yaweze kushirikiwa. Hatukuulizi wewe ni nani. Namba za simu za watu wengine hufichwa kwenye kurasa za umma.",
-  "footer.demo": "Biashara zote katika onyesho hili ni za kubuni.",
+  "footer.demo": "Kurasa za kuiga katika onyesho hili ni za kubuni. Maelezo ya chapa yanatoka kwenye njia zao za umma.",
 
   "pay.eyebrow": "Kagua kabla ya kulipa",
   "pay.title1": "Je, namba hii",
@@ -303,4 +341,6 @@ export const sw = {
   "sim.back": "Rudi kwenye dashibodi",
   "sim.live": "Imekokotolewa papo hapo na injini ya ukaguzi",
   "sim.offline": "Imeandaliwa mapema (injini haipatikani)",
-} as const satisfies Record<MessageKey, string>;
+} as const;
+
+export const sw = { ...swBase, ...swMerchant, ...swOnboard, ...swMisc } as const satisfies Record<MessageKey, string>;

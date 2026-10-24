@@ -93,6 +93,16 @@ LANGUAGE_TOKENS: tuple[tuple[int, tuple[str, ...]], ...] = (
     ),
     (10, ("strictly delivery", "no physical shop", "inbox to order", "delivery countrywide", "order now")),
 )
+# Phrase groups for the standalone scorer (scorer.score_standalone). "Pochi la biashara" and
+# "send money to" are deliberately in neither group: they describe a payment channel, which
+# honest sellers use too. Only demanding money BEFORE the goods is a pressure signal on its own.
+ADVANCE_PAYMENT_PHRASES: frozenset[str] = frozenset(
+    {"pay before delivery", "lipa kwanza", "lipa kabla", "deposit required", "pay via m-pesa before"}
+)
+URGENCY_PHRASES: frozenset[str] = frozenset(
+    {"offer ends today", "leo tu", "limited stock", "payment with order", "no refunds", "non-refundable"}
+)
+
 _LANGUAGE_PATTERNS: tuple[tuple[int, str, re.Pattern[str]], ...] = tuple(
     (weight, phrase, re.compile(r"(?<![\w])" + re.escape(phrase).replace(r"\ ", r"\s+") + r"(?![\w])"))
     for weight, phrases in LANGUAGE_TOKENS

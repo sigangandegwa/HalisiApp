@@ -1,0 +1,59 @@
+{
+  "scan_id": "267db2f2-75a8-5af7-be3d-a2264a1ea10a",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "quickmartkenya",
+    "display_name": null,
+    "url": "https://instagram.com/quickmartkenya",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "62d69652-9c13-5ffa-84d5-bffae1007fa2",
+    "business_name": "Quickmart Kenya",
+    "slug": "quickmart-kenya",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "quickmartkenya",
+        "url": "https://instagram.com/quickmartkenya"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "quickmartkenya",
+        "url": "https://tiktok.com/@quickmartkenya"
+      },
+      {
+        "platform": "facebook",
+        "handle": "quickmartkenyaofficial",
+        "url": "https://facebook.com/quickmartkenyaofficial"
+      },
+      {
+        "platform": "x",
+        "handle": "quickmartkenya",
+        "url": "https://x.com/quickmartkenya"
+      }
+    ],
+    "payment": {
+      "type": "none",
+      "number": null,
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Contact Quickmart Kenya only through @quickmartkenya.",
+    "text_sw": "Wasiliana na Quickmart Kenya kupitia @quickmartkenya pekee."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

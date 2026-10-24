@@ -17,6 +17,9 @@ import {
   Stats,
   ThreatDetail,
   ThreatSummary,
+  VerificationState,
+  Watchlist,
+  WatchlistScan,
   type CheckRequest,
   type MerchantCreate,
   type ReportCreate,
@@ -118,6 +121,17 @@ export const api = {
     form.set("logo", logo);
     return request("merchants", MerchantCreated, { form });
   },
+  /** 5.12: where the merchant stands (claimed / verified / curated) and the code to put in their bio. */
+  getVerification: (merchantId: string) =>
+    request(`merchants/${encodeURIComponent(merchantId)}/verification`, VerificationState),
+  /** 5.12: look for the code in the official bios. 422 VERIFICATION_CODE_NOT_FOUND means "not there yet". */
+  checkVerification: (merchantId: string) =>
+    request(`merchants/${encodeURIComponent(merchantId)}/verification/check`, VerificationState, { method: "POST", json: {} }),
+  /** 5.12: look-alike handles Halisi would watch for (generated; nothing fetched). */
+  getWatchlist: (merchantId: string) => request(`merchants/${encodeURIComponent(merchantId)}/watchlist`, Watchlist),
+  /** 5.12: probe the look-alikes that exist and report the ones imitating this merchant. */
+  scanWatchlist: (merchantId: string) =>
+    request(`merchants/${encodeURIComponent(merchantId)}/watchlist/scan`, WatchlistScan, { method: "POST", json: {} }),
   listThreats: (merchantId: string, status?: ThreatStatus) =>
     request(`merchants/${encodeURIComponent(merchantId)}/threats`, ThreatSummary.array(), { search: { status } }),
   getThreat: (id: string) => request(`threats/${encodeURIComponent(id)}`, ThreatDetail),
@@ -144,5 +158,7 @@ export const qk = {
   stats: (merchantId?: string) => ["stats", merchantId ?? "global"] as const,
   merchant: (slug: string) => ["merchant", slug] as const,
   merchants: () => ["merchants"] as const,
+  verification: (merchantId: string) => ["verification", merchantId] as const,
+  watchlist: (merchantId: string) => ["watchlist", merchantId] as const,
   alerts: (merchantId: string) => ["alerts", merchantId] as const,
 };

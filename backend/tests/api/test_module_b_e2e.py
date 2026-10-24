@@ -1,6 +1,6 @@
 """Automated test execution suite for Module 3.B of E2E_TESTING_GUIDE.md.
 
-Covers all 14 test cases assigned to Geoffrey:
+Covers the live Module 3.B cases assigned to Geoffrey (TC-B09..TC-B13 are archived: tests/archived/):
 - TC-B01: FastAPI Server Health & OpenAPI Docs
 - TC-B02: Public Scan Endpoint (POST /api/v1/check)
 - TC-B03: API Security & SSRF Protection
@@ -9,36 +9,22 @@ Covers all 14 test cases assigned to Geoffrey:
 - TC-B06: Payment Verification Endpoint (GET /api/v1/verify/payment)
 - TC-B07: Community Report Intake (POST /api/v1/reports)
 - TC-B08: In-App Alert Dispatcher & De-duplication
-- TC-B09: Africa's Talking USSD Handler (POST /api/v1/channels/ussd)
-- TC-B10: Africa's Talking SMS Dispatcher (app/alerts/sms.py)
-- TC-B11: Telegram Consumer Checker Bot (POST /api/v1/channels/telegram/webhook)
-- TC-B12: Safaricom Daraja API Validation (app/ingestion/daraja.py)
-- TC-B13: Meta Rights Manager Automated Takedown (app/ingestion/meta_rights.py)
 - TC-B14: 3-Tier Page Scraper Fallback (app/ingestion/page_scraper.py)
 """
 
 from __future__ import annotations
 
 import base64
-from pathlib import Path
 from uuid import UUID
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.alerts.sms import send_threat_sms
 from app.core.repository import MemoryRepository
 from app.core.security import RateLimiter
-from app.ingestion.daraja import DarajaClient
 from app.ingestion.fixtures import logos as L
-from app.ingestion.meta_rights import (
-    MetaRightsManagerClient,
-    compute_evidence_hash,
-)
 from app.ingestion.mock_seeder import seed_id
 from app.ingestion.page_scraper import parse_opengraph, profile_from_opengraph
-from app.main import create_app
-from tests.conftest import make_settings
 
 LOGO_B64 = base64.b64encode(L.png_bytes(L.sneaker_logo())).decode()
 NSV_ID = str(seed_id("merchant", "nsv"))
@@ -216,132 +202,6 @@ def test_tc_b08_alert_dispatcher_deduplication(client: TestClient, auth: dict[st
         f"/api/v1/merchants/{NSV_ID}/alerts", headers=auth, params={"since": next_cursor}
     ).json()
     assert dup_alerts["alerts"] == []
-
-
-# ==============================================================================
-# TC-B09: Africa's Talking USSD Handler (POST /api/v1/channels/ussd)
-# ==============================================================================
-def test_tc_b09_ussd_menu_navigation(client: TestClient) -> None:
-    """TC-B09: POST /api/v1/channels/ussd responds per Africa's Talking USSD protocol."""
-    # 1. Level 0 Welcome Menu
-    resp0 = client.post(
-        "/api/v1/channels/ussd",
-        data={"sessionId": "s1", "serviceCode": "*384*100#", "phoneNumber": "+254712345678", "text": ""},
-    )
-    assert resp0.status_code == 200
-    assert resp0.text.startswith("CON ")
-    assert "Karibu Halisi" in resp0.text
-
-    # 2. Level 1 Option 1 (Prompt for Till/Phone)
-    resp1 = client.post(
-        "/api/v1/channels/ussd",
-        data={"sessionId": "s1", "serviceCode": "*384*100#", "phoneNumber": "+254712345678", "text": "1"},
-    )
-    assert resp1.status_code == 200
-    assert resp1.text.startswith("CON ")
-    assert "Enter Till" in resp1.text
-
-    # 3. Level 2 Official Till Check (543210)
-    resp2 = client.post(
-        "/api/v1/channels/ussd",
-        data={
-            "sessionId": "s1",
-            "serviceCode": "*384*100#",
-            "phoneNumber": "+254712345678",
-            "text": "1*543210",
-        },
-    )
-    assert resp2.status_code == 200
-    assert resp2.text.startswith("END ")
-    assert "VERIFIED OFFICIAL" in resp2.text
-
-
-# ==============================================================================
-# TC-B10: Africa's Talking SMS Dispatcher (app/alerts/sms.py)
-# ==============================================================================
-@pytest.mark.asyncio
-async def test_tc_b10_sms_dispatcher(tmp_path: Path) -> None:
-    """TC-B10: Africa's Talking SMS dispatcher formats and sends simulated alert cleanly."""
-    settings = make_settings(tmp_path, demo_mode=True)
-    result = await send_threat_sms(
-        phone_number="+254712345678",
-        merchant_name="Nairobi Sneaker Vault",
-        threat_handle="@nairobi_sneaker_vault_ke",
-        score=94.5,
-        settings=settings,
-    )
-    assert result.success is True
-    assert result.simulated is True
-    assert "HALISI TAHADHARI" in result.message
-    assert "Risk:" in result.message
-
-
-# ==============================================================================
-# TC-B11: Telegram Consumer Checker Bot (POST /api/v1/channels/telegram/webhook)
-# ==============================================================================
-def test_tc_b11_telegram_checker_webhook(tmp_path: Path) -> None:
-    """TC-B11: POST /api/v1/channels/telegram/webhook parses handle and returns Forensic Verdict."""
-    settings = make_settings(tmp_path, telegram_bot_token="test-token-secret")
-    with TestClient(create_app(settings)) as test_client:
-        webhook_payload = {
-            "update_id": 999123,
-            "message": {
-                "message_id": 1,
-                "date": 1700000000,
-                "chat": {"id": 123456789, "type": "private"},
-                "from": {"id": 123456789, "is_bot": False, "first_name": "TestUser"},
-                "text": "/check @nairobi_sneakervault_official_ke",
-            },
-        }
-        resp = test_client.post("/api/v1/channels/telegram/webhook", json=webhook_payload)
-        assert resp.status_code == 200, resp.text
-        data = resp.json()
-        assert data["ok"] is True
-        reply = data.get("text") or ""
-        assert ("HALISI" in reply) or ("FEKI" in reply) or ("Verdict" in reply)
-
-
-# ==============================================================================
-# TC-B12: Safaricom Daraja API Validation (app/ingestion/daraja.py)
-# ==============================================================================
-def test_tc_b12_daraja_api_validation(tmp_path: Path) -> None:
-    """TC-B12: DarajaClient resolves till validation in sandbox/demo mode without network crash."""
-    settings = make_settings(tmp_path, daraja_enabled=True, demo_mode=True)
-    client = DarajaClient(settings)
-    res = client.mock_validate("543210")
-    assert res.is_valid is True
-    assert res.account_name == "NAIROBI SNEAKER VAULT"
-    assert res.account_type == "till"
-    assert res.kyc_status == "verified"
-
-
-# ==============================================================================
-# TC-B13: Meta Rights Manager Automated Takedown (app/ingestion/meta_rights.py)
-# ==============================================================================
-@pytest.mark.asyncio
-async def test_tc_b13_meta_rights_manager_automated_takedown(tmp_path: Path) -> None:
-    """TC-B13: MetaRightsManagerClient submits takedown for 95+ score threat with SHA-256 evidence hash."""
-    settings = make_settings(tmp_path, meta_rights_manager_enabled=True, demo_mode=True)
-    client = MetaRightsManagerClient(settings=settings)
-    evidence_hash = compute_evidence_hash(
-        handle="nairobi_sneakervault_clone",
-        url="https://instagram.com/nairobi_sneakervault_clone",
-        score=96.0,
-    )
-    assert len(evidence_hash) == 64
-
-    res = await client.submit_takedown(
-        threat_handle="@nairobi_sneakervault_clone",
-        threat_url="https://instagram.com/nairobi_sneakervault_clone",
-        merchant_name="Nairobi Sneaker Vault",
-        score=96.0,
-        evidence_hash=evidence_hash,
-    )
-    assert res.success is True
-    assert res.status == "simulated"
-    assert res.score == 96.0
-    assert res.evidence_hash == evidence_hash
-    assert res.takedown_id is not None
 
 
 # ==============================================================================

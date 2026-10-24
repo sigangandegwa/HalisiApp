@@ -1,0 +1,34 @@
+{
+  "id": "b98ff61d-d167-593b-bae3-14d2f295d20e",
+  "business_name": "Equity Bank Kenya",
+  "slug": "equity-bank-kenya",
+  "logo_url": null,
+  "category": "Bank",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "equitygroup",
+      "url": "https://instagram.com/equitygroup"
+    },
+    {
+      "platform": "facebook",
+      "handle": "keequitybank",
+      "url": "https://facebook.com/keequitybank"
+    },
+    {
+      "platform": "x",
+      "handle": "keequitybank",
+      "url": "https://x.com/keequitybank"
+    }
+  ],
+  "payment": {
+    "type": "paybill",
+    "number": "247247",
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

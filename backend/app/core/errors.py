@@ -63,6 +63,16 @@ class ConflictError(HalisiError):
     status_code, code, message = 409, "CONFLICT", "Conflict."
 
 
+class VerificationFailed(HalisiError):
+    """422: the Halisi code was not found in the merchant's official bio(s)."""
+
+    status_code, code, message = (
+        422,
+        "VERIFICATION_CODE_NOT_FOUND",
+        "We could not find your Halisi code in your official bio yet.",
+    )
+
+
 class Unauthorized(HalisiError):
     """401: missing or wrong ``X-Halisi-Key``."""
 

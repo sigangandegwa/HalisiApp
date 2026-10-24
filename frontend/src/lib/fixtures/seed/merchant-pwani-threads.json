@@ -7,6 +7,7 @@
   "location": "Mombasa",
   "established_on": "2020-11-02",
   "is_verified": true,
+  "verification_status": "curated",
   "official_handles": [
     {
       "platform": "instagram",

@@ -41,10 +41,10 @@
     {
       "key": "visual",
       "label": "Logo match",
-      "score": 79.6,
+      "score": 70.0,
       "weight": 0.3,
       "available": true,
-      "evidence": "pHash distance 10/64 · dHash distance 16/64 · CLIP similarity 0.90"
+      "evidence": "pHash distance 10/64 · dHash distance 16/64"
     },
     {
       "key": "identity",
@@ -95,8 +95,8 @@
     {
       "code": "LOGO_COPY",
       "severity": "medium",
-      "text": "Uses a logo 80% similar to Nairobi Sneaker Vault's.",
-      "text_sw": "Inatumia nembo inayofanana 80% na ya Nairobi Sneaker Vault."
+      "text": "Uses a logo 70% similar to Nairobi Sneaker Vault's.",
+      "text_sw": "Inatumia nembo inayofanana 70% na ya Nairobi Sneaker Vault."
     },
     {
       "code": "SCAM_LANGUAGE",
@@ -115,5 +115,5 @@
     "text_sw": "Lipa tu kwa Till 543210 (NAIROBI SNEAKER VAULT). Ukurasa rasmi ni @nairobisneakervault."
   },
   "threat_id": "26d7872a-f4ba-546f-87bf-ee034e25f55f",
-  "elapsed_ms": 4
+  "elapsed_ms": 3
 }

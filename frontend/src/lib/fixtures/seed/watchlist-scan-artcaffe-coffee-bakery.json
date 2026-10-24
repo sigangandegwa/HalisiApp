@@ -1,0 +1,9 @@
+{
+  "merchant_id": "2a73a0b4-454e-5998-8674-46d16b2f3452",
+  "variants_generated": 240,
+  "probed": 40,
+  "resolved": 0,
+  "unreachable": 40,
+  "budget_exhausted": true,
+  "findings": []
+}

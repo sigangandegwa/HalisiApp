@@ -1,0 +1,26 @@
+{
+  "merchant_id": "760e3dc7-886b-55d1-b96c-a400ed66d0f2",
+  "variants_generated": 160,
+  "probed": 42,
+  "resolved": 2,
+  "unreachable": 40,
+  "budget_exhausted": true,
+  "findings": [
+    {
+      "platform": "instagram",
+      "handle": "kilimaniglow_official_ke",
+      "verdict": "impersonation",
+      "score": 94.0,
+      "scan_id": "18695b9a-d183-5487-bd97-4a7d454527e1",
+      "threat_id": "7d1975e3-848c-5ae4-b1c3-ca43aa489f34"
+    },
+    {
+      "platform": "instagram",
+      "handle": "kiiimaniglow",
+      "verdict": "impersonation",
+      "score": 90.0,
+      "scan_id": "6c888bb3-7b05-5203-8dce-7deb7d75cada",
+      "threat_id": "848f0795-3077-53c1-8cd9-8d9df8609e3a"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "scan_id": "80523cd0-d48a-5608-9647-15c25fb8f6ce",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "kcbkenya",
+    "display_name": null,
+    "url": "https://instagram.com/kcbkenya",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "9775b32e-9258-5ccf-9546-4bd03136b5bf",
+    "business_name": "KCB Bank Kenya",
+    "slug": "kcb-bank-kenya",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "kcbkenya",
+        "url": "https://instagram.com/kcbkenya"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "kcb_kenya",
+        "url": "https://tiktok.com/@kcb_kenya"
+      },
+      {
+        "platform": "facebook",
+        "handle": "kcbinkenya",
+        "url": "https://facebook.com/kcbinkenya"
+      },
+      {
+        "platform": "x",
+        "handle": "kcbinkenya",
+        "url": "https://x.com/kcbinkenya"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "522522",
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Pay only via Paybill 522522 through @kcbkenya.",
+    "text_sw": "Lipa tu kwa Paybill 522522. Ukurasa rasmi ni @kcbkenya."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

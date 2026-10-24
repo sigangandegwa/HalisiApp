@@ -62,18 +62,6 @@ class PaymentLookup(BaseSchema):
     linked_threats: int = 0  # active impersonation threats whose page lists this number
 
 
-class DarajaValidation(BaseSchema):
-    """Authoritative Safaricom Daraja account validation / owner lookup."""
-
-    is_valid: bool = True
-    account_name: str | None = None
-    account_type: str = "unknown"
-    kyc_status: str = "verified"
-    source: Literal["live", "sandbox", "simulated", "cache", "fallback"] = "simulated"
-    error_message: str | None = None
-    operator: str = "Safaricom M-Pesa"
-
-
 class VerifyPaymentResult(BaseSchema):
     """``GET /verify/payment`` response. ``unknown`` means "not registered with Halisi", never "safe"."""
 
@@ -84,7 +72,6 @@ class VerifyPaymentResult(BaseSchema):
     merchant: PublicMerchant | None = None
     report_count: int
     linked_threats: int
-    daraja: DarajaValidation | None = None
 
 
 

@@ -1,0 +1,49 @@
+{
+  "scan_id": "fc7d9171-457f-513a-a061-d3e7ea00d7f4",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "dstv_kenya",
+    "display_name": null,
+    "url": "https://instagram.com/dstv_kenya",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "d83bf535-14c1-5eb4-b573-659a9d1c8428",
+    "business_name": "DStv Kenya (MultiChoice)",
+    "slug": "dstv-kenya",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "dstv_kenya",
+        "url": "https://instagram.com/dstv_kenya"
+      },
+      {
+        "platform": "x",
+        "handle": "dstv_kenya",
+        "url": "https://x.com/dstv_kenya"
+      }
+    ],
+    "payment": {
+      "type": "paybill",
+      "number": "444900",
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Pay only via Paybill 444900 through @dstv_kenya.",
+    "text_sw": "Lipa tu kwa Paybill 444900. Ukurasa rasmi ni @dstv_kenya."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

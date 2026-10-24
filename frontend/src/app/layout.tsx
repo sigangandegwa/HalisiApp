@@ -7,9 +7,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { getI18n } from "@/lib/i18n/server";
 import "./globals.css";
 
+// Local fonts ensure zero network dependencies during production build (Netlify).
 // Variable names are deliberately distinct from the Tailwind theme names (--font-sans etc.),
 // otherwise `--font-sans: var(--font-sans)` resolves to itself and the font never applies.
-// Local fonts ensure zero network dependencies during production build.
 const geistSans = localFont({
   src: [
     { path: "../assets/fonts/Geist-Medium.woff", weight: "500", style: "normal" },
@@ -20,19 +20,29 @@ const geistSans = localFont({
 });
 
 const geistMono = localFont({
-  src: [
-    { path: "../assets/fonts/GeistMono-Medium.woff", weight: "500", style: "normal" },
-  ],
+  src: [{ path: "../assets/fonts/GeistMono-Medium.woff", weight: "500", style: "normal" }],
   variable: "--font-geist-mono",
   display: "swap",
 });
 
-const fraunces = localFont({
+// Monumental condensed capitals: the verdict words and every display headline.
+const bigShoulders = localFont({
   src: [
-    { path: "../assets/fonts/Fraunces-SemiBold.woff", weight: "600", style: "normal" },
-    { path: "../assets/fonts/Fraunces-Italic-500.woff", weight: "500", style: "italic" },
+    { path: "../assets/fonts/BigShoulders-700.woff2", weight: "700", style: "normal" },
+    { path: "../assets/fonts/BigShoulders-800.woff2", weight: "800", style: "normal" },
+    { path: "../assets/fonts/BigShoulders-900.woff2", weight: "900", style: "normal" },
   ],
-  variable: "--font-fraunces",
+  variable: "--font-big-shoulders",
+  display: "swap",
+});
+
+// The single editorial voice: one italic word per headline.
+const instrument = localFont({
+  src: [
+    { path: "../assets/fonts/InstrumentSerif-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/InstrumentSerif-Italic.woff2", weight: "400", style: "italic" },
+  ],
+  variable: "--font-instrument",
   display: "swap",
 });
 
@@ -59,7 +69,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: [{ color: "#F2EEE3" }],
+  themeColor: [{ color: "#07070A" }],
   width: "device-width",
   initialScale: 1,
 };
@@ -67,7 +77,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { locale, messages, t } = await getI18n();
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} ${bigShoulders.variable} ${instrument.variable}`} suppressHydrationWarning>
       <body className="min-h-dvh">
         <a
           href="#content"

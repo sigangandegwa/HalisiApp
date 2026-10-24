@@ -84,7 +84,11 @@ class CheckOutcome:
 
 
 class MerchantCache:
-    """Merchant records + engine profiles, refreshed every minute or when invalidated (onboarding)."""
+    """Merchant records + engine profiles, refreshed every minute or when invalidated (onboarding).
+
+    Only curated/verified merchants become engine profiles. A claimed merchant is stored but inert,
+    so a self-declared brand can never produce a FEKI or a HALISI verdict.
+    """
 
     def __init__(self, repo: Repository, ttl: float = MERCHANT_CACHE_SECONDS) -> None:
         self.repo = repo
@@ -103,7 +107,7 @@ class MerchantCache:
         async with self._lock:
             if time.monotonic() - self._loaded_at > self.ttl:
                 self._records = await self.repo.list_merchants()
-                self._profiles = [merchant_profile(r) for r in self._records]
+                self._profiles = [merchant_profile(r) for r in self._records if r.is_verified]
                 self._loaded_at = time.monotonic()
             return self._records, self._profiles
 
@@ -248,6 +252,30 @@ class CheckService:
         )
         return acquired
 
+    async def fetch_bio(self, platform: str, handle: str, url: str | None) -> str | None:
+        """The page's current public bio, for ownership proof (docs/PRODUCT_V2.md section 5).
+
+        Bypasses every cache: the merchant has just edited their bio. In demo / offline mode only the
+        stored target profile can answer, which is what lets tests and the offline demo run.
+        """
+        if self.settings.demo_mode or not self.settings.scraper_enabled or not url:
+            known = await self.repo.get_target_profile(platform, handle)
+            return known.bio if known else None
+        try:
+            page = await fetch_opengraph(
+                self.http,
+                url,
+                platform,
+                handle,
+                timeout=self.settings.fetch_timeout_seconds,
+                image_timeout=self.settings.image_timeout_seconds,
+                resolver=self.resolver,
+            )
+        except FetchError as exc:
+            log_event("verification_fetch_failed", platform=platform, reason=exc.reason)
+            return None
+        return page.bio
+
     def _fresh(self, fetched_at: datetime) -> bool:
         return (utcnow() - fetched_at).total_seconds() < self.settings.profile_cache_seconds
 
@@ -348,7 +376,6 @@ class CheckService:
                 threshold=self.settings.threat_threshold,
                 dedup_hours=self.settings.alert_dedup_hours,
                 now=outcome.scan.created_at,
-                settings=self.settings,
             )
 
     # -- builders --------------------------------------------------------------------------

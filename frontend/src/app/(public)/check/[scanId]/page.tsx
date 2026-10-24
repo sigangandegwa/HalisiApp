@@ -21,8 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!res.data) return { title: t("result.notFound"), robots: { index: false } };
   const r = res.data;
   const meta = VERDICTS[r.verdict];
-  const title = `${t(meta.word)} @${r.target.handle}`;
-  const description = t(meta.line, { business: r.matched_merchant?.business_name ?? "" });
+  const title = `${meta.stamp} @${r.target.handle}`;
+  const lineKey = r.verdict === "suspicious" && !r.matched_merchant ? "line.suspicious.nobody" : meta.line;
+  const description = t(lineKey, { business: r.matched_merchant?.business_name ?? "" });
   return {
     title,
     description,
@@ -32,37 +33,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** Shareable verdict (TSK-023): server-rendered final state, "Replay scan" on demand. */
+/** A shared verdict: the word, the sentence, what to do instead. Server-rendered, final state. */
 export default async function ResultPage({ params }: Props) {
   const { scanId } = await params;
   const { t } = await getI18n();
   const res = await load(scanId);
 
+  const back = (
+    <Link href="/" className="inline-flex h-11 items-center gap-2 font-mono text-[0.8125rem] tracking-[0.1em] text-fg-3 uppercase hover:text-fg">
+      <ArrowLeft className="size-4" strokeWidth={1.75} aria-hidden="true" />
+      {t("nav.check")}
+    </Link>
+  );
+
   if (!res.data) {
     return (
-      <section className="page-wrap section-y">
+      <section className="page-wrap flex min-h-svh flex-col justify-center gap-8 pt-24 pb-16">
         <MarkFixture on={res.fixture} />
-        <h1 className="type-display-m max-w-[20ch]">{t("result.notFound")}</h1>
-        <Link href="/" className="mt-8 inline-flex items-center gap-2 font-medium underline underline-offset-4">
-          <ArrowLeft className="size-4" strokeWidth={1.5} aria-hidden="true" />
-          {t("notFound.home")}
-        </Link>
+        <h1 className="type-display-m max-w-[14ch]">{t("result.notFound")}</h1>
+        {back}
       </section>
     );
   }
 
-  const r = res.data;
   return (
-    <section className="page-wrap pt-8 pb-20 sm:pt-12">
+    <section className="page-wrap pt-24 pb-20 sm:pt-28">
       <MarkFixture on={res.fixture} />
-      <Link href="/" className="type-caption inline-flex items-center gap-2 text-fg-2 hover:text-fg">
-        <ArrowLeft className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
-        {t("nav.check")}
-      </Link>
-      <h1 className="mt-5 mb-8 font-display text-[clamp(2rem,5vw,3.5rem)] leading-none font-medium tracking-[-0.03em] break-words">
-        {t("result.title", { handle: r.target.handle ?? "" })}
-      </h1>
-      <ResultView result={r} />
+      <div className="mx-auto mb-6 w-full max-w-[40rem]">{back}</div>
+      <ResultView result={res.data} />
     </section>
   );
 }

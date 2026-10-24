@@ -54,13 +54,20 @@ export function classify(
       if (a === "simulator" && b === "clone" && m === "POST") return { access: "merchant", upstream: v1(path) };
       return null;
     case 3:
-      if (a === "merchants" && (c === "threats" || c === "alerts") && m === "GET") {
+      if (a === "merchants" && (c === "threats" || c === "alerts" || c === "verification" || c === "watchlist") && m === "GET") {
         return { access: "merchant", upstream: v1(path), merchantId: b };
       }
       if (a === "threats" && c === "playbooks" && m === "POST") return { access: "merchant", upstream: v1(path) };
       return null;
     case 4:
       if (a === "merchants" && c === "alerts" && d === "read" && m === "POST") {
+        return { access: "merchant", upstream: v1(path), merchantId: b };
+      }
+      // 5.12: ownership proof and the look-alike scan. Both are merchant-scoped and need the session.
+      if (a === "merchants" && c === "verification" && d === "check" && m === "POST") {
+        return { access: "merchant", upstream: v1(path), merchantId: b };
+      }
+      if (a === "merchants" && c === "watchlist" && d === "scan" && m === "POST") {
         return { access: "merchant", upstream: v1(path), merchantId: b };
       }
       return null;

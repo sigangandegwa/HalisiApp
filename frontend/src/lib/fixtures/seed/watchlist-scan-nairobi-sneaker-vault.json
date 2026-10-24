@@ -1,0 +1,26 @@
+{
+  "merchant_id": "190bec2a-588a-54e5-8590-c237c6239a4a",
+  "variants_generated": 160,
+  "probed": 42,
+  "resolved": 2,
+  "unreachable": 40,
+  "budget_exhausted": true,
+  "findings": [
+    {
+      "platform": "instagram",
+      "handle": "nairobi_sneakervault_official_ke",
+      "verdict": "impersonation",
+      "score": 97.0,
+      "scan_id": "39f2cbbc-c488-5b51-ad1b-3f51a8cb6b1d",
+      "threat_id": "c4938d51-9402-5300-988f-df90156e7d9b"
+    },
+    {
+      "platform": "instagram",
+      "handle": "nairobisneakervau1t",
+      "verdict": "impersonation",
+      "score": 90.0,
+      "scan_id": "9ab98023-0710-5aa0-a25b-f9131de2d3c9",
+      "threat_id": "26d7872a-f4ba-546f-87bf-ee034e25f55f"
+    }
+  ]
+}

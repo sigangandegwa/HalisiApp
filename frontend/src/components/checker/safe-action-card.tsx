@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
 import { paymentParts } from "@/lib/format";
 import { useI18n } from "@/lib/i18n/provider";
 import { officialHandle } from "@/lib/result";
@@ -10,8 +9,8 @@ import type { CheckResult } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
 /**
- * Always rendered with a verdict (FRONTEND.md section 7): what to do instead. Uses the backend's
- * safe_action text (EN/SW) and the merchant's official payment at data size.
+ * "What to do instead": always shown with a verdict. When there is a real business behind the
+ * answer, the official till is the biggest thing in the block; otherwise it is one honest sentence.
  */
 export function SafeActionCard({ result, className }: { result: CheckResult; className?: string }) {
   const { t, locale } = useI18n();
@@ -20,53 +19,56 @@ export function SafeActionCard({ result, className }: { result: CheckResult; cla
   const pay = m ? paymentParts(m.payment) : null;
   const safeText = result.safe_action ? (locale === "sw" ? result.safe_action.text_sw : result.safe_action.text) : null;
 
-  if (result.verdict === "no_match" || !m) {
+  if (!m || result.verdict === "no_match" || result.verdict === "error") {
+    const scammy = result.verdict === "suspicious";
     return (
-      <section aria-labelledby="safe-title" className={cn("rounded-doc border border-line bg-bg-2 p-5 sm:p-6", className)}>
-        <h3 id="safe-title" className="text-[1.0625rem] font-semibold">{t("safe.no_match.title")}</h3>
-        <p className="mt-1.5 text-fg-2">{t("safe.no_match.body")}</p>
-        <Link href="/pay" className={cn(buttonVariants({ variant: "secondary", size: "md" }), "mt-4")}>
+      <section aria-labelledby="safe-title" className={cn("grid gap-3 border-t border-line pt-6", className)}>
+        <h3 id="safe-title" className="text-[1.25rem] leading-snug font-semibold">
+          {scammy ? t("safe.suspicious.title") : t("safe.no_match.title")}
+        </h3>
+        <p className="text-fg-2">{t("safe.no_match.body")}</p>
+        <Link href="/pay" className="inline-flex h-11 w-fit items-center gap-1.5 font-medium underline decoration-line-strong underline-offset-4 hover:decoration-fg">
           {t("safe.checkNumber")}
+          <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
         </Link>
       </section>
     );
   }
 
-  const tone =
-    result.verdict === "impersonation" ? "border-feki before:bg-feki" : result.verdict === "suspicious" ? "border-caution before:bg-caution" : "border-halisi before:bg-real";
   const title =
     result.verdict === "impersonation" ? t("safe.impersonation.title") : result.verdict === "suspicious" ? t("safe.suspicious.title") : t("safe.official.title");
 
   return (
-    <section
-      aria-labelledby="safe-title"
-      className={cn("relative overflow-hidden rounded-doc border bg-bg p-5 pl-7 before:absolute before:inset-y-0 before:left-0 before:w-1 sm:p-6 sm:pl-8", tone, className)}
-    >
-      <h3 id="safe-title" className={cn("text-[1.125rem] font-semibold", result.verdict === "impersonation" && "text-fake")}>
+    <section aria-labelledby="safe-title" className={cn("grid gap-4 border-t border-line pt-6", className)}>
+      <h3 id="safe-title" className="text-[1.25rem] leading-snug font-semibold">
         {title}
       </h3>
       {result.verdict !== "official" && handle ? (
-        <p className="mt-2 text-fg-2">
+        <p className="text-fg-2">
           {t("safe.impersonation.real", { business: m.business_name })}{" "}
-          <a href={handle.url ?? "#"} target="_blank" rel="noopener noreferrer" className="type-data text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg">
+          <a href={handle.url ?? "#"} target="_blank" rel="noopener noreferrer" className="font-mono text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg">
             @{handle.handle}
           </a>
         </p>
       ) : null}
       {pay ? (
-        <p className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="type-caption text-fg-3">{pay.label}</span>
-          <span className="type-data text-[clamp(1.5rem,3.2vw,2rem)] leading-none tracking-[-0.01em]">{pay.value}</span>
-          {m.payment.account_name ? <span className="type-data text-small text-fg-2">{m.payment.account_name}</span> : null}
+        <div className="grid gap-1">
+          <p className="type-caption text-fg-3">{pay.label}</p>
+          <p className="font-mono text-[clamp(2rem,9vw,3rem)] leading-none font-medium tracking-[-0.02em]">{pay.value}</p>
+          {m.payment.account_name ? <p className="font-mono text-small text-fg-3">{m.payment.account_name}</p> : null}
+        </div>
+      ) : null}
+      {safeText ? (
+        <p className="text-small text-fg-3" lang={locale}>
+          {safeText}
         </p>
       ) : null}
-      {safeText ? <p className="mt-3 text-small text-fg-2" lang={locale}>{safeText}</p> : null}
       <Link
         href={`/v/${m.slug}`}
-        className="mt-4 inline-flex items-center gap-1.5 text-small font-medium underline decoration-line-strong underline-offset-4 hover:decoration-fg"
+        className="inline-flex h-11 w-fit items-center gap-1.5 font-medium underline decoration-line-strong underline-offset-4 hover:decoration-fg"
       >
         {t("safe.viewCertificate", { business: m.business_name })}
-        <ArrowUpRight className="size-4" strokeWidth={1.5} aria-hidden="true" />
+        <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden="true" />
       </Link>
     </section>
   );

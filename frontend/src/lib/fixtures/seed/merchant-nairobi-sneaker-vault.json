@@ -7,6 +7,7 @@
   "location": "Nairobi CBD",
   "established_on": "2021-03-01",
   "is_verified": true,
+  "verification_status": "curated",
   "official_handles": [
     {
       "platform": "instagram",

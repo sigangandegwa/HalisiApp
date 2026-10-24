@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { RotateCcw, Sparkles } from "lucide-react";
 import { LogoImage } from "@/components/brand/logo-image";
-import { ScanSequence } from "@/components/checker/scan-sequence";
+import { ResultCase } from "@/components/checker/result-case";
 import { Button } from "@/components/ui/button";
 import { ApiError, api } from "@/lib/api";
 import { dictionaries, translator, type Locale, type MessageKey } from "@/lib/i18n";
@@ -152,7 +152,7 @@ export function SimulatorClient({ merchants, locale }: { merchants: SimulatorMer
               transition={{ duration: 0.32, ease: bezier("out") }}
               className="theme-paper rounded-doc bg-paper p-6 text-ink sm:p-10"
             >
-              <ScanSequence result={result} onAgain={() => setResult(null)} />
+              <ResultCase result={result} onAgain={() => setResult(null)} />
               <Button variant="secondary" className="mt-8" onClick={() => setResult(null)}>
                 <RotateCcw className="size-4" strokeWidth={1.5} aria-hidden="true" />
                 {t("sim.again")}

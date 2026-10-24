@@ -13,13 +13,17 @@ export function AlertBell() {
   const [pulse, setPulse] = useState(false);
   const [prev, setPrev] = useState(unreadCount);
 
-  useEffect(() => {
-    if (unreadCount > prev) {
-      setPulse(true);
-      setTimeout(() => setPulse(false), 420);
-    }
+  // Derive the pulse while rendering (React's pattern for "state that follows a prop")...
+  if (unreadCount !== prev) {
     setPrev(unreadCount);
-  }, [unreadCount, prev]);
+    if (unreadCount > prev) setPulse(true);
+  }
+  // ...and let a timer switch it off again.
+  useEffect(() => {
+    if (!pulse) return;
+    const id = setTimeout(() => setPulse(false), 420);
+    return () => clearTimeout(id);
+  }, [pulse]);
 
   return (
     <button 

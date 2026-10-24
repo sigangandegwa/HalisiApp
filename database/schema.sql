@@ -1,8 +1,12 @@
 -- =============================================================================
--- Halisi Supabase schema v2.2 (TSK-001)
+-- Halisi Supabase schema v2.3 (TSK-001, TSK-044)
 -- v2.1 (2026-09-27): Telegram/SMS alert columns removed; merchant_alerts table added for in-app alerts.
 -- v2.2 (2026-09-27): threats.avatar_dhash + threats.status_history; target_profiles table (tier-1 known
 --                    pages for the scraper, docs/BACKEND.md section 7.2). Upgrade block at the end of the file.
+-- v2.3 (2026-10-22): merchants.verification_status / verification_code / verified_at (trust tiers,
+--                    docs/PRODUCT_V2.md section 5). is_verified is kept and means status in (curated, verified).
+--                    RUN THE v2.3 UPGRADE BLOCK AT THE END OF THIS FILE on the deployed database before
+--                    deploying the backend: it now writes these columns.
 -- Run in the Supabase SQL Editor on a fresh project. Safe to re-run (IF NOT EXISTS).
 -- This file is the single source of truth for the data model.
 -- backend/app/schemas/*.py (Pydantic) must mirror it. See docs/BACKEND.md section 4.
@@ -34,7 +38,11 @@ create table if not exists merchants (
     mpesa_number       text,                  -- till / paybill / pochi phone
     mpesa_account_name text,                  -- name shown on the M-Pesa confirmation SMS
     phone_numbers      text[] not null default '{}',  -- official numbers, E.164 (+2547XXXXXXXX)
-    is_verified        boolean not null default false,
+    is_verified        boolean not null default false,   -- derived: verification_status in ('curated', 'verified')
+    verification_status text not null default 'claimed'  -- v2.3: curated = Halisi-seeded from public sources,
+        check (verification_status in ('curated', 'verified', 'claimed')),  -- verified = bio code proven, claimed = self-declared
+    verification_code  text,                  -- v2.3: one-time bio code while claimed (halisi-xxxxxx)
+    verified_at        timestamptz,           -- v2.3
     created_at         timestamptz not null default now(),
     updated_at         timestamptz not null default now()
 );
@@ -248,3 +256,20 @@ alter table target_profiles    enable row level security;
 -- -----------------------------------------------------------------------------
 alter table threats add column if not exists avatar_dhash   char(16);
 alter table threats add column if not exists status_history jsonb not null default '[]';
+
+-- -----------------------------------------------------------------------------
+-- Upgrade an existing v2.2 database to v2.3: merchant trust tiers (safe to re-run)
+-- Existing verified rows were seeded by Halisi, so they become 'curated'.
+-- -----------------------------------------------------------------------------
+alter table merchants add column if not exists verification_status text not null default 'claimed';
+alter table merchants add column if not exists verification_code   text;
+alter table merchants add column if not exists verified_at         timestamptz;
+do $$
+begin
+    if not exists (select 1 from pg_constraint where conname = 'merchants_verification_status_check') then
+        alter table merchants add constraint merchants_verification_status_check
+            check (verification_status in ('curated', 'verified', 'claimed'));
+    end if;
+end $$;
+update merchants set verification_status = 'curated', verified_at = coalesce(verified_at, created_at)
+    where is_verified and verification_status = 'claimed';

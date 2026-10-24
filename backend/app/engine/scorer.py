@@ -31,6 +31,16 @@ from app.engine.constants import (
     REASON_MIN_SCORE,
     REPORTED_FLOOR,
     RESEMBLANCE_GATE,
+    STANDALONE_ACCOUNT,
+    STANDALONE_ACCOUNT_MIN,
+    STANDALONE_ADVANCE_BASE,
+    STANDALONE_ADVANCE_EXTRA,
+    STANDALONE_CAP,
+    STANDALONE_CONFIDENCE_BASE,
+    STANDALONE_CONFIDENCE_MAX,
+    STANDALONE_CONFIDENCE_STEP,
+    STANDALONE_PERSONAL_PAYMENT,
+    STANDALONE_URGENCY,
     STRONG_IDENTITY,
     STRONG_VISUAL,
     SUSPICIOUS_THRESHOLD,
@@ -38,7 +48,7 @@ from app.engine.constants import (
     WEIGHTS,
 )
 from app.engine.hasher import ImageFeatures, VisualResult, visual_score
-from app.engine.matcher import identity_score, language_score
+from app.engine.matcher import ADVANCE_PAYMENT_PHRASES, URGENCY_PHRASES, identity_score, language_score
 from app.engine.payment import PaymentEvidence, PaymentResult, canonical_phone, payment_score
 
 Verdict = Literal["official", "impersonation", "suspicious", "no_match"]
@@ -200,21 +210,103 @@ def score_against_all(
 ) -> ScoreResult:
     """Score a page against every merchant and return the verdict for the closest one.
 
-    ``no_match`` results carry ``merchant=None`` and keep only merchant-independent reasons
-    (scam language, community-reported numbers). A page can be a scam without imitating anyone.
+    When the page imitates nobody (or there are no merchants at all) it is scored on its own
+    merits by :func:`score_standalone`: a page can be a scam without imitating anyone. Results
+    without a merchant carry ``merchant=None`` and only merchant-independent reasons.
     """
     official = find_official(target, merchants)
     if official is not None:
         return ScoreResult(verdict="official", score=0.0, confidence=1.0, merchant=official, rules=("O1",))
 
     if not merchants:
-        return _no_match(score_target(target, _NOBODY, ctx))
+        return score_standalone(target, ctx)
 
     best = max(
         (score_target(target, merchant, ctx) for merchant in merchants),
         key=lambda r: (r.score, r.confidence),
     )
-    return _no_match(best) if best.verdict == "no_match" else best
+    if best.verdict != "no_match":
+        return best
+    standalone = score_standalone(target, ctx)
+    if standalone.verdict == "suspicious":
+        return standalone
+    # Keep the merchant comparison's score and dimensions, but explain it only with standalone reasons:
+    # the legacy language reason fires on payment-channel phrases ("pochi la biashara") that honest
+    # sellers use, and must never be shown against an unknown shop.
+    return replace(_no_match(best), reasons=standalone.reasons)
+
+
+def score_standalone(target: TargetProfile, ctx: ScoringContext) -> ScoreResult:
+    """Score a page that imitates no known merchant (STANDALONE v1, docs/PRODUCT_V2.md section 4).
+
+    The gate is an *advance-payment demand* ("lipa kwanza", "pay before delivery"). A personal
+    number, a Pochi line or a new account is normal for small Kenyan sellers, so those signals only
+    amplify the gate and never raise a page by themselves. A number in a confirmed community report
+    is an independent route to a high score. Without a reference page the verdict can be at most
+    ``suspicious`` (ONYO), never ``impersonation``, and confidence never reaches 1.
+    """
+    payment = payment_score(
+        target.payment,
+        official_phones=(),
+        official_mpesa_number=None,
+        close_resemblance=False,
+        confirmed_reported=ctx.confirmed_reported,
+    )
+    language = language_score(target.bio)
+    language_value = language.score
+    account_value, account_evidence, account_code = _account_signal(target, 0.0, ctx.today)
+
+    advance = tuple(p for p in language.phrases if p in ADVANCE_PAYMENT_PHRASES)
+    urgency = tuple(p for p in language.phrases if p in URGENCY_PHRASES)
+    personal_payment = bool(target.payment.phones) or target.payment.pochi_phrasing
+    new_account = account_value is not None and account_value >= STANDALONE_ACCOUNT_MIN
+
+    score = 0.0
+    rules: list[str] = []
+    if advance:
+        score = STANDALONE_ADVANCE_BASE + (STANDALONE_ADVANCE_EXTRA if len(advance) > 1 else 0.0)
+        score += STANDALONE_URGENCY if urgency else 0.0
+        score += STANDALONE_PERSONAL_PAYMENT if personal_payment else 0.0
+        score += STANDALONE_ACCOUNT if new_account else 0.0
+        score = min(score, STANDALONE_CAP)
+        rules.append("S1")
+    if payment.reported_hits:
+        score = max(score, REPORTED_FLOOR)
+        rules.append("S2")
+
+    score = round(score, 2)
+    verdict: Verdict = "suspicious" if score >= ctx.suspicious_threshold else "no_match"
+    groups = sum(v is not None for v in (language_value, payment.score, account_value))
+    confidence = round(
+        min(STANDALONE_CONFIDENCE_MAX, STANDALONE_CONFIDENCE_BASE + STANDALONE_CONFIDENCE_STEP * groups), 2
+    )
+    reasons = _standalone_reasons(
+        advance=advance,
+        urgency=urgency,
+        personal_payment=personal_payment and bool(advance),
+        payment=payment,
+        new_account=new_account and bool(advance),
+        account_code=account_code,
+        account_evidence=account_evidence,
+    )
+
+    dimensions = (
+        Dimension("visual", None, None),
+        Dimension("identity", None, None),
+        Dimension("payment", payment.score, payment.evidence),
+        Dimension("language", language_value, language.evidence),
+        Dimension("account", account_value, account_evidence),
+    )
+    return ScoreResult(
+        verdict=verdict,
+        score=score,
+        confidence=confidence,
+        merchant=None,
+        dimensions=dimensions,
+        reasons=reasons,
+        payment=payment,
+        rules=tuple(rules),
+    )
 
 
 def score_target(target: TargetProfile, merchant: MerchantProfile, ctx: ScoringContext) -> ScoreResult:
@@ -224,7 +316,7 @@ def score_target(target: TargetProfile, merchant: MerchantProfile, ctx: ScoringC
 
     identity_value: float | None = None
     identity_evidence: str | None = None
-    if merchant is not _NOBODY and (target.handle or target.display_name):
+    if target.handle or target.display_name:
         identity = identity_score(target.handle, target.display_name, merchant)
         identity_value, identity_evidence = identity.score, identity.evidence
 
@@ -280,7 +372,7 @@ def score_target(target: TargetProfile, merchant: MerchantProfile, ctx: ScoringC
         verdict=verdict,
         score=composite,
         confidence=confidence,
-        merchant=None if merchant is _NOBODY else merchant,
+        merchant=merchant,
         dimensions=dimensions,
         reasons=_reasons(dimensions, payment, account_code, merchant, target),
         visual=visual,
@@ -314,7 +406,53 @@ def safe_action(merchant: MerchantProfile, platform: str | None = None) -> tuple
 
 # --- internals ----------------------------------------------------------------------------------
 
-_NOBODY = MerchantProfile(id="", business_name="", slug="")   # sentinel: "no merchants registered"
+def _standalone_reasons(
+    *,
+    advance: Sequence[str],
+    urgency: Sequence[str],
+    personal_payment: bool,
+    payment: PaymentResult,
+    new_account: bool,
+    account_code: str | None,
+    account_evidence: str | None,
+) -> tuple[Reason, ...]:
+    """Plain-language reasons for a page with no known brand. They never name a business.
+
+    Wording is deliberately "signals", not "scam": ONYO means high-risk, not proven fraud.
+    """
+    out: list[Reason] = []
+    if payment.reported_hits:
+        out.append(Reason(
+            "COMMUNITY_REPORTED", "high",
+            "A payment number on this page has been reported by other customers.",
+            "Namba ya malipo kwenye ukurasa huu imeripotiwa na wateja wengine.",
+        ))
+    if advance:
+        phrases = ", ".join(f"'{p}'" for p in (*advance, *urgency))
+        out.append(Reason(
+            "SCAM_LANGUAGE", "high",
+            f"Asks you to pay before you receive anything: {phrases}.",
+            f"Inakuomba ulipe kabla ya kupokea bidhaa: {phrases}.",
+        ))
+    if personal_payment:
+        out.append(Reason(
+            "POCHI_REQUEST", "medium",
+            "Asks for payment to a personal number or Pochi, not a registered Till or Paybill.",
+            "Inaomba malipo kwa namba ya binafsi au Pochi, si Till au Paybill iliyosajiliwa.",
+        ))
+    if new_account and account_code == "NEW_ACCOUNT":
+        out.append(Reason(
+            "NEW_ACCOUNT", "medium",
+            f"The account was created recently ({account_evidence}).",
+            "Akaunti hii imefunguliwa hivi karibuni.",
+        ))
+    elif new_account:
+        out.append(Reason(
+            "LOW_ACTIVITY", "medium",
+            f"Very little activity for a shop asking for money up front ({account_evidence}).",
+            "Shughuli chache sana kwa duka linaloomba pesa kabla ya bidhaa.",
+        ))
+    return tuple(out)
 
 
 def _closely_resembles(visual: float | None, identity: float | None) -> bool:

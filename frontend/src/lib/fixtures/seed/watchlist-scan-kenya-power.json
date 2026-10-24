@@ -1,0 +1,18 @@
+{
+  "merchant_id": "bcdcb96c-6657-5cdd-924f-4b5df1f43f8d",
+  "variants_generated": 320,
+  "probed": 40,
+  "resolved": 1,
+  "unreachable": 39,
+  "budget_exhausted": true,
+  "findings": [
+    {
+      "platform": "instagram",
+      "handle": "kenyapower_",
+      "verdict": "suspicious",
+      "score": 49.23,
+      "scan_id": "3ca49494-f930-47ff-8a24-8a9f41356f2a",
+      "threat_id": null
+    }
+  ]
+}

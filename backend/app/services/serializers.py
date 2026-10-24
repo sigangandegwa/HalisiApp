@@ -62,9 +62,10 @@ def public_merchant(record: MerchantRecord) -> PublicMerchant:
         location=record.location,
         established_on=record.established_on,
         is_verified=record.is_verified,
+        verification_status=record.verification_status,
         official_handles=record.official_handles,
         payment=merchant_payment(record),
-        verified_since=record.created_at if record.is_verified else None,
+        verified_since=(record.verified_at or record.created_at) if record.is_verified else None,
     )
 
 

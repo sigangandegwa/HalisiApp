@@ -1,0 +1,59 @@
+{
+  "scan_id": "1501c2a4-d255-5f6d-8a57-295f7403bb11",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "naivas_supermarket",
+    "display_name": null,
+    "url": "https://instagram.com/naivas_supermarket",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "df51dd04-a774-5ce6-9c31-b7610c732da8",
+    "business_name": "Naivas Supermarket",
+    "slug": "naivas-supermarket",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "naivas_supermarket",
+        "url": "https://instagram.com/naivas_supermarket"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "naivas",
+        "url": "https://tiktok.com/@naivas"
+      },
+      {
+        "platform": "facebook",
+        "handle": "naivassupermarkets",
+        "url": "https://facebook.com/naivassupermarkets"
+      },
+      {
+        "platform": "x",
+        "handle": "naivas_kenya",
+        "url": "https://x.com/naivas_kenya"
+      }
+    ],
+    "payment": {
+      "type": "none",
+      "number": null,
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Contact Naivas Supermarket only through @naivas_supermarket.",
+    "text_sw": "Wasiliana na Naivas Supermarket kupitia @naivas_supermarket pekee."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

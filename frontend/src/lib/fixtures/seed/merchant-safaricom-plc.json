@@ -1,0 +1,34 @@
+{
+  "id": "90b68053-1db4-5cd1-b3a3-f641f311aebc",
+  "business_name": "Safaricom PLC",
+  "slug": "safaricom-plc",
+  "logo_url": null,
+  "category": "Telecom / M-Pesa",
+  "location": null,
+  "established_on": null,
+  "is_verified": true,
+  "verification_status": "curated",
+  "official_handles": [
+    {
+      "platform": "instagram",
+      "handle": "safaricomplc_",
+      "url": "https://instagram.com/safaricomplc_"
+    },
+    {
+      "platform": "tiktok",
+      "handle": "safaricomplc",
+      "url": "https://tiktok.com/@safaricomplc"
+    },
+    {
+      "platform": "x",
+      "handle": "safaricomplc",
+      "url": "https://x.com/safaricomplc"
+    }
+  ],
+  "payment": {
+    "type": "none",
+    "number": null,
+    "account_name": null
+  },
+  "verified_since": "2026-08-28T09:00:00Z"
+}

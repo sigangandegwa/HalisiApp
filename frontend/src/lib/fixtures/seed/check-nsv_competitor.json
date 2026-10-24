@@ -1,8 +1,8 @@
 {
   "scan_id": "fcbeccce-81c6-5d85-b466-21ead41b8513",
   "verdict": "no_match",
-  "score": 35.19,
-  "confidence": 1.0,
+  "score": 24.09,
+  "confidence": 0.7,
   "target": {
     "platform": "instagram",
     "handle": "nairobisneakerhub",
@@ -19,18 +19,18 @@
     {
       "key": "visual",
       "label": "Logo match",
-      "score": 53.77,
+      "score": 0.0,
       "weight": 0.3,
-      "available": true,
-      "evidence": "pHash distance 34/64 · dHash distance 32/64 · CLIP similarity 0.87"
+      "available": false,
+      "evidence": "No data"
     },
     {
       "key": "identity",
       "label": "Name & handle",
-      "score": 43.23,
+      "score": 34.44,
       "weight": 0.25,
       "available": true,
-      "evidence": "'nairobisneakerhub' resembles 'nairobisneakervault' (43% similar)"
+      "evidence": "'nairobisneakerhub' resembles 'java house kenya' (34% similar)"
     },
     {
       "key": "payment",

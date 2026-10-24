@@ -1,0 +1,59 @@
+{
+  "scan_id": "be08426b-20ec-5722-a6a2-9ea476f6be4f",
+  "verdict": "official",
+  "score": 0.0,
+  "confidence": 1.0,
+  "target": {
+    "platform": "instagram",
+    "handle": "javahouseafrica",
+    "display_name": null,
+    "url": "https://instagram.com/javahouseafrica",
+    "avatar_url": null,
+    "follower_count": null,
+    "post_count": null,
+    "account_created_on": null,
+    "fetched_via": "none"
+  },
+  "matched_merchant": {
+    "id": "25d961c5-2de0-5cb3-8ea7-fdfca5a79967",
+    "business_name": "Java House Kenya",
+    "slug": "java-house-kenya",
+    "logo_url": null,
+    "official_handles": [
+      {
+        "platform": "instagram",
+        "handle": "javahouseafrica",
+        "url": "https://instagram.com/javahouseafrica"
+      },
+      {
+        "platform": "tiktok",
+        "handle": "javahouseafrica_",
+        "url": "https://tiktok.com/@javahouseafrica_"
+      },
+      {
+        "platform": "facebook",
+        "handle": "javahouseafrica",
+        "url": "https://facebook.com/javahouseafrica"
+      },
+      {
+        "platform": "x",
+        "handle": "javahouseafrica",
+        "url": "https://x.com/javahouseafrica"
+      }
+    ],
+    "payment": {
+      "type": "none",
+      "number": null,
+      "account_name": null
+    }
+  },
+  "dimensions": [],
+  "reasons": [],
+  "hashes": null,
+  "safe_action": {
+    "text": "Contact Java House Kenya only through @javahouseafrica.",
+    "text_sw": "Wasiliana na Java House Kenya kupitia @javahouseafrica pekee."
+  },
+  "threat_id": null,
+  "elapsed_ms": 0
+}

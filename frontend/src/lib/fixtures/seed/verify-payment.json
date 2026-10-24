@@ -13,6 +13,7 @@
       "location": "Nairobi CBD",
       "established_on": "2021-03-01",
       "is_verified": true,
+      "verification_status": "curated",
       "official_handles": [
         {
           "platform": "instagram",
@@ -33,16 +34,7 @@
       "verified_since": "2026-08-28T09:00:00Z"
     },
     "report_count": 0,
-    "linked_threats": 0,
-    "daraja": {
-      "is_valid": false,
-      "account_name": null,
-      "account_type": "till",
-      "kyc_status": "not_found",
-      "source": "live",
-      "error_message": "Identifier not registered on M-Pesa",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 0
   },
   "400200": {
     "kind": "till",
@@ -58,6 +50,7 @@
       "location": "Kilimani, Nairobi",
       "established_on": "2022-06-15",
       "is_verified": true,
+      "verification_status": "curated",
       "official_handles": [
         {
           "platform": "instagram",
@@ -78,16 +71,7 @@
       "verified_since": "2026-08-28T09:00:00Z"
     },
     "report_count": 0,
-    "linked_threats": 0,
-    "daraja": {
-      "is_valid": false,
-      "account_name": null,
-      "account_type": "till",
-      "kyc_status": "not_found",
-      "source": "live",
-      "error_message": "Identifier not registered on M-Pesa",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 0
   },
   "+254700111222": {
     "kind": "phone",
@@ -103,6 +87,7 @@
       "location": "Mombasa",
       "established_on": "2020-11-02",
       "is_verified": true,
+      "verification_status": "curated",
       "official_handles": [
         {
           "platform": "instagram",
@@ -123,16 +108,180 @@
       "verified_since": "2026-08-28T09:00:00Z"
     },
     "report_count": 0,
-    "linked_threats": 0,
-    "daraja": {
-      "is_valid": false,
-      "account_name": null,
-      "account_type": "phone",
-      "kyc_status": "not_found",
-      "source": "live",
-      "error_message": "Identifier not registered on M-Pesa",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 0
+  },
+  "888880": {
+    "kind": "till",
+    "normalized": "888880",
+    "display": "888880",
+    "status": "official",
+    "merchant": {
+      "id": "bcdcb96c-6657-5cdd-924f-4b5df1f43f8d",
+      "business_name": "Kenya Power (KPLC)",
+      "slug": "kenya-power",
+      "logo_url": null,
+      "category": "Utility - electricity",
+      "location": null,
+      "established_on": null,
+      "is_verified": true,
+      "verification_status": "curated",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kenyapower",
+          "url": "https://instagram.com/kenyapower"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "kenyapower",
+          "url": "https://tiktok.com/@kenyapower"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kenyapowerltd",
+          "url": "https://facebook.com/kenyapowerltd"
+        },
+        {
+          "platform": "x",
+          "handle": "kenyapower",
+          "url": "https://x.com/kenyapower"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "888880",
+        "account_name": null
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  "522522": {
+    "kind": "till",
+    "normalized": "522522",
+    "display": "522522",
+    "status": "official",
+    "merchant": {
+      "id": "9775b32e-9258-5ccf-9546-4bd03136b5bf",
+      "business_name": "KCB Bank Kenya",
+      "slug": "kcb-bank-kenya",
+      "logo_url": null,
+      "category": "Bank",
+      "location": null,
+      "established_on": null,
+      "is_verified": true,
+      "verification_status": "curated",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "kcbkenya",
+          "url": "https://instagram.com/kcbkenya"
+        },
+        {
+          "platform": "tiktok",
+          "handle": "kcb_kenya",
+          "url": "https://tiktok.com/@kcb_kenya"
+        },
+        {
+          "platform": "facebook",
+          "handle": "kcbinkenya",
+          "url": "https://facebook.com/kcbinkenya"
+        },
+        {
+          "platform": "x",
+          "handle": "kcbinkenya",
+          "url": "https://x.com/kcbinkenya"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "522522",
+        "account_name": null
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  "247247": {
+    "kind": "till",
+    "normalized": "247247",
+    "display": "247247",
+    "status": "official",
+    "merchant": {
+      "id": "b98ff61d-d167-593b-bae3-14d2f295d20e",
+      "business_name": "Equity Bank Kenya",
+      "slug": "equity-bank-kenya",
+      "logo_url": null,
+      "category": "Bank",
+      "location": null,
+      "established_on": null,
+      "is_verified": true,
+      "verification_status": "curated",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "equitygroup",
+          "url": "https://instagram.com/equitygroup"
+        },
+        {
+          "platform": "facebook",
+          "handle": "keequitybank",
+          "url": "https://facebook.com/keequitybank"
+        },
+        {
+          "platform": "x",
+          "handle": "keequitybank",
+          "url": "https://x.com/keequitybank"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "247247",
+        "account_name": null
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
+  },
+  "444900": {
+    "kind": "till",
+    "normalized": "444900",
+    "display": "444900",
+    "status": "official",
+    "merchant": {
+      "id": "d83bf535-14c1-5eb4-b573-659a9d1c8428",
+      "business_name": "DStv Kenya (MultiChoice)",
+      "slug": "dstv-kenya",
+      "logo_url": null,
+      "category": "Pay-TV",
+      "location": null,
+      "established_on": null,
+      "is_verified": true,
+      "verification_status": "curated",
+      "official_handles": [
+        {
+          "platform": "instagram",
+          "handle": "dstv_kenya",
+          "url": "https://instagram.com/dstv_kenya"
+        },
+        {
+          "platform": "x",
+          "handle": "dstv_kenya",
+          "url": "https://x.com/dstv_kenya"
+        }
+      ],
+      "payment": {
+        "type": "paybill",
+        "number": "444900",
+        "account_name": null
+      },
+      "verified_since": "2026-08-28T09:00:00Z"
+    },
+    "report_count": 0,
+    "linked_threats": 0
   },
   "+254798999111": {
     "kind": "phone",
@@ -141,16 +290,7 @@
     "status": "reported",
     "merchant": null,
     "report_count": 2,
-    "linked_threats": 1,
-    "daraja": {
-      "is_valid": true,
-      "account_name": "JOHN KAMAU NJOROGE",
-      "account_type": "phone",
-      "kyc_status": "active",
-      "source": "fallback",
-      "error_message": "Live API error: HTTP 403: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1.0\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><script type=\"text/javascript\" src=\"/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3\"></script></head><body style=\"margin:0px;height:100%\"><iframe id=\"main-iframe\" src=\"/_Incapsula_Resource?CWUDNSAI=23&xinfo=17-47011366-0%200NNN%20RT%281791889800723%20555%29%20q%280%20-1%20-1%20-1%29%20r%280%20-1%29%20B15%2811%2c6926146%2c0%29%20U6&incident_id=6552000680106160849-222471480931782929&edet=15&cinfo=0b000000&rpinfo=0&cip=196.96.178.219&mth=POST\" frameborder=0 width=\"100%\" height=\"100%\" marginheight=\"0px\" marginwidth=\"0px\">Request unsuccessful. Incapsula incident ID: 6552000680106160849-222471480931782929</iframe></body></html>",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 1
   },
   "+254733000111": {
     "kind": "phone",
@@ -159,16 +299,7 @@
     "status": "reported",
     "merchant": null,
     "report_count": 2,
-    "linked_threats": 1,
-    "daraja": {
-      "is_valid": true,
-      "account_name": "MERCY KIMANI",
-      "account_type": "phone",
-      "kyc_status": "active",
-      "source": "fallback",
-      "error_message": "Live API error: Daraja OAuth failed with HTTP 403: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1.0\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><script type=\"text/javascript\" src=\"/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3\"></script></head><body style=\"margin:0px;height:100%\"><iframe id=\"main-iframe\" src=\"/_Incapsula_Resource?CWUDNSAI=23&xinfo=11-7565430-0%200NNN%20RT%281791889802056%20127%29%20q%280%20-1%20-1%203%29%20r%280%20-1%29%20B15%2811%2c6926146%2c0%29%20U16&incident_id=6552000680106161820-36365149222211851&edet=15&cinfo=0b000000&rpinfo=0&cip=196.96.178.219&mth=GET\" frameborder=0 width=\"100%\" height=\"100%\" marginheight=\"0px\" marginwidth=\"0px\">Request unsuccessful. Incapsula incident ID: 6552000680106161820-36365149222211851</iframe></body></html>",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 1
   },
   "+254799111222": {
     "kind": "phone",
@@ -177,16 +308,7 @@
     "status": "reported",
     "merchant": null,
     "report_count": 1,
-    "linked_threats": 1,
-    "daraja": {
-      "is_valid": true,
-      "account_name": "PETER CHERUIYOT",
-      "account_type": "phone",
-      "kyc_status": "active",
-      "source": "fallback",
-      "error_message": "Live API error: Daraja OAuth failed with HTTP 403: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1.0\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><script type=\"text/javascript\" src=\"/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3\"></script></head><body style=\"margin:0px;height:100%\"><iframe id=\"main-iframe\" src=\"/_Incapsula_Resource?CWUDNSAI=23&xinfo=16-41380922-0%200NNN%20RT%281791889802806%20135%29%20q%280%20-1%20-1%20-1%29%20r%280%20-1%29%20B15%2811%2c6926146%2c0%29%20U16&incident_id=6552000680106161820-214763449154539792&edet=15&cinfo=0b000000&rpinfo=0&cip=196.96.178.219&mth=GET\" frameborder=0 width=\"100%\" height=\"100%\" marginheight=\"0px\" marginwidth=\"0px\">Request unsuccessful. Incapsula incident ID: 6552000680106161820-214763449154539792</iframe></body></html>",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 1
   },
   "889900": {
     "kind": "till",
@@ -195,15 +317,6 @@
     "status": "unknown",
     "merchant": null,
     "report_count": 0,
-    "linked_threats": 0,
-    "daraja": {
-      "is_valid": true,
-      "account_name": "KICKS KENYA LIMITED",
-      "account_type": "till",
-      "kyc_status": "verified",
-      "source": "fallback",
-      "error_message": "Live API error: Daraja OAuth failed with HTTP 403: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1.0\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><script type=\"text/javascript\" src=\"/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3\"></script></head><body style=\"margin:0px;height:100%\"><iframe id=\"main-iframe\" src=\"/_Incapsula_Resource?CWUDNSAI=23&xinfo=12-12788604-0%200NNN%20RT%281791889803607%20117%29%20q%280%20-1%20-1%20-1%29%20r%280%20-1%29%20B15%2811%2c6926146%2c0%29%20U16&incident_id=6552000680106161820-59994633355661580&edet=15&cinfo=0b000000&rpinfo=0&cip=196.96.178.219&mth=GET\" frameborder=0 width=\"100%\" height=\"100%\" marginheight=\"0px\" marginwidth=\"0px\">Request unsuccessful. Incapsula incident ID: 6552000680106161820-59994633355661580</iframe></body></html>",
-      "operator": "Safaricom M-Pesa"
-    }
+    "linked_threats": 0
   }
 }

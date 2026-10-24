@@ -21,6 +21,7 @@ from uuid import UUID
 from app.engine.payment import canonical_phone, canonical_till
 from app.schemas.alert import AlertCreate, AlertRecord
 from app.schemas.check import ScanCreate, ScanRecord, TargetProfileRecord
+from app.schemas.common import VerificationStatus
 from app.schemas.merchant import LogoFeatures, MerchantCreate, MerchantHandle, MerchantRecord
 from app.schemas.remediation import RemediationCreate, RemediationRecord
 from app.schemas.report import PaymentLookup, PlatformCount, ReportCreate, ReportRecord, Stats
@@ -60,13 +61,16 @@ class Repository(Protocol):
     async def create_merchant(
         self,
         data: MerchantCreate,
-        hashes: LogoFeatures,
+        hashes: LogoFeatures | None,
         *,
         logo_url: str | None = None,
         merchant_id: UUID | None = None,
         is_verified: bool = True,
+        verification_status: VerificationStatus | None = None,
+        verification_code: str | None = None,
         created_at: datetime | None = None,
     ) -> MerchantRecord: ...
+    async def mark_verified(self, merchant_id: UUID, verified_at: datetime) -> MerchantRecord: ...
     async def upsert_threat(self, threat: ThreatUpsert) -> ThreatRecord: ...
     async def get_threat_by_target(
         self, merchant_id: UUID, platform: str, handle: str
@@ -146,15 +150,22 @@ def merchant_numbers(merchant: MerchantRecord) -> set[str]:
 
 def build_merchant(
     data: MerchantCreate,
-    hashes: LogoFeatures,
+    hashes: LogoFeatures | None,
     *,
     logo_url: str | None,
     merchant_id: UUID | None,
     is_verified: bool,
     created_at: datetime | None,
+    verification_status: VerificationStatus | None = None,
+    verification_code: str | None = None,
 ) -> MerchantRecord:
-    """Assemble a new MerchantRecord from onboarding data (numbers canonicalised)."""
+    """Assemble a new MerchantRecord from onboarding data (numbers canonicalised).
+
+    ``verification_status`` wins; without it ``is_verified`` decides between ``curated`` (Halisi-seeded)
+    and ``claimed`` (self-declared).
+    """
     now = created_at or utcnow()
+    status: VerificationStatus = verification_status or ("curated" if is_verified else "claimed")
     phones = [p for p in (canonical_phone(n) for n in data.phone_numbers) if p]
     number = (data.mpesa_number or "").strip() or None
     if number:
@@ -174,14 +185,17 @@ def build_merchant(
         location=data.location,
         established_on=data.established_on,
         logo_url=logo_url,
-        logo_phash=hashes.phash,
-        logo_dhash=hashes.dhash,
-        logo_embedding=hashes.embedding,
+        logo_phash=hashes.phash if hashes else None,
+        logo_dhash=hashes.dhash if hashes else None,
+        logo_embedding=hashes.embedding if hashes else None,
         mpesa_type=data.mpesa_type,
         mpesa_number=number,
         mpesa_account_name=data.mpesa_account_name,
         phone_numbers=list(dict.fromkeys(phones)),
-        is_verified=is_verified,
+        is_verified=status in ("curated", "verified"),
+        verification_status=status,
+        verification_code=verification_code,
+        verified_at=now if status in ("curated", "verified") else None,
         created_at=now,
         updated_at=now,
         official_handles=handles,
@@ -247,8 +261,12 @@ def payment_lookup(
     reports: Iterable[ReportRecord],
     threats: Iterable[ThreatRecord],
 ) -> PaymentLookup:
-    """Facts about one canonical phone/till across merchants, reports and active threats."""
-    merchant = next((m for m in merchants if number in merchant_numbers(m)), None)
+    """Facts about one canonical phone/till across merchants, reports and active threats.
+
+    Only curated/verified merchants can make a number "official": a self-declared (claimed) merchant
+    must not be able to launder a scammer's number into an official one.
+    """
+    merchant = next((m for m in merchants if m.is_verified and number in merchant_numbers(m)), None)
     matching = [
         r
         for r in reports
@@ -343,10 +361,15 @@ class MemoryRepository:
         return next((m for m in self.merchants.values() if m.slug == slug), None)
 
     async def find_official_handle(self, platform: str, handle: str) -> MerchantRecord | None:
-        """Exact official handle (lowercase, no '@', no trailing '/') on the same platform."""
+        """Exact official handle (lowercase, no '@', no trailing '/') of a curated/verified merchant.
+
+        A merely *claimed* handle is not official: it must never produce a HALISI verdict.
+        """
         key = _handle_key(platform, handle)
         for merchant in self.merchants.values():
-            if any(_handle_key(h.platform, h.handle) == key for h in merchant.official_handles):
+            if merchant.is_verified and any(
+                _handle_key(h.platform, h.handle) == key for h in merchant.official_handles
+            ):
                 return merchant
         return None
 
@@ -360,34 +383,66 @@ class MemoryRepository:
     async def create_merchant(
         self,
         data: MerchantCreate,
-        hashes: LogoFeatures,
+        hashes: LogoFeatures | None,
         *,
         logo_url: str | None = None,
         merchant_id: UUID | None = None,
         is_verified: bool = True,
+        verification_status: VerificationStatus | None = None,
+        verification_code: str | None = None,
         created_at: datetime | None = None,
     ) -> MerchantRecord:
-        """Insert a merchant (idempotent for the same id). Raises Conflict on slug/handle clashes."""
+        """Insert a merchant (idempotent for the same id). Raises Conflict on slug/handle clashes.
+
+        A handle held only by a *claimed* merchant never blocks anyone: it is released to the new
+        registrant, so a squatter cannot lock the real owner out of their own handle.
+        """
         record = build_merchant(
             data,
             hashes,
             logo_url=logo_url,
             merchant_id=merchant_id,
             is_verified=is_verified,
+            verification_status=verification_status,
+            verification_code=verification_code,
             created_at=created_at,
         )
+        wanted = {_handle_key(h.platform, h.handle) for h in record.official_handles}
+        released: list[MerchantRecord] = []
         for other in self.merchants.values():
             if other.id == record.id:
                 continue
             if other.slug == record.slug:
                 raise Conflict("SLUG_TAKEN", f"Slug '{record.slug}' is already registered.")
             taken = {_handle_key(h.platform, h.handle) for h in other.official_handles}
-            if any(_handle_key(h.platform, h.handle) in taken for h in record.official_handles):
-                raise Conflict(
-                    "HANDLE_TAKEN", "One of these handles is already registered to another merchant."
-                )
+            if wanted & taken:
+                if other.is_verified:
+                    raise Conflict(
+                        "HANDLE_TAKEN", "One of these handles is already registered to another merchant."
+                    )
+                released.append(other)
+        for other in released:
+            kept = [h for h in other.official_handles if _handle_key(h.platform, h.handle) not in wanted]
+            self.merchants[other.id] = other.model_copy(update={"official_handles": kept})
         self.merchants[record.id] = record
         return record
+
+    async def mark_verified(self, merchant_id: UUID, verified_at: datetime) -> MerchantRecord:
+        """Promote a claimed merchant to ``verified`` and drop the one-time code."""
+        merchant = self.merchants.get(merchant_id)
+        if merchant is None:
+            raise NotFound(f"merchant {merchant_id}")
+        updated = merchant.model_copy(
+            update={
+                "verification_status": "verified",
+                "is_verified": True,
+                "verification_code": None,
+                "verified_at": verified_at,
+                "updated_at": verified_at,
+            }
+        )
+        self.merchants[merchant_id] = updated
+        return updated
 
     async def upsert_threat(self, threat: ThreatUpsert) -> ThreatRecord:
         """Insert or update on (merchant_id, platform, target_handle)."""
@@ -670,8 +725,8 @@ class SupabaseRepository:
         rows = await self._merchants_where("slug", slug)
         return rows[0] if rows else None
 
-    async def find_official_handle(self, platform: str, handle: str) -> MerchantRecord | None:
-        """Exact official handle on the same platform."""
+    async def _handle_owner(self, platform: str, handle: str) -> MerchantRecord | None:
+        """Whoever holds a handle, whatever their verification status."""
         p, h = _handle_key(platform, handle)
         rows = await self._run(
             lambda: (
@@ -683,6 +738,11 @@ class SupabaseRepository:
             )
         )
         return await self.get_merchant(UUID(rows[0]["merchant_id"])) if rows else None
+
+    async def find_official_handle(self, platform: str, handle: str) -> MerchantRecord | None:
+        """Exact official handle of a curated/verified merchant (a claimed handle is not official)."""
+        owner = await self._handle_owner(platform, handle)
+        return owner if owner is not None and owner.is_verified else None
 
     async def find_by_payment(self, phone: str | None, till: str | None) -> PaymentLookup:
         """Facts about a phone or till."""
@@ -708,31 +768,44 @@ class SupabaseRepository:
     async def create_merchant(
         self,
         data: MerchantCreate,
-        hashes: LogoFeatures,
+        hashes: LogoFeatures | None,
         *,
         logo_url: str | None = None,
         merchant_id: UUID | None = None,
         is_verified: bool = True,
+        verification_status: VerificationStatus | None = None,
+        verification_code: str | None = None,
         created_at: datetime | None = None,
     ) -> MerchantRecord:
-        """Upsert a merchant and its handles (idempotent for the same id)."""
+        """Upsert a merchant and its handles (idempotent for the same id).
+
+        A handle held only by a *claimed* merchant is released to the new registrant.
+        """
         record = build_merchant(
             data,
             hashes,
             logo_url=logo_url,
             merchant_id=merchant_id,
             is_verified=is_verified,
+            verification_status=verification_status,
+            verification_code=verification_code,
             created_at=created_at,
         )
         clash = await self.get_merchant_by_slug(record.slug)
         if clash and clash.id != record.id:
             raise Conflict("SLUG_TAKEN", f"Slug '{record.slug}' is already registered.")
+        released: list[str] = []
         for h in record.official_handles:
-            owner = await self.find_official_handle(h.platform, h.handle)
-            if owner and owner.id != record.id:
+            owner = await self._handle_owner(h.platform, h.handle)
+            if owner is None or owner.id == record.id:
+                continue
+            if owner.is_verified:
                 raise Conflict(
                     "HANDLE_TAKEN", "One of these handles is already registered to another merchant."
                 )
+            released.append(str(uuid.uuid5(owner.id, f"{h.platform}:{h.handle}")))
+        if released:
+            await self.delete_rows("merchant_handles", "id", released)
         row = record.model_dump(mode="json", exclude={"official_handles"})
         row["logo_embedding"] = _vector(record.logo_embedding)
         await self._run(lambda: self._table("merchants").upsert(row, on_conflict="id").execute())
@@ -755,6 +828,25 @@ class SupabaseRepository:
                 )
             )
         return record
+
+    async def mark_verified(self, merchant_id: UUID, verified_at: datetime) -> MerchantRecord:
+        """Promote a claimed merchant to ``verified`` and drop the one-time code."""
+        merchant = await self.get_merchant(merchant_id)
+        if merchant is None:
+            raise NotFound(f"merchant {merchant_id}")
+        patch = {
+            "verification_status": "verified",
+            "is_verified": True,
+            "verification_code": None,
+            "verified_at": _iso(verified_at),
+            "updated_at": _iso(verified_at),
+        }
+        await self._run(
+            lambda: self._table("merchants").update(patch).eq("id", str(merchant_id)).execute()
+        )
+        return merchant.model_copy(
+            update={**patch, "verified_at": verified_at, "updated_at": verified_at}
+        )
 
     # -- threats --
     def _threat(self, row: dict[str, Any]) -> ThreatRecord:

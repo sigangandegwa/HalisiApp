@@ -26,6 +26,8 @@ import {
   Playbooks,
   Stats,
   ThreatDetail,
+  Watchlist,
+  WatchlistScan,
 } from "@/lib/schemas";
 
 import alertsHand from "./alerts.json";
@@ -78,6 +80,9 @@ export interface FixtureSet {
   merchants: FixtureMerchant[];
   stats: z.infer<typeof StatsFile>;
   playbooks: z.infer<typeof PlaybooksFile>;
+  /** Look-alike watchlists and their recorded scans, keyed by merchant id (5.12). Empty without a seed. */
+  watchlists: Record<string, Watchlist>;
+  watchlistScans: Record<string, WatchlistScan>;
   /** Human-readable provenance, shown on /styleguide. */
   sources: Record<string, string>;
 }
@@ -171,6 +176,17 @@ function loadSeed(): FixtureSet | null {
     if (books) (playbooks[m[1]] ??= {})[m[2] as "en" | "sw"] = books;
   }
 
+  const watchlists: Record<string, Watchlist> = {};
+  for (const f of list(SEED_DIR, /^watchlist-(?!scan-).+\.json$/)) {
+    const w = safe(f, () => parseOrWarn(Watchlist, readJson(SEED_DIR, f), `seed/${f}`));
+    if (w) watchlists[w.merchant_id] = w;
+  }
+  const watchlistScans: Record<string, WatchlistScan> = {};
+  for (const f of list(SEED_DIR, /^watchlist-scan-.+\.json$/)) {
+    const s = safe(f, () => parseOrWarn(WatchlistScan, readJson(SEED_DIR, f), `seed/${f}`));
+    if (s) watchlistScans[s.merchant_id] = s;
+  }
+
   return {
     source: "seed",
     merchants,
@@ -178,6 +194,8 @@ function loadSeed(): FixtureSet | null {
     threats,
     alerts,
     payments,
+    watchlists,
+    watchlistScans,
     stats: {
       global: global ?? { pages_scanned: 0, threats_detected: 0, impersonations_blocked_7d: 0, merchants_protected: merchants.length, median_detection_ms: 0, top_platforms: [], active_threats: null, resolved: null, customers_warned_estimate: null },
       merchants: merchantStats,
@@ -201,6 +219,8 @@ function loadPlaceholders(): FixtureSet {
     merchants: z.array(FixtureMerchant).parse(merchantsHand),
     stats: StatsFile.parse(statsHand),
     playbooks: PlaybooksFile.parse(playbooksHand),
+    watchlists: {},
+    watchlistScans: {},
     sources: { world: "frontend placeholders (scripts/make_fixtures.py)" },
   };
 }

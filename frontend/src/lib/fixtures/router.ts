@@ -24,6 +24,8 @@ import {
   type Stats,
   type ThreatStatus,
   type ThreatSummary,
+  type VerificationState,
+  merchantStatus,
 } from "@/lib/schemas";
 import { canonicalPhone, canonicalTill, looksLikePayment, maskPhone, parseTarget } from "@/lib/format";
 import { fixtures, simulatorFixtures, type FixtureAlert, type FixtureMerchant, type FixtureThreat } from "./index";
@@ -41,6 +43,8 @@ interface DemoStore {
   extraScans: Map<string, CheckResult>;
   playbookLog: Map<string, Record<string, unknown>[]>;
   extraMerchants: Map<string, FixtureMerchant>;
+  /** One-time bio codes of merchants registered while offline (5.12). */
+  verificationCodes: Map<string, string>;
 }
 
 const globalStore = globalThis as unknown as { __halisiDemoStore?: DemoStore };
@@ -52,9 +56,13 @@ const store: DemoStore = (globalStore.__halisiDemoStore ??= {
   extraScans: new Map(),
   playbookLog: new Map(),
   extraMerchants: new Map(),
+  verificationCodes: new Map(),
 });
 if (!store.extraMerchants) {
   store.extraMerchants = new Map();
+}
+if (!store.verificationCodes) {
+  store.verificationCodes = new Map();
 }
 
 /** Handles whose manual-input result was precomputed by the real engine (scripts/make_fixtures.py). */
@@ -115,6 +123,22 @@ export function allMerchants(): FixtureMerchant[] {
   return [...base, ...store.extraMerchants.values()];
 }
 
+function verificationState(merchant: FixtureMerchant): VerificationState {
+  const status = merchantStatus(merchant);
+  const claimed = status === "claimed";
+  const code = claimed ? (store.verificationCodes.get(merchant.id) ?? null) : null;
+  return {
+    status,
+    is_verified: !claimed,
+    verification_code: code,
+    handles_to_check: claimed ? merchant.official_handles.filter((h) => ["instagram", "tiktok", "facebook", "x"].includes(h.platform)) : [],
+    checked: [],
+    found_on: null,
+    verified_at: claimed ? null : merchant.verified_since,
+    instructions: claimed && code ? `Add ${code} to the bio of one of your official accounts, then press Verify. You can remove it afterwards.` : null,
+  };
+}
+
 function findScan(id: string): CheckResult | undefined {
   return fixtures().checks.find((c) => c.scan_id === id) ?? store.extraScans.get(id);
 }
@@ -128,6 +152,7 @@ function paymentLookup(value: string): PaymentLookup | null {
   if (known) return known;
 
   const matched = allMerchants().find((m) => {
+    if (merchantStatus(m) === "claimed") return false; // a self-declared claim never makes a number official
     if (!m.payment.number) return false;
     const n = canonicalPhone(m.payment.number) ?? canonicalTill(m.payment.number);
     return n === normalized;
@@ -295,17 +320,21 @@ export function resolveFixture(
       category: data.category ?? null,
       location: data.location ?? null,
       established_on: data.established_on ?? null,
-      is_verified: true,
+      // A new merchant is only *claimed* (5.12): inert until it proves control of an official handle.
+      is_verified: false,
+      verification_status: "claimed",
       official_handles: handles,
       payment: {
         type: data.mpesa_type,
         number: data.mpesa_number ?? null,
         account_name: data.mpesa_account_name ?? null,
       },
-      verified_since: at,
+      verified_since: null,
     };
 
     store.extraMerchants.set(merchantId, newMerchant);
+    const code = `halisi-${randomUUID().replace(/-/g, "").slice(0, 6)}`;
+    store.verificationCodes.set(merchantId, code);
 
     if (!fixtures().stats.merchants[merchantId]) {
       fixtures().stats.merchants[merchantId] = {
@@ -326,6 +355,7 @@ export function resolveFixture(
       logo_phash: "a1b2c3d4e5f60718",
       logo_dhash: "1807f6e5d4c3b2a1",
       clip: false,
+      verification_code: code,
     };
 
     return { status: 201, body: created };
@@ -343,6 +373,30 @@ export function resolveFixture(
       .map(summary)
       .sort((x, y) => y.composite_score - x.composite_score);
     return { status: 200, body: list };
+  }
+
+  // 5.12 ownership proof. Offline we can read state, but never prove ownership: that needs the live engine.
+  if (a === "merchants" && b && c === "verification" && !d && m === "GET") {
+    const merchant = allMerchants().find((x) => x.id === b);
+    if (!merchant) return err(404, "NOT_FOUND", "Merchant not found.");
+    return { status: 200, body: verificationState(merchant) };
+  }
+
+  if (a === "merchants" && b && c === "verification" && d === "check" && m === "POST") {
+    const merchant = allMerchants().find((x) => x.id === b);
+    if (!merchant) return err(404, "NOT_FOUND", "Merchant not found.");
+    if (merchantStatus(merchant) !== "claimed") return { status: 200, body: verificationState(merchant) };
+    return err(503, "ENGINE_OFFLINE", "Proving ownership means reading your live bio, which needs the Halisi engine. Try again when it is back online.");
+  }
+
+  if (a === "merchants" && b && c === "watchlist" && !d && m === "GET") {
+    const watch = fixtures().watchlists[b];
+    return watch ? { status: 200, body: watch } : err(503, "ENGINE_OFFLINE", "The look-alike watchlist needs the live engine for this business.");
+  }
+
+  if (a === "merchants" && b && c === "watchlist" && d === "scan" && m === "POST") {
+    const scan = fixtures().watchlistScans[b];
+    return scan ? { status: 200, body: scan } : err(503, "ENGINE_OFFLINE", "Scanning for look-alikes needs the live engine.");
   }
 
   if (a === "merchants" && b && c === "alerts" && !d) {
