@@ -15,21 +15,21 @@
 
 ---
 
-## 🚨 The Problem: The Clone-and-Collect Scam
+## The Problem: The Clone-and-Collect Scam
 In Kenya, social commerce runs on Instagram, Facebook, TikTok and WhatsApp, and payments run on M-Pesa. Scammers clone a trusted shop's page in minutes: they copy the logo and product photos, pick a look-alike handle (`nairobi_sneakervault_official_ke`), and ask customers to pay a personal number or a Pochi la Biashara. The customer loses money. The real business loses its reputation.
 
-## 🛡️ The Solution: Halisi
+## The Solution: Halisi
 **Halisi** *(Swahili for "authentic")* gives customers a verdict **before they pay**, and gives businesses a response kit **within the first minute** of a clone appearing.
 
-- 🔍 **Check a page**: paste a link and get **HALISI** (official), **FEKI** (impersonator), **TAHADHARI** (caution) or **HAIJULIKANI** (not verified), with plain-language reasons.
-- 💳 **Check a till or phone**: is this number registered to a verified business, or reported by other customers?
-- 🏅 **Halisi Verified**: a certificate page and QR story sticker merchants post, so customers have one trusted place to confirm the real page and till.
-- 📡 **Live merchant alerts**: in-app alerts in the Halisi dashboard (bell, toasts, and opt-in phone/browser notifications) with the evidence attached.
-- 📝 **AI-drafted response kit**: customer warnings in **English and Swahili**, Instagram/Facebook impersonation report text, and Safaricom and KE-CIRT/CC report drafts. The kit is grounded in computed evidence and **sent by the merchant**, never auto-filed.
+- **Check a page**: paste a link and get **HALISI** (official), **FEKI** (impersonator), **TAHADHARI** (caution) or **HAIJULIKANI** (not verified), with plain-language reasons.
+- **Check a till or phone**: is this number registered to a verified business, or reported by other customers?
+- **Halisi Verified**: a certificate page and QR story sticker merchants post, so customers have one trusted place to confirm the real page and till.
+- **Live merchant alerts**: in-app alerts in the Halisi dashboard (bell, toasts, and opt-in phone/browser notifications) with the evidence attached.
+- **AI-drafted response kit**: customer warnings in **English and Swahili**, Instagram/Facebook impersonation report text, and Safaricom and KE-CIRT/CC report drafts. The kit is grounded in computed evidence and **sent by the merchant**, never auto-filed.
 
 ---
 
-## 🧠 How the engine decides
+## How the engine decides
 
 Halisi separates **"who is this imitating?"** from **"how dangerous is it?"**. That's how it avoids flagging honest shops that happen to have similar names.
 
@@ -81,7 +81,7 @@ graph TD
 
 ---
 
-## 🛠️ Quick Start
+## Quick Start
 
 ```bash
 git clone https://github.com/chiromo-tech-club/halisi.git
