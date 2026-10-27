@@ -31,7 +31,7 @@ Before beginning test execution, ensure your local environment is configured:
 | :-- | :-- | :-- | :-: |
 | **Backend Service** | Geoffrey | `cd backend && uvicorn app.main:app --port 8000 --reload`<br>Check `http://localhost:8000/health` returns `status: "ok"` | [X] |
 | **Seeded Database** | Geoffrey | `python -m app.ingestion.mock_seeder --target memory` (or Supabase)<br>Verify 3 merchants + 9 threats populated | [~] |
-| **Frontend Service** | Ndegwa | `cd frontend && npm run dev`<br>Check `http://localhost:3000` loads properly without console errors | [ ] |
+| **Frontend Service** | Ndegwa | `cd frontend && npm run dev`<br>Check `http://localhost:3000` loads properly without console errors | [X] |
 | **Engine Weights (Optional)** | Collins | Verify pHash + dHash operational; if CLIP enabled, check CPU/CUDA memory | [ ] |
 
 ---
