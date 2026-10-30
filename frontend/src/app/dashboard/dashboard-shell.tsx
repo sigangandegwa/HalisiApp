@@ -38,12 +38,12 @@ export function DashboardShell({
       isExternal: false,
       match: (p: string) => p === "/dashboard" || p.startsWith("/dashboard/threat"),
     },
-    {
-      name: "Onboarding",
-      href: "/dashboard/onboarding",
-      isExternal: false,
-      match: (p: string) => p.startsWith("/dashboard/onboarding") || p.startsWith("/onboarding"),
-    },
+    // {
+    //   name: "Onboarding",
+    //   href: "/dashboard/onboarding",
+    //   isExternal: false,
+    //   match: (p: string) => p.startsWith("/dashboard/onboarding") || p.startsWith("/onboarding"),
+    // },
     {
       name: "Simulator",
       href: "/simulator",
