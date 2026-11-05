@@ -60,6 +60,7 @@ META_TAKEDOWN_THRESHOLD: Final = 95.0           # score >= this triggers automat
 # account signals only AMPLIFY an advance-payment demand; they never raise a page on their own.
 STANDALONE_ADVANCE_BASE: Final = 30.0           # >= 1 advance-payment phrase ("lipa kwanza")
 STANDALONE_ADVANCE_EXTRA: Final = 5.0           # a second, different advance-payment phrase
+STANDALONE_FEE_LURE: Final = 15.0               # fee + lure pair ("you won" + "processing fee")
 STANDALONE_URGENCY: Final = 15.0                # urgency / no-refund phrases ("offer ends today")
 STANDALONE_PERSONAL_PAYMENT: Final = 20.0       # asks for a personal phone / Pochi, not a till or paybill
 STANDALONE_ACCOUNT: Final = 15.0                # new account or very little activity
