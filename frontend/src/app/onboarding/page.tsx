@@ -2,19 +2,16 @@
 
 import { useState } from "react";
 import { api, qk } from "@/lib/api";
-import { Certificate } from "@/components/certificate/certificate";
 import type { MerchantCreate, MpesaType } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, ArrowRight, CheckCircle2, ExternalLink, ShieldCheck, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useI18n } from "@/lib/i18n/provider";
 import { LogoImage } from "@/components/brand/logo-image";
 import { paymentParts } from "@/lib/format";
 
 export default function OnboardingPage() {
-  const { t } = useI18n();
   const [view, setView] = useState<"register" | "directory">("register");
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<MerchantCreate>>({
@@ -73,53 +70,52 @@ export default function OnboardingPage() {
 
   if (createMutation.isSuccess) {
     const merchant = createMutation.data;
+    const code = merchant.verification_code;
     return (
       <div className="theme-night world-night min-h-dvh bg-bg text-fg">
-        <div className="page-wrap py-10 sm:py-14">
-          <div className="max-w-2xl mx-auto space-y-8 flex flex-col items-center animate-in fade-in">
-            <div className="flex flex-col items-center text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-pill bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm font-medium">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Successfully Registered</span>
-              </div>
-              <h1 className="type-display-l text-fg">{merchant.business_name}</h1>
-              <p className="type-lede text-fg-2 max-w-md">
-                Your business is now stored in the database and protected against impersonation. Your customers can verify your official payment and handles instantly.
-              </p>
-            </div>
+        <div className="page-wrap grid max-w-3xl gap-10 py-12 sm:py-20">
+          <header className="grid gap-5">
+            <p className="type-caption text-fg-3">Registered · {merchant.business_name}</p>
+            <h1 className="type-display-l">
+              <span className="reveal-line"><span>One step left.</span></span>
+            </h1>
+            <p className="measure text-lede text-fg-2">
+              Halisi has your details but is not defending your brand yet. Anyone can type a business name, so prove it&rsquo;s yours:
+              put this code in the bio of one of your official accounts.
+            </p>
+          </header>
 
-            <div className="w-full">
-              <Certificate merchant={merchant} url={`https://halisi.app/v/${merchant.slug}`} t={t} />
+          {code ? (
+            <div className="corner-marks desk-panel grid gap-4 p-6 sm:p-10">
+              <p className="type-caption text-fg-3">One-time code</p>
+              <p className="type-data break-all text-[clamp(2rem,9vw,5rem)] leading-none">{code}</p>
+              <p className="text-[0.9375rem] text-fg-2">You can delete it from your bio once Halisi has read it.</p>
             </div>
+          ) : null}
 
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-              <Link
-                href="/dashboard"
-                className="bg-fg text-bg hover:bg-fg/90 px-8 py-3 rounded-pill type-caption transition-all duration-100 ease-out active:scale-[0.96]"
-              >
-                Go to your dashboard
-              </Link>
-              <Link
-                href={`/v/${merchant.slug}`}
-                target="_blank"
-                className="border border-line-strong text-fg hover:border-fg px-8 py-3 rounded-pill type-caption transition-all duration-100 ease-out active:scale-[0.96] inline-flex items-center gap-2"
-              >
-                View Public Certificate <ExternalLink className="w-3.5 h-3.5" />
-              </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  createMutation.reset();
-                  setStep(1);
-                  setData({ handles: [], mpesa_type: "none", phone_numbers: [] });
-                  setLogoFile(null);
-                  setView("directory");
-                }}
-                className="border border-line text-fg-2 hover:text-fg px-6 py-3 rounded-pill type-caption transition-all duration-100 ease-out active:scale-[0.96] cursor-pointer"
-              >
-                View in Directory
-              </button>
-            </div>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="/dashboard/verify"
+              className="inline-flex h-14 items-center gap-3 border border-fg bg-fg px-8 text-[1.0625rem] font-semibold text-bg transition-transform duration-(--dur-micro) active:scale-[0.98]"
+            >
+              Verify ownership <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <Link href="/dashboard" className="type-caption inline-flex h-14 items-center px-2 text-fg-2 underline decoration-line-strong underline-offset-4 hover:text-fg">
+              Later, go to my dashboard
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                createMutation.reset();
+                setStep(1);
+                setData({ handles: [], mpesa_type: "none", phone_numbers: [] });
+                setLogoFile(null);
+                setView("directory");
+              }}
+              className="type-caption h-14 cursor-pointer px-2 text-fg-3 hover:text-fg"
+            >
+              View directory
+            </button>
           </div>
         </div>
       </div>
@@ -202,7 +198,7 @@ export default function OnboardingPage() {
             <div className="desk-panel p-12 text-center text-fg-3">
               <ShieldCheck className="w-12 h-12 mx-auto mb-3 opacity-40" />
               <p className="type-heading text-fg mb-1">No businesses registered yet</p>
-              <p className="text-small mb-6">Register your brand to start active protection.</p>
+              <p className="text-small mb-6">Register your brand, then prove you own it to start protection.</p>
               <Button onClick={() => setView("register")}>Register a Business</Button>
             </div>
           ) : (
@@ -240,14 +236,18 @@ export default function OnboardingPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                      <Link
-                        href={`/v/${m.slug}`}
-                        target="_blank"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-fg-2 hover:text-fg border border-line hover:border-fg rounded-pill px-3 py-1.5 transition-colors"
-                      >
-                        <span>Certificate</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
+                      {m.is_verified ? (
+                        <Link
+                          href={`/v/${m.slug}`}
+                          target="_blank"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-fg-2 hover:text-fg border border-line hover:border-fg rounded-pill px-3 py-1.5 transition-colors"
+                        >
+                          <span>Certificate</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </Link>
+                      ) : (
+                        <span className="type-caption text-fg-3">Not verified yet</span>
+                      )}
                     </div>
                   </div>
                 );

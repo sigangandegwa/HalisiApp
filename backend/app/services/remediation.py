@@ -54,6 +54,8 @@ class NimClient:
 
         self.model = settings.llm_model
         self.timeout = settings.llm_timeout_seconds
+        self._disable_thinking = settings.llm_disable_thinking
+        self.languages: frozenset[str] = frozenset({"en", "sw"} if settings.llm_swahili else {"en"})
         self._client = AsyncOpenAI(
             base_url=settings.llm_base_url,
             api_key=settings.llm_api_key,
@@ -63,11 +65,14 @@ class NimClient:
 
     async def complete(self, messages: list[dict[str, str]]) -> str:
         """One chat completion, temperature 0.3."""
+        no_think = {"chat_template_kwargs": {"enable_thinking": False}}
+        extra: dict[str, object] | None = no_think if self._disable_thinking else None
         response = await self._client.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=0.3,
-            max_tokens=700,  # type: ignore[arg-type]
+            max_tokens=900,  # type: ignore[arg-type]  # headroom: a playbook is ~100-250 tokens
+            extra_body=extra,
         )
         return response.choices[0].message.content or ""
 
@@ -150,7 +155,7 @@ async def generate_playbooks(
     facts = build_facts(threat, merchant)
     outputs: dict[str, tuple[dict[str, str], str]] = {}
     llm_results: list[dict[str, str] | None] = [None] * len(KINDS)
-    if llm is not None:
+    if llm is not None and lang in getattr(llm, "languages", {"en", "sw"}):
         llm_results = list(await asyncio.gather(*(_llm_playbook(llm, k, facts, lang) for k in KINDS)))
     for kind, llm_out in zip(KINDS, llm_results, strict=True):
         outputs[kind] = (llm_out, "llm") if llm_out else (rem.render_playbook(kind, facts, lang), "template")
@@ -165,7 +170,7 @@ async def generate_playbooks(
                 generated_content=text,
                 generator=generator,  # type: ignore[arg-type]
                 prompt_id=rem.PROMPT_IDS[kind],
-                model=llm.model if llm and generator == "llm" else None,
+                model=llm.model if llm is not None and generator == "llm" else None,
             )
         )
 

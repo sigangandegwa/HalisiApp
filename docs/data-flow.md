@@ -16,7 +16,7 @@
                   ┌──────────────────────────────────┐
                   │  Merchant ingestion              │
                   │  - pHash + dHash of logo         │
-                  │  - CLIP embedding (Brev GPU)     │
+                  │  - CLIP embedding (optional, off)      │
                   │  - Store in Postgres + pgvector  │
                   │  - Issue Halisi Verified page+QR │
                   └────────────────┬─────────────────┘
@@ -126,7 +126,7 @@ Halisi **drafts**; the merchant **decides and sends**. Nothing is auto-filed wit
 Generation pipeline:
 
 1. Build **facts** from the DB only (names, handles, numbers, real scores, dates).
-2. Call NVIDIA NIM (`meta/llama-3.1-8b-instruct`) with a versioned prompt (AGENTS.md section 7). Scraped text is passed only as quoted data.
+2. Call NVIDIA NIM (`nvidia/nemotron-3.5-lightning-30b-a3b`) with a versioned prompt (AGENTS.md section 7). Scraped text is passed only as quoted data.
 3. **Validate**: parse as JSON; every number or handle in the output must exist in the facts.
 4. On any failure (timeout, invalid output, or LLM disabled), use the **deterministic template** (EN/SW).
 5. Log to `remediation_logs` (`generator`, `prompt_id`, `model`).

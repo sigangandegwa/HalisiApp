@@ -58,6 +58,8 @@ export function classify(
         return { access: "merchant", upstream: v1(path), merchantId: b };
       }
       if (a === "threats" && c === "playbooks" && m === "POST") return { access: "merchant", upstream: v1(path) };
+      // Evidence dossier (PDF/HTML/JSON with the SHA-256 evidence hash). Read-only, merchant session.
+      if (a === "threats" && c === "dossier" && m === "GET") return { access: "merchant", upstream: v1(path) };
       return null;
     case 4:
       if (a === "merchants" && c === "alerts" && d === "read" && m === "POST") {
