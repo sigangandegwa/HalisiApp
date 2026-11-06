@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { paymentParts } from "@/lib/format";
 import { HALISI, INK, OgRosette, OgWordmark, PAPER, ogFonts, siteHost } from "@/lib/og";
-import { MerchantPublic } from "@/lib/schemas";
+import { MerchantPublic, merchantStatus } from "@/lib/schemas";
 import { serverGet } from "@/lib/upstream";
 
 export const alt = "Halisi Verified certificate";
@@ -12,7 +12,8 @@ export const contentType = "image/png";
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [res, fonts] = await Promise.all([serverGet(["merchants", slug], MerchantPublic), ogFonts()]);
-  const m = res.data;
+  // A claimed (unproven) brand never gets a Verified card.
+  const m = res.data && merchantStatus(res.data) !== "claimed" ? res.data : null;
   const pay = m ? paymentParts(m.payment) : null;
   return new ImageResponse(
     (

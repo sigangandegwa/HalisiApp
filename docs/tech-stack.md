@@ -13,7 +13,7 @@
 * **Evidence, not vibes.** Every score is explainable: sub-scores, evidence strings and plain-language reasons. Missing signals are reported as missing (confidence), never faked as 0.
 * **Kenyan financial context first.** M-Pesa Till, Paybill and Pochi la Biashara mismatch detection, Swahili/Sheng scam language, and bilingual EN/SW output.
 * **Fast where it matters.** Seeded/cached checks take < 1.2 s; live fetches take < 4 s.
-* **Low cost.** Free tiers everywhere except the GPU (NVIDIA Brev, credit-based). The code also runs without a GPU.
+* **Low cost.** Free tiers where possible; no GPU is required (LLM drafting uses hosted NVIDIA NIM, CLIP is off).
 
 ---
 
@@ -41,7 +41,7 @@ Full spec: [BACKEND.md](BACKEND.md).
 * **HTTP**: HTTPX (one shared async client), tenacity retries
 * **Background work**: FastAPI `BackgroundTasks` (alerts, persistence); APScheduler for the P2 takedown tracker. No Celery or Redis in the MVP.
 * **Rate limiting**: slowapi
-* **Hosting**: **NVIDIA Brev GPU instance** (API + engine in one service), exposed through an ngrok static domain. The laptop hot spare runs in CPU mode. See [BREV_ENGINE_SETUP.md](BREV_ENGINE_SETUP.md).
+* **Hosting**: any host with a public HTTPS URL (decision 2026-11-06: Brev and ngrok dropped); the frontend finds it through `HALISI_API_URL`. The laptop hot spare runs in CPU mode. See [BREV_ENGINE_SETUP.md](BREV_ENGINE_SETUP.md).
 
 ---
 
@@ -50,12 +50,12 @@ Full spec: [BACKEND.md](BACKEND.md).
 | Signal | Technique | Library | Runs on |
 | :-- | :-- | :-- | :-- |
 | Visual | pHash + dHash (64-bit), calibrated Hamming → similarity | `imagehash`, Pillow | CPU, < 5 ms |
-| Visual (robust) | CLIP ViT-B-32 image embeddings (512-d), cosine similarity | `sentence-transformers`, PyTorch | **Brev GPU** (~15 ms) / CPU (~150 ms) / off |
+| Visual (robust) | CLIP ViT-B-32 image embeddings (512-d), cosine similarity | `sentence-transformers`, PyTorch | CPU (~150 ms) / GPU if ever used / **off (current default)** |
 | Identity | Normalised + homoglyph-folded Jaro-Winkler / ratio / token-set / containment | `rapidfuzz` | CPU |
 | Payment | Kenyan phone / Till / Paybill / Pochi extraction vs the merchant registry | `re` | CPU |
 | Language | Weighted EN/SW/Sheng scam-token lexicon | `re` | CPU |
 | Account | Account age (when known), post/follower counts, first-seen recency | — | CPU |
-| Remediation | Facts-grounded LLM drafting with output validation + template fallback | NVIDIA NIM (`meta/llama-3.1-8b-instruct`) via `openai` client | Hosted NIM (default) or self-hosted NIM on Brev |
+| Remediation | Facts-grounded LLM drafting with output validation + template fallback | NVIDIA NIM (`nvidia/nemotron-3.5-lightning-30b-a3b`) via `openai` client | Hosted NIM (default) or self-hosted NIM on Brev |
 
 Dropped from v0.1: the MiniLM bio embeddings (no clear gain over the lexicon for the MVP), ChromaDB (replaced by pgvector inside Supabase, one fewer system), and the Gemini API (replaced by NVIDIA NIM to align with the Brev GPU story; any OpenAI-compatible endpoint still works).
 

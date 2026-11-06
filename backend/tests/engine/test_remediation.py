@@ -124,6 +124,18 @@ def test_templates_work_offline_and_pass_the_validator(lang: str) -> None:
     assert "0700 000 999" not in json.dumps(warning)  # the injected bio never reaches output
 
 
+async def test_swahili_stays_on_templates_when_the_llm_is_english_only() -> None:
+    """Live run 2026-11-06: the model's Swahili was ungrammatical and the validator cannot see that."""
+    llm = FakeLlm()
+    llm.languages = frozenset({"en"})  # type: ignore[attr-defined]
+    out = await generate_playbooks(MemoryRepository(), THREAT, MERCHANT, "sw", llm)
+    assert llm.calls == []
+    assert out.generator == "template" and out.model is None
+    assert out.consumer_warning.generator == "template"
+    english = await generate_playbooks(MemoryRepository(), THREAT, MERCHANT, "en", llm)
+    assert len(llm.calls) == 4 and english.generator == "llm"
+
+
 async def test_llm_path_is_used_when_valid() -> None:
     repo = MemoryRepository()
     llm = FakeLlm()

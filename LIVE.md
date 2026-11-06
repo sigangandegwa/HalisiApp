@@ -30,7 +30,7 @@ npm run dev
 ```bash
 # If your presenter phone is on the same local Wi-Fi:
 # Open http://<YOUR_LAPTOP_IP>:3000/dashboard on your Android/iOS phone
-# OR use cloudflared / ngrok:
+# OR use a tunnel (cloudflared) for a quick public URL:
 npx cloudflared tunnel --url http://localhost:3000
 ```
 
@@ -151,7 +151,7 @@ This is the exact sequence to execute on stage:
      - Drag side-by-side logo compare slider.
      - View 64-bit pHash hamming distance.
   3. Open Playbooks tab:
-     - Show the Swahili consumer advisory drafted by Llama 3.1 NIM.
+     - Show the Swahili consumer advisory drafted by NVIDIA NIM (English only; Swahili uses reviewed templates).
      - Click "Copy WhatsApp Warning".
   4. Click "Download Evidence Dossier (PDF)":
      - Opens formal legal PDF citing the Computer Misuse & Cybercrimes Act 2018 with cryptographic SHA-256 evidence bundle hash.

@@ -10,7 +10,7 @@
   <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"></a>
-  <a href="https://www.nvidia.com/en-us/"><img src="https://img.shields.io/badge/NVIDIA%20Brev%20%2B%20NIM-76B900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA Brev + NIM"></a>
+  <a href="https://www.nvidia.com/en-us/"><img src="https://img.shields.io/badge/NVIDIA%20NIM-76B900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA NIM"></a>
 </p>
 
 ---
@@ -64,7 +64,7 @@ graph TD
 ## 💻 Tech Stack
 - **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS v4, shadcn/ui, Motion + GSAP
 - **Backend:** FastAPI, Pydantic v2, HTTPX
-- **AI engine:** CLIP ViT-B-32 on **NVIDIA Brev** GPUs, imagehash, RapidFuzz; remediation LLM via **NVIDIA NIM** (Llama 3.1)
+- **AI engine:** imagehash (pHash/dHash), RapidFuzz; optional CLIP ViT-B-32 (off by default); remediation LLM via **NVIDIA NIM** (Nemotron)
 - **Data:** Supabase Postgres + pgvector
 - **Alerts:** in-app (polling + service-worker notifications), no third-party messaging
 
@@ -76,7 +76,7 @@ graph TD
 | [AGENTS.md](AGENTS.md) | Tasks, owners, change log, review findings (start here) |
 | [docs/BACKEND.md](docs/BACKEND.md) | API contract, engine maths, security |
 | [docs/FRONTEND.md](docs/FRONTEND.md) | Design system, pages, motion |
-| [docs/BREV_ENGINE_SETUP.md](docs/BREV_ENGINE_SETUP.md) | GPU deployment + demo-day failover |
+| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | Deployment (Supabase, backend host, frontend) and demo-day checks |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local setup, build order, demo script |
 
 ---
