@@ -39,6 +39,7 @@ from app.engine.constants import (
     STANDALONE_CONFIDENCE_BASE,
     STANDALONE_CONFIDENCE_MAX,
     STANDALONE_CONFIDENCE_STEP,
+    STANDALONE_FEE_LURE,
     STANDALONE_PERSONAL_PAYMENT,
     STANDALONE_URGENCY,
     STRONG_IDENTITY,
@@ -48,7 +49,13 @@ from app.engine.constants import (
     WEIGHTS,
 )
 from app.engine.hasher import ImageFeatures, VisualResult, visual_score
-from app.engine.matcher import ADVANCE_PAYMENT_PHRASES, URGENCY_PHRASES, identity_score, language_score
+from app.engine.matcher import (
+    URGENCY_PHRASES,
+    advance_demands,
+    has_fee_lure_pair,
+    identity_score,
+    language_score,
+)
 from app.engine.payment import PaymentEvidence, PaymentResult, canonical_phone, payment_score
 
 Verdict = Literal["official", "impersonation", "suspicious", "no_match"]
@@ -256,7 +263,7 @@ def score_standalone(target: TargetProfile, ctx: ScoringContext) -> ScoreResult:
     language_value = language.score
     account_value, account_evidence, account_code = _account_signal(target, 0.0, ctx.today)
 
-    advance = tuple(p for p in language.phrases if p in ADVANCE_PAYMENT_PHRASES)
+    advance = advance_demands(language.phrases)
     urgency = tuple(p for p in language.phrases if p in URGENCY_PHRASES)
     personal_payment = bool(target.payment.phones) or target.payment.pochi_phrasing
     new_account = account_value is not None and account_value >= STANDALONE_ACCOUNT_MIN
@@ -265,6 +272,7 @@ def score_standalone(target: TargetProfile, ctx: ScoringContext) -> ScoreResult:
     rules: list[str] = []
     if advance:
         score = STANDALONE_ADVANCE_BASE + (STANDALONE_ADVANCE_EXTRA if len(advance) > 1 else 0.0)
+        score += STANDALONE_FEE_LURE if has_fee_lure_pair(language.phrases) else 0.0
         score += STANDALONE_URGENCY if urgency else 0.0
         score += STANDALONE_PERSONAL_PAYMENT if personal_payment else 0.0
         score += STANDALONE_ACCOUNT if new_account else 0.0

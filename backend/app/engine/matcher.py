@@ -76,6 +76,14 @@ LANGUAGE_TOKENS: tuple[tuple[int, tuple[str, ...]], ...] = (
             "tuma pesa",
             "deposit required",
             "pay via m-pesa before",
+            "pay upfront",
+            "pay first",
+            "advance payment",
+            "send deposit",
+            "tuma deposit",
+            "lipa deposit",
+            "weka deposit",
+            "deposit kwanza",
         ),
     ),
     (
@@ -89,19 +97,112 @@ LANGUAGE_TOKENS: tuple[tuple[int, tuple[str, ...]], ...] = (
             "whatsapp only",
             "dm for price",
             "limited stock",
+            "stock inaisha",
+            "inaisha leo",
+            "last chance",
+            "ends tonight",
         ),
     ),
-    (10, ("strictly delivery", "no physical shop", "inbox to order", "delivery countrywide", "order now")),
+    # Fees and lures (v2.2): neither is a scam signal alone ("visa processing fee" at a travel agent,
+    # "registration fee" at a school). Together they are the Kenyan advance-fee pattern, see
+    # ADVANCE_FEE_PHRASES / FEE_LURE_PHRASES below.
+    (
+        15,
+        (
+            "registration fee",
+            "processing fee",
+            "clearance fee",
+            "release fee",
+            "activation fee",
+        ),
+    ),
+    (
+        10,
+        (
+            "strictly delivery",
+            "no physical shop",
+            "inbox to order",
+            "delivery countrywide",
+            "order now",
+            "job placement",
+            "overseas jobs",
+            "jobs in dubai",
+            "you have won",
+            "you won",
+            "claim your prize",
+            "loan approved",
+            "instant loan",
+            "no collateral",
+        ),
+    ),
 )
 # Phrase groups for the standalone scorer (scorer.score_standalone). "Pochi la biashara" and
 # "send money to" are deliberately in neither group: they describe a payment channel, which
 # honest sellers use too. Only demanding money BEFORE the goods is a pressure signal on its own.
 ADVANCE_PAYMENT_PHRASES: frozenset[str] = frozenset(
-    {"pay before delivery", "lipa kwanza", "lipa kabla", "deposit required", "pay via m-pesa before"}
+    {
+        "pay before delivery",
+        "lipa kwanza",
+        "lipa kabla",
+        "deposit required",
+        "pay via m-pesa before",
+        "pay upfront",
+        "pay first",
+        "advance payment",
+        "send deposit",
+        "tuma deposit",
+        "lipa deposit",
+        "weka deposit",
+        "deposit kwanza",
+    }
 )
 URGENCY_PHRASES: frozenset[str] = frozenset(
-    {"offer ends today", "leo tu", "limited stock", "payment with order", "no refunds", "non-refundable"}
+    {
+        "offer ends today",
+        "leo tu",
+        "limited stock",
+        "payment with order",
+        "no refunds",
+        "non-refundable",
+        "stock inaisha",
+        "inaisha leo",
+        "last chance",
+        "ends tonight",
+    }
 )
+# Advance-fee scams (fake jobs abroad, "you won" prizes, guaranteed loans) demand a *fee* before a
+# benefit that never arrives. A fee phrase counts as an advance-payment demand ONLY when a lure
+# phrase is also present, so a school's "registration fee" or a travel agent's "visa processing fee"
+# is never gated on its own.
+ADVANCE_FEE_PHRASES: frozenset[str] = frozenset(
+    {"registration fee", "processing fee", "clearance fee", "release fee", "activation fee"}
+)
+FEE_LURE_PHRASES: frozenset[str] = frozenset(
+    {
+        "job placement",
+        "overseas jobs",
+        "jobs in dubai",
+        "you have won",
+        "you won",
+        "claim your prize",
+        "loan approved",
+        "instant loan",
+        "no collateral",
+    }
+)
+
+
+def has_fee_lure_pair(phrases: Sequence[str]) -> bool:
+    """True when a fee phrase and a lure phrase were both matched (the advance-fee pattern)."""
+    return any(p in ADVANCE_FEE_PHRASES for p in phrases) and any(p in FEE_LURE_PHRASES for p in phrases)
+
+
+def advance_demands(phrases: Sequence[str]) -> tuple[str, ...]:
+    """The advance-payment demands among matched ``phrases`` (plain demands, plus fee + lure pairs)."""
+    demands = [p for p in phrases if p in ADVANCE_PAYMENT_PHRASES]
+    if has_fee_lure_pair(phrases):
+        demands.extend(p for p in phrases if p in ADVANCE_FEE_PHRASES)
+    return tuple(demands)
 
 _LANGUAGE_PATTERNS: tuple[tuple[int, str, re.Pattern[str]], ...] = tuple(
     (weight, phrase, re.compile(r"(?<![\w])" + re.escape(phrase).replace(r"\ ", r"\s+") + r"(?![\w])"))
