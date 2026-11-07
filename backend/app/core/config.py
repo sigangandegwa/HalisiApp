@@ -57,8 +57,15 @@ class Settings(BaseSettings):
     llm_enabled: bool = True
     llm_base_url: str = "https://integrate.api.nvidia.com/v1"
     llm_api_key: str = ""
-    llm_model: str = "meta/llama-3.1-8b-instruct"
+    llm_model: str = "nvidia/nemotron-3.5-lightning-30b-a3b"
     llm_timeout_seconds: float = 12.0
+    # Reasoning models (the default) spend the whole token budget "thinking", return nothing, and take ~10 s.
+    # True sends chat_template_kwargs.enable_thinking=false, which cuts a playbook to ~1.5 s. Set false for
+    # models/servers that reject the field (e.g. a self-hosted non-reasoning NIM).
+    llm_disable_thinking: bool = True
+    # Swahili stays on the reviewed templates by default: the model's Swahili was ungrammatical in a live
+    # run (2026-11-06) and the validator checks numbers and handles, not language. Opt in after review.
+    llm_swahili: bool = False
 
     # --- in-app alerts ---
     alert_dedup_hours: float = 6.0

@@ -1,58 +1,62 @@
 "use client";
 
 import Link from "next/link";
-import { timeAgo } from "@/lib/format";
+import { motion, useReducedMotion } from "motion/react";
+import { timeAgo, shortId } from "@/lib/format";
+import { STATUS_LABEL } from "@/lib/case";
+import { bezier } from "@/lib/motion";
 import type { ThreatSummary } from "@/lib/schemas";
-import { motion } from "motion/react";
+import { VERDICTS } from "@/lib/verdict";
 import { HandleDiff } from "./handle-diff";
 
-interface ThreatRowProps {
-  threat: ThreatSummary;
-  merchantHandles: string[];
-}
+/**
+ * One case in the ledger. The verdict word is the loudest thing on the row because it is the
+ * decision; the handle diff is second because it is the proof. Nothing else competes.
+ */
+export function ThreatRow({ threat, merchantHandles, index = 0 }: { threat: ThreatSummary; merchantHandles: string[]; index?: number }) {
+  const reduced = useReducedMotion() ?? false;
+  const meta = VERDICTS[threat.verdict];
 
-export function ThreatRow({ threat, merchantHandles }: ThreatRowProps) {
-  const isHighRisk = threat.composite_score >= 70;
-  
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
+    <motion.li
+      initial={reduced ? false : { opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay: Math.min(index, 8) * 0.06, ease: bezier("out") }}
     >
-      <Link 
+      <Link
         href={`/dashboard/threat/${threat.id}`}
-        className="desk-panel group flex items-center p-4 gap-4 transition-colors hover:bg-bg-3 relative overflow-hidden"
+        className="group relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 border-b border-line py-5 pl-5 transition-colors duration-(--dur-ui) hover:bg-bg-2 sm:gap-x-6 sm:pl-6"
       >
-        <div className={`absolute left-0 top-0 bottom-0 w-1 ${isHighRisk ? 'bg-[var(--color-feki)]' : 'bg-[var(--color-caution)]'}`} />
-        
-        <div className="w-12 h-12 rounded-full overflow-hidden bg-bg-2 border border-line flex-shrink-0">
-           {threat.avatar_url ? (
-             <img src={threat.avatar_url} alt="" className="w-full h-full object-cover" />
-           ) : (
-             <div className="w-full h-full bg-line-strong" />
-           )}
+        <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] origin-top scale-y-60 transition-transform duration-(--dur-ui) ease-out group-hover:scale-y-100" style={{ background: meta.stampColor }} />
+
+        <div className="size-12 shrink-0 overflow-hidden rounded-full border border-line bg-bg-3 sm:size-14">
+          {threat.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element -- seeded/remote avatars, sizes unknown
+            <img src={threat.avatar_url} alt="" className="size-full object-cover" />
+          ) : null}
         </div>
 
-        <div className="flex-1 min-w-0">
-          <HandleDiff 
-            target={threat.target_handle} 
-            officials={merchantHandles}
-          />
-          <p className="type-caption text-fg-2 mt-1 truncate">{threat.top_reason?.text}</p>
+        <div className="min-w-0">
+          <p className="type-caption text-fg-3">
+            Case {shortId(threat.id)} · {threat.platform}
+          </p>
+          <HandleDiff target={threat.target_handle} officials={merchantHandles} className="mt-1 text-[1.0625rem] sm:text-[1.25rem]" />
+          {threat.top_reason ? <p className="mt-1.5 line-clamp-1 text-[0.9375rem] text-fg-2">{threat.top_reason.text}</p> : null}
         </div>
 
-        <div className="text-right whitespace-nowrap">
-          <div className={`type-data text-lg ${isHighRisk ? 'text-[var(--color-feki)]' : 'text-[var(--color-caution)]'}`}>
-            {threat.composite_score}%
-          </div>
-          <p className="text-xs text-fg-3 mt-1">{timeAgo(threat.first_seen_at)}</p>
+        <div className="text-right">
+          <p className="font-display text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[0.85] font-black uppercase" style={{ color: meta.stampColor }}>
+            {meta.stamp}
+          </p>
+          <p className="type-data mt-1.5 text-[0.8125rem] text-fg-2">{Math.round(threat.composite_score)}/100</p>
         </div>
-        
-        <div className="ml-4 pl-4 border-l border-line flex flex-col justify-center min-w-[100px]">
-          <span className="type-caption text-fg-2">{threat.status.replace("_", " ")}</span>
-        </div>
+
+        <p className="col-span-3 col-start-1 flex items-center justify-between gap-3 pl-0 text-[0.8125rem] text-fg-3 sm:col-span-1 sm:col-start-3 sm:justify-end">
+          <span className="type-caption">{STATUS_LABEL[threat.status]}</span>
+          <span aria-hidden="true">·</span>
+          <time dateTime={threat.first_seen_at}>{timeAgo(threat.first_seen_at)}</time>
+        </p>
       </Link>
-    </motion.div>
+    </motion.li>
   );
 }

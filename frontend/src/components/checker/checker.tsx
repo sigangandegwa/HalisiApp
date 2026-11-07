@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, api, qk } from "@/lib/api";
 import { looksLikePayment, parseTarget } from "@/lib/format";
+import { useClientValue } from "@/lib/hooks";
 import { useI18n } from "@/lib/i18n/provider";
 import type { MessageKey } from "@/lib/i18n";
 import { bezier } from "@/lib/motion";
@@ -55,7 +56,11 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
   const reduced = useReducedMotion() ?? false;
   const inputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
-  const [value, setValue] = useState("");
+  // "Share to Halisi" (PWA share target) and deep links land as /?q=<link>. We prefill and focus only:
+  // a check is a deliberate tap, never something a link can trigger on someone's behalf.
+  const shared = useClientValue(() => (new URLSearchParams(window.location.search).get("q") ?? "").slice(0, 2048), "");
+  const [typed, setValue] = useState<string | null>(null);
+  const value = typed ?? shared;
   const [stage, setStage] = useState<Stage>("idle");
   const [result, setResult] = useState<CheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +71,10 @@ export function Checker({ inputClassName, resultClassName }: { inputClassName?: 
   const [announce, setAnnounce] = useState("");
 
   const mutation = useMutation({ mutationFn: (req: CheckRequest) => api.check(req) });
+
+  useEffect(() => {
+    if (shared) inputRef.current?.focus();
+  }, [shared]);
 
   // Honest, time-paced console lines while the API works.
   useEffect(() => {

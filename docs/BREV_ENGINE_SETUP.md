@@ -1,5 +1,8 @@
 # Halisi on NVIDIA Brev: Engine Setup and Demo-Day Guide (docs/BREV_ENGINE_SETUP.md)
 
+> **SUPERSEDED (2026-11-06).** The team dropped NVIDIA Brev and the ngrok tunnel: the backend runs on any host with a public HTTPS URL, the frontend reaches it through `HALISI_API_URL`, LLM drafting uses hosted NVIDIA NIM, and CLIP is off. The current steps are in `DEPLOYMENT_GUIDE.md` (Phase 2). Keep this file only as a reference if a GPU is ever used for CLIP; its model name and tunnel steps are out of date.
+
+
 **Owner**: Collins (TSK-017) · **Audience**: the whole team, plus AI agents doing deployment work.
 **Goal**: run the Halisi API + detection engine (CLIP ViT-B-32 on GPU) on an NVIDIA Brev instance, expose it at a **stable public HTTPS URL** that the Vercel frontend calls, and survive demo day even if Brev, Wi-Fi or the LLM fails.
 
@@ -138,7 +141,7 @@ ENGINE_DEVICE=cuda
 LLM_ENABLED=true
 LLM_BASE_URL=https://integrate.api.nvidia.com/v1
 LLM_API_KEY=nvapi-...
-LLM_MODEL=meta/llama-3.1-8b-instruct
+LLM_MODEL=nvidia/nemotron-3.5-lightning-30b-a3b
 ```
 
 Generate a key with `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
@@ -263,11 +266,11 @@ cloudflared tunnel --url http://127.0.0.1:8080    # prints https://<random>.tryc
 ```bash
 curl -s https://integrate.api.nvidia.com/v1/chat/completions \
   -H "Authorization: Bearer $LLM_API_KEY" -H "Content-Type: application/json" \
-  -d '{"model":"meta/llama-3.1-8b-instruct","max_tokens":80,
+  -d '{"model":"nvidia/nemotron-3.5-lightning-30b-a3b","max_tokens":80,
        "messages":[{"role":"user","content":"Andika onyo fupi la utapeli kwa wateja kwa Kiswahili."}]}'
 ```
 
-If the Swahili quality isn't good enough, try `meta/llama-3.3-70b-instruct` (same API, just change `LLM_MODEL`).
+Swahili from the hosted model was not good enough on 2026-11-06, so `LLM_SWAHILI=false` keeps Swahili on the reviewed templates. NVIDIA retired every `meta/llama-*` model on 2026-08-26 (HTTP 410): list what your key can use with `GET {LLM_BASE_URL}/models` and test each with a real call before relying on it.
 
 **B. Self-hosted NIM on Brev (optional upgrade, needs the L40S-class instance from section 3):**
 

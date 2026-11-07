@@ -20,6 +20,7 @@ IDs are uuid5 (deterministic) and every write is an upsert, so re-running is ide
 
 import argparse
 import asyncio
+import io
 import json
 import shutil
 import string
@@ -363,13 +364,28 @@ def render_assets() -> dict[str, bytes]:
     return out
 
 
+def _same_pixels(existing: bytes, fresh: bytes) -> bool:
+    """True when two PNGs decode to the same image (PNG encoders differ by Pillow/zlib version)."""
+    if existing == fresh:
+        return True
+    try:
+        with Image.open(io.BytesIO(existing)) as a, Image.open(io.BytesIO(fresh)) as b:
+            return a.size == b.size and a.convert("RGBA").tobytes() == b.convert("RGBA").tobytes()
+    except (OSError, ValueError):
+        return False
+
+
 def write_assets(directory: Path = ASSETS_DIR) -> dict[str, bytes]:
-    """Write (or refresh) the generated PNGs; returns them."""
+    """Write (or refresh) the generated PNGs; returns them.
+
+    A file is rewritten only when its *pixels* change, so running the seeder or the test suite with a
+    different Pillow build does not dirty the committed fixtures with byte-level re-encodes.
+    """
     assets = render_assets()
     directory.mkdir(parents=True, exist_ok=True)
     for key, data in assets.items():
         path = directory / asset_name(key)
-        if not path.exists() or path.read_bytes() != data:
+        if not path.exists() or not _same_pixels(path.read_bytes(), data):
             path.write_bytes(data)
     return assets
 

@@ -31,31 +31,36 @@ export function DashboardShell({
     enabled: Boolean(merchantSlug),
   });
 
+  const proven = merchant ? merchant.is_verified : true;
   const nav = [
     {
-      name: "Overview",
+      name: "Cases",
       href: "/dashboard",
       isExternal: false,
       match: (p: string) => p === "/dashboard" || p.startsWith("/dashboard/threat"),
     },
-    // {
-    //   name: "Onboarding",
-    //   href: "/dashboard/onboarding",
-    //   isExternal: false,
-    //   match: (p: string) => p.startsWith("/dashboard/onboarding") || p.startsWith("/onboarding"),
-    // },
+    {
+      name: proven ? "Ownership" : "Verify",
+      href: "/dashboard/verify",
+      isExternal: false,
+      match: (p: string) => p.startsWith("/dashboard/verify"),
+    },
     {
       name: "Simulator",
       href: "/simulator",
       isExternal: false,
       match: (p: string) => p.startsWith("/simulator"),
     },
-    {
-      name: "Public Certificate",
-      href: `/v/${merchantSlug}`,
-      isExternal: true,
-      match: (p: string) => p === `/v/${merchantSlug}`,
-    },
+    ...(proven
+      ? [
+          {
+            name: "Certificate",
+            href: `/v/${merchantSlug}`,
+            isExternal: true,
+            match: (p: string) => p === `/v/${merchantSlug}`,
+          },
+        ]
+      : []),
   ];
 
   async function handleLogout() {
@@ -81,7 +86,7 @@ export function DashboardShell({
     <AlertProvider merchantId={merchantId} merchantSlug={merchantSlug}>
       <div className="theme-night world-night min-h-screen flex flex-col font-sans text-fg bg-bg selection:bg-fg selection:text-bg">
         {/* Apple-style Translucent Floating Header with light-catching top edge */}
-        <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-xl shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset]">
+        <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-xl">
           <div className="page-wrap flex h-16 items-center justify-between gap-2 sm:gap-4">
             {/* Left: Brand */}
             <div className="flex items-center shrink-0">
@@ -90,8 +95,8 @@ export function DashboardShell({
                 className="flex items-center gap-2 rounded-sm focus-visible transition-transform duration-100 ease-out active:scale-[0.96]"
               >
                 <Wordmark className="h-6 text-fg" />
-                <span className="type-caption text-fg-2 hidden xs:inline tracking-wider uppercase text-[11px]">
-                  Dashboard
+                <span className="type-caption text-fg-3 hidden xs:inline">
+                  Strike Console
                 </span>
               </Link>
             </div>
@@ -110,7 +115,7 @@ export function DashboardShell({
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 text-xs sm:text-small text-fg-2 hover:text-fg hover:bg-fg/5 transition-all duration-100 ease-out active:scale-[0.96] shrink-0"
+                      className="group type-caption inline-flex h-11 items-center gap-1.5 px-3 text-fg-3 transition-colors duration-(--dur-micro) hover:text-fg shrink-0"
                     >
                       <span>{item.name}</span>
                       <ExternalLink
@@ -126,10 +131,10 @@ export function DashboardShell({
                     key={item.name}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`inline-flex items-center rounded-pill px-3.5 py-1.5 text-xs sm:text-small transition-all duration-100 ease-out active:scale-[0.96] shrink-0 ${
+                    className={`type-caption relative inline-flex h-11 items-center px-3 transition-colors duration-(--dur-micro) shrink-0 after:absolute after:inset-x-3 after:bottom-1 after:h-px after:origin-left after:transition-transform after:duration-(--dur-ui) ${
                       active
-                        ? "bg-fg/10 text-fg font-medium shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset]"
-                        : "text-fg-2 hover:text-fg hover:bg-fg/5 font-normal"
+                        ? "text-fg after:scale-x-100 after:bg-fg"
+                        : "text-fg-3 hover:text-fg after:scale-x-0 after:bg-fg"
                     }`}
                   >
                     {item.name}
@@ -146,7 +151,7 @@ export function DashboardShell({
                 title={`Signed in as ${merchant?.business_name || merchantSlug}`}
               >
                 <span
-                  className="size-1.5 rounded-full bg-emerald-500 shrink-0 animate-pulse"
+                  className="size-1.5 rounded-full bg-fg shrink-0"
                   aria-hidden="true"
                 />
                 <span className="truncate font-sans font-medium text-fg">

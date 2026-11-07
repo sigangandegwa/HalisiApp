@@ -246,6 +246,45 @@ def test_advance_demand_plus_one_amplifier_is_suspicious():
     assert urgent.verdict == "suspicious" and urgent.score == 45.0
 
 
+@pytest.mark.parametrize(
+    "bio",
+    [
+        "Tuma deposit ya 500 kwanza uhifadhiwe. Bei poa, leo tu!",             # Swahili deposit + urgency
+        "Simu mpya. Weka deposit, stock inaisha leo",  # deposit + Sheng urgency
+        "Jobs in Dubai! Pay registration fee before interview. Last chance",  # fake job abroad
+        "Congratulations you won 100,000! Pay a processing fee to claim",      # prize scam
+        "Instant loan, no collateral. Pay upfront processing fee. Ends tonight",
+    ],
+)
+def test_kenyan_advance_fee_and_deposit_scams_are_flagged(bio):
+    result = standalone(bio=bio)
+    assert result.verdict == "suspicious", result
+    assert result.merchant is None
+    assert result.score <= 84.0                       # still never FEKI without a report
+
+
+@pytest.mark.parametrize(
+    "bio",
+    [
+        "Visa processing fee KES 5,000. Licensed travel agent, Nairobi CBD. Pay on collection",
+        "Registration fee KES 1,000 per term. Admissions open. Call the office",
+        "Tuma location yako kwanza tukutumie rider. Pay on delivery. Order now",
+        "Last chance to order before the weekend! Fresh bread daily",
+        "Congratulations to our graduating class! Cakes for every occasion",
+    ],
+)
+def test_fee_or_urgency_words_alone_do_not_raise_an_honest_page(bio):
+    """A fee with no lure, urgency with no demand, or a congratulation is normal commerce."""
+    assert standalone(bio=bio).verdict == "no_match"
+
+
+def test_a_fee_counts_only_alongside_a_lure():
+    fee_only = standalone(bio="Processing fee applies. Last chance")
+    assert fee_only.verdict == "no_match"
+    paired = standalone(bio="Processing fee applies. Instant loan. Last chance")
+    assert paired.verdict == "suspicious" and paired.score == 60.0       # 30 + 15 fee/lure + 15 urgency
+
+
 def test_standalone_never_reaches_impersonation_without_a_report():
     result = standalone(
         bio="Lipa kwanza. Pay before delivery. Offer ends today. No refunds",

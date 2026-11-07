@@ -286,7 +286,7 @@ Fields: `data` (JSON: business_name, slug, aliases[], category, location, establ
 ```json
 {
   "generator": "llm",                       // or "template" (fallback)
-  "model": "meta/llama-3.1-8b-instruct",
+  "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
   "prompt_ids": ["PROMPT_CONSUMER_DEFENSE_V2", "PROMPT_PLATFORM_TAKEDOWN_V2", "PROMPT_SAFARICOM_REPORT_V2"],
   "consumer_warning": { "title": "Scam alert", "body": "…", "whatsapp_share_url": "https://wa.me/?text=…" },
   "platform_takedown": { "platform": "instagram", "report_url": "https://help.instagram.com/…", "body": "…" },
@@ -521,7 +521,7 @@ Required scorer tests: the seeded blatant clone ≥ 90 → `impersonation`; the 
 ### 6.9 AI remediation (`engine/remediation.py`), TSK-009
 
 - **Facts first.** Build a `RemediationFacts` object from the DB: merchant name, official handles, till and account name, target handle/URL, masked-free phone numbers, actual hash distance, actual scores, first_seen_at. The LLM gets only these facts.
-- **LLM:** NVIDIA NIM through the OpenAI-compatible client (`openai.AsyncOpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)`). Default `meta/llama-3.1-8b-instruct`. Use `meta/llama-3.3-70b-instruct` if the Swahili quality isn't good enough. `temperature=0.3`, JSON output, `timeout=LLM_TIMEOUT_SECONDS`.
+- **LLM:** NVIDIA NIM through the OpenAI-compatible client (`openai.AsyncOpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)`). Default `nvidia/nemotron-3.5-lightning-30b-a3b`. It is a reasoning model, so the client sends `chat_template_kwargs.enable_thinking=false` (`LLM_DISABLE_THINKING`); without it the default token budget returns an empty reply. Swahili uses the templates unless `LLM_SWAHILI=true`. Verify a model with a live call: NVIDIA retired all `meta/llama-*` models on 2026-08-26 (HTTP 410) while still listing them in `/models`.
 - **Validation (anti-hallucination):** parse into Pydantic. Then extract every phone number, till and `@handle` from the output and assert each one appears in the facts. On any failure (timeout, bad JSON, invented number), fall back to the **deterministic template**, set `generator="template"`, and log why.
 - **Templates** live in `engine/prompts/templates/*.j2` (EN + SW) and always work offline. They are the demo safety net.
 - **Human in the loop:** Halisi drafts; the merchant sends. Never auto-email Safaricom or KE-CIRT/CC.

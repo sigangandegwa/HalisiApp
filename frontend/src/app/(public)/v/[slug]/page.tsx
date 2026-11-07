@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { paymentParts } from "@/lib/format";
 import { getI18n } from "@/lib/i18n/server";
 import { siteUrl } from "@/lib/result";
-import { MerchantPublic } from "@/lib/schemas";
+import { MerchantPublic, merchantStatus } from "@/lib/schemas";
 import { serverGet } from "@/lib/upstream";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -17,7 +17,7 @@ const load = (slug: string) => serverGet(["merchants", slug], MerchantPublic);
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const res = await load(slug);
-  if (!res.data) return { title: "Not found", robots: { index: false } };
+  if (!res.data || merchantStatus(res.data) === "claimed") return { title: "Not found", robots: { index: false } };
   const m = res.data;
   const pay = paymentParts(m.payment);
   const title = `${m.business_name} · Halisi Verified`;
@@ -31,7 +31,8 @@ export default async function CertificatePage({ params }: Props) {
   const { t } = await getI18n();
   const res = await load(slug);
 
-  if (!res.data) {
+  // A claimed (unproven) brand has no certificate: Halisi must never vouch for a name anyone could type.
+  if (!res.data || merchantStatus(res.data) === "claimed") {
     return (
       <section className="page-wrap section-y">
         <MarkFixture on={res.fixture} />
