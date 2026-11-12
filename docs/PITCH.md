@@ -81,7 +81,7 @@ Tier 3  Frontend fixtures: frontend/src/lib/fixtures/seed/*.json served when the
 
 * Tier 1 to 2: set `DEMO_MODE=true` in `backend/.env`, run `uvicorn app.main:app --port 8000`. Seeding takes a moment; **time it yourself in rehearsal** and write the number here: `____ s`.
 * Tier 2 to 3: stop the backend; the Next.js proxy serves the frozen fixtures.
-* Live-mode gotcha (found 2026-11-06): seeded clone handles such as `nairobi_sneaker_vault_` do **not** resolve against the real database (the seed lookup exists only in `DEMO_MODE`), and the nine curated real brands exist only in the fixtures unless they are seeded into Supabase. For a live FEKI use `/simulator` or paste manual details.
+* Live-mode gotcha (found 2026-11-06): seeded clone handles such as `nairobi_sneaker_vault_` do **not** resolve against the real database (the seed lookup exists only in `DEMO_MODE`), and the nine curated real brands were seeded into Supabase on 2026-11-09 (the real Safaricom account now reads HALISI live). Six of the nine have no logo hash, so their visual signal is unavailable and a look-alike relies on name, payment and language. For a live FEKI use `/simulator` or paste manual details, but note that a manual check against the live database writes a real scan, threat and alert, so use a throwaway merchant.
 * Demo gotcha: seeded clones already have threats and alerts, so re-checking them creates no new alert. For the live "phone buzzes" moment use `/simulator` or a brand-new handle.
 
 ## 5. Reproduce every number in this document
