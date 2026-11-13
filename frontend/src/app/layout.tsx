@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const { locale, messages, t } = await getI18n();
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} ${bigShoulders.variable} ${instrument.variable}`} suppressHydrationWarning>
-      <body className="min-h-dvh">
+      <body className="min-h-dvh" suppressHydrationWarning>
         <a
           href="#content"
           className="fixed top-3 left-3 z-60 -translate-y-24 rounded-pill bg-fg px-5 py-3 text-small font-medium text-bg transition-transform duration-(--dur-ui) ease-out focus-visible:translate-y-0"
