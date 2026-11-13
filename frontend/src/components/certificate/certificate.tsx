@@ -5,7 +5,7 @@ import { Seal } from "@/components/brand/seal";
 import { formatDate, paymentParts, shortId } from "@/lib/format";
 import { waveBand } from "@/lib/guilloche";
 import type { T } from "@/lib/i18n";
-import type { MerchantPublic } from "@/lib/schemas";
+import { merchantStatus, type MerchantPublic } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
 const PLATFORM: Record<string, string> = { instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", x: "X", whatsapp: "WhatsApp", website: "Website" };
@@ -74,7 +74,7 @@ export function Certificate({
               <path d="M7.8 12.4l2.8 2.8 5.6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
             </svg>
             {merchant.is_verified
-              ? t("cert.since", { date: formatDate(merchant.verified_since) || "" })
+              ? t(merchantStatus(merchant) === "curated" ? "cert.curated" : "cert.since", { date: formatDate(merchant.verified_since) || "" })
               : t("cert.unverified")}
           </p>
           {!compact ? (

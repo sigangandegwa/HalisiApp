@@ -2,8 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
-import { AlertCircle, ArrowRight, AtSign, Eye, EyeOff, Loader2, Lock, Sparkles } from "lucide-react";
+import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "motion/react";
+import { ArrowRight } from "lucide-react";
+import { VerdictGlyph } from "@/components/brand/wordmark";
 import { dictionaries, translator, type Locale, type MessageKey } from "@/lib/i18n";
+import { bezier } from "@/lib/motion";
 
 /** Body shape returned by POST /api/session (src/app/api/session/route.ts). */
 interface SessionError {
@@ -17,26 +20,61 @@ const CODE_KEY: Record<string, MessageKey> = {
   NOT_CONFIGURED: "login.error.notConfigured",
 };
 
-export function LoginForm({ locale }: { locale: Locale }) {
+/** Fictional seeded merchants, offered as one-tap fills when the deployment shows the demo passcode. */
+const DEMO_BUSINESSES = [
+  { slug: "nairobi-sneaker-vault", name: "Nairobi Sneaker Vault" },
+  { slug: "pwani-threads", name: "Pwani Threads" },
+] as const;
+
+const FIELD =
+  "peer h-14 w-full border-0 border-b border-line-strong bg-transparent px-0 text-[1.25rem] leading-none text-fg caret-fg focus-visible:outline-none";
+
+/** The rule under a field thickens from the left when the field has focus: the designed focus state. */
+function FocusRule() {
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-fg transition-transform duration-(--dur-ui) ease-out peer-focus:scale-x-100"
+    />
+  );
+}
+
+/**
+ * The sign-in slip: two ruled lines and one bar. A refusal reads like a verdict (broken seal, FEKI red)
+ * and nudges the slip; a pass raises a bone sheet over the room while the dashboard loads behind it.
+ * `demoPasscode` is null unless the server was told to show it (SHOW_DEMO_PASSCODE).
+ */
+export function LoginForm({ locale, demoPasscode }: { locale: Locale; demoPasscode: string | null }) {
   const t = translator(dictionaries[locale]);
   const identifierId = useId();
   const passcodeId = useId();
+  const errorId = useId();
   const router = useRouter();
   const params = useSearchParams();
+  const reduced = useReducedMotion() ?? false;
+  const nudge = useAnimationControls();
   const next = params.get("next");
   const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
 
   const [identifier, setIdentifier] = useState("");
   const [passcode, setPasscode] = useState("");
   const [showPasscode, setShowPasscode] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string; refused: boolean } | null>(null);
   const [pending, setPending] = useState(false);
+  const [opened, setOpened] = useState(false);
+
+  function fail(message: string, refused: boolean) {
+    setError({ message, refused });
+    if (!reduced) {
+      void nudge.start({ x: [0, -7, 6, -3, 0], transition: { duration: 0.42, ease: bezier("quart") } });
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const cleanPasscode = passcode.trim();
     if (!cleanPasscode) {
-      setError(t("login.error.empty"));
+      fail(t("login.error.empty"), false);
       return;
     }
 
@@ -56,158 +94,155 @@ export function LoginForm({ locale }: { locale: Locale }) {
       if (!res.ok) {
         const body: SessionError = await res.json().catch(() => ({}));
         const key = body.error ? CODE_KEY[body.error.code] : undefined;
-        setError(key ? t(key) : (body.error?.message ?? t("login.error.generic")));
+        fail(key ? t(key) : (body.error?.message ?? t("login.error.generic")), true);
+        setPending(false);
         return;
       }
 
+      // The sheet rises while the dashboard loads; navigation is not delayed for the animation.
+      setOpened(true);
       router.push(safeNext);
       router.refresh();
     } catch {
-      setError(t("login.error.generic"));
-    } finally {
+      fail(t("login.error.generic"), false);
       setPending(false);
     }
   }
 
   function fillDemo(slug: string) {
+    if (!demoPasscode) return;
     setIdentifier(slug);
-    setPasscode("halisi-demo");
+    setPasscode(demoPasscode);
     setError(null);
   }
 
   return (
-    <form onSubmit={submit} noValidate className="mt-8 space-y-5">
-      {/* Error Banner with smooth entry */}
-      {error && (
-        <div
-          role="alert"
-          className="flex items-start gap-3 rounded-xl border border-fake/30 bg-fake/10 p-3.5 text-xs text-fake transition-all duration-150 ease-out animate-in fade-in slide-in-from-top-1"
-        >
-          <AlertCircle className="size-4 shrink-0 mt-0.5" strokeWidth={2} />
-          <div className="flex-1 font-medium leading-relaxed">{error}</div>
-        </div>
-      )}
-
-      {/* Input 1: Business Identifier */}
-      <div className="space-y-1.5">
-        <label htmlFor={identifierId} className="block text-xs font-mono uppercase tracking-[0.14em] text-fg-3 font-medium">
-          {t("login.identifierLabel")}
-        </label>
-        <div className="relative flex items-center">
-          <div className="pointer-events-none absolute left-3.5 flex items-center justify-center text-fg-3">
-            <AtSign className="size-4" strokeWidth={1.5} />
+    <>
+      <motion.form onSubmit={submit} noValidate animate={nudge} className="grid gap-8">
+        <div className="group grid gap-1">
+          <label htmlFor={identifierId} className="type-caption flex items-baseline gap-3 text-fg-3 transition-colors duration-(--dur-ui) group-focus-within:text-fg">
+            <span className="tabular-nums">01</span>
+            {t("login.identifierLabel")}
+          </label>
+          <div className="relative">
+            <input
+              id={identifierId}
+              name="identifier"
+              type="text"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              autoComplete="username"
+              placeholder={t("login.identifierPlaceholder")}
+              value={identifier}
+              onChange={(e) => {
+                setIdentifier(e.target.value);
+                if (error) setError(null);
+              }}
+              className={FIELD}
+            />
+            <FocusRule />
           </div>
-          <input
-            id={identifierId}
-            name="identifier"
-            type="text"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            autoComplete="username"
-            placeholder={t("login.identifierPlaceholder")}
-            value={identifier}
-            onChange={(e) => {
-              setIdentifier(e.target.value);
-              if (error) setError(null);
-            }}
-            className="h-12 w-full rounded-xl border border-line-strong bg-bg-3/30 pl-10 pr-4 text-sm text-fg placeholder:text-fg-3/50 transition-all duration-150 ease-out hover:border-fg/40 focus:border-fg focus:bg-bg/90 focus:outline-none focus:ring-2 focus:ring-fg/20"
-          />
         </div>
-        <p className="text-[11px] text-fg-3 leading-normal">
-          Slug, business name, or @handle (defaults to Nairobi Sneaker Vault)
-        </p>
-      </div>
 
-      {/* Input 2: Dashboard Passcode */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <label htmlFor={passcodeId} className="block text-xs font-mono uppercase tracking-[0.14em] text-fg-3 font-medium">
+        <div className="group grid gap-1">
+          <label htmlFor={passcodeId} className="type-caption flex items-baseline gap-3 text-fg-3 transition-colors duration-(--dur-ui) group-focus-within:text-fg">
+            <span className="tabular-nums">02</span>
             {t("login.passcodeLabel")}
           </label>
-        </div>
-        <div className="relative flex items-center">
-          <div className="pointer-events-none absolute left-3.5 flex items-center justify-center text-fg-3">
-            <Lock className="size-4" strokeWidth={1.5} />
-          </div>
-          <input
-            id={passcodeId}
-            name="passcode"
-            type={showPasscode ? "text" : "password"}
-            autoComplete="current-password"
-            placeholder={t("login.placeholder")}
-            value={passcode}
-            onChange={(e) => {
-              setPasscode(e.target.value);
-              if (error) setError(null);
-            }}
-            className="h-12 w-full rounded-xl border border-line-strong bg-bg-3/30 pl-10 pr-11 font-mono text-sm tracking-wider text-fg placeholder:font-sans placeholder:tracking-normal placeholder:text-fg-3/50 transition-all duration-150 ease-out hover:border-fg/40 focus:border-fg focus:bg-bg/90 focus:outline-none focus:ring-2 focus:ring-fg/20"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPasscode(!showPasscode)}
-            className="absolute right-3.5 p-1 text-fg-3 hover:text-fg transition-transform duration-100 ease-out active:scale-90"
-            aria-label={showPasscode ? "Hide password" : "Show password"}
-          >
-            {showPasscode ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Fast Demo Shortcuts for Judges */}
-      <div className="rounded-xl border border-line/40 bg-bg-3/20 p-2.5">
-        <div className="flex items-center justify-between gap-2">
-          <span className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-fg-3">
-            <Sparkles className="size-3 text-real" /> Quick fill:
-          </span>
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="relative">
+            <input
+              id={passcodeId}
+              name="passcode"
+              type={showPasscode ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder={t("login.placeholder")}
+              value={passcode}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? errorId : undefined}
+              onChange={(e) => {
+                setPasscode(e.target.value);
+                if (error) setError(null);
+              }}
+              className={`${FIELD} pr-20 ${showPasscode && passcode ? "font-mono tracking-[0.04em]" : ""}`}
+            />
+            <FocusRule />
             <button
               type="button"
-              onClick={() => fillDemo("nairobi-sneaker-vault")}
-              className="rounded-lg border border-line px-2 py-0.5 text-[11px] font-mono text-fg-2 hover:border-fg/40 hover:text-fg hover:bg-bg-3/50 transition-all duration-100 ease-out active:scale-95"
+              aria-pressed={showPasscode}
+              onClick={() => setShowPasscode((v) => !v)}
+              className="type-caption absolute top-1/2 right-0 inline-flex h-11 -translate-y-1/2 cursor-pointer items-center pl-4 text-fg-3 transition-colors duration-(--dur-micro) hover:text-fg"
             >
-              sneaker-vault
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemo("pwani-threads")}
-              className="rounded-lg border border-line px-2 py-0.5 text-[11px] font-mono text-fg-2 hover:border-fg/40 hover:text-fg hover:bg-bg-3/50 transition-all duration-100 ease-out active:scale-95"
-            >
-              pwani-threads
+              {showPasscode ? t("login.hide") : t("login.show")}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Apple Design instant-feedback submit button */}
-      <button
-        type="submit"
-        disabled={pending}
-        className="group relative flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-fg text-bg font-medium text-sm shadow-md transition-all duration-100 ease-out active:scale-[0.98] hover:bg-[color-mix(in_oklab,var(--fg)_88%,var(--bg))] disabled:pointer-events-none disabled:opacity-45 cursor-pointer"
-      >
-        {pending ? (
-          <>
-            <Loader2 className="size-4 animate-spin" />
-            <span>{t("login.submitting")}...</span>
-          </>
-        ) : (
-          <>
-            <span>{t("login.submit")}</span>
-            <ArrowRight className="size-4 transition-transform duration-150 ease-out group-hover:translate-x-0.5" />
-          </>
-        )}
-      </button>
+        <div aria-live="assertive" className="-my-2 empty:hidden">
+          {error ? (
+            <div id={errorId} role="alert" className="flex items-start gap-3 border-l-2 border-fake py-1 pl-4 [animation:halisi-fade-up_480ms_var(--ease-out)_both]">
+              {error.refused ? <VerdictGlyph glyph="broken" className="mt-0.5 text-fake" /> : null}
+              <p className="grid gap-1">
+                {error.refused ? <span className="type-caption text-fake">{t("login.refused")}</span> : null}
+                <span className="text-[0.9375rem] leading-snug text-fg-2">{error.message}</span>
+              </p>
+            </div>
+          ) : null}
+        </div>
 
-      {/* Back to public checker */}
-      <div className="text-center pt-1">
         <button
-          type="button"
-          onClick={() => router.push("/")}
-          className="text-xs text-fg-3 hover:text-fg transition-colors duration-100 ease-out underline decoration-line underline-offset-4 active:scale-95"
+          type="submit"
+          disabled={pending}
+          className="group/go relative inline-flex h-14 w-full cursor-pointer items-center justify-between gap-3 overflow-hidden border border-fg bg-fg px-6 text-[1.0625rem] font-semibold text-bg transition-transform duration-(--dur-micro) active:scale-[0.99] disabled:cursor-progress"
         >
-          {t("login.back")}
+          {pending ? (
+            <span>
+              {t("login.submitting")}
+              <span className="caret" aria-hidden="true" />
+            </span>
+          ) : (
+            <>
+              <span>{t("login.submit")}</span>
+              <ArrowRight className="size-5 transition-transform duration-(--dur-ui) ease-out group-hover/go:translate-x-1.5" strokeWidth={1.75} aria-hidden="true" />
+            </>
+          )}
         </button>
-      </div>
-    </form>
+
+        {demoPasscode ? (
+          <div className="grid gap-3 border border-dashed border-line-strong p-4">
+            <p className="type-caption text-fg-3">{t("login.demo")}</p>
+            <div className="flex flex-wrap gap-2">
+              {DEMO_BUSINESSES.map((b) => (
+                <button
+                  key={b.slug}
+                  type="button"
+                  onClick={() => fillDemo(b.slug)}
+                  className="inline-flex min-h-11 cursor-pointer items-center border border-line-strong px-4 text-[0.875rem] transition-colors duration-(--dur-micro) hover:bg-bg-2 active:scale-[0.98]"
+                >
+                  {b.name}
+                </button>
+              ))}
+            </div>
+            <p className="text-[0.8125rem] text-fg-3">{t("login.demoHint", { passcode: demoPasscode })}</p>
+          </div>
+        ) : null}
+      </motion.form>
+
+      <AnimatePresence>
+        {opened ? (
+          <motion.div
+            role="status"
+            className="theme-paper fixed inset-0 z-50 flex items-end bg-bg p-(--gutter) pb-[max(var(--gutter),env(safe-area-inset-bottom))] text-fg"
+            initial={reduced ? false : { y: "100%" }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.7, ease: bezier("inOut") }}
+          >
+            <p className="font-display text-[clamp(3.75rem,17vw,13rem)] leading-[0.82] font-black tracking-[-0.012em] uppercase">
+              {t("login.opening")}
+            </p>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 }

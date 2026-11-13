@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { InkFilterDefs } from "@/components/brand/stamp";
-import { OfflineChip } from "@/components/offline-chip";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { getI18n } from "@/lib/i18n/server";
@@ -88,7 +87,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <InkFilterDefs />
         <Providers locale={locale} messages={messages}>
           {children}
-          <OfflineChip />
           <Toaster />
         </Providers>
       </body>

@@ -40,7 +40,7 @@ export class ApiError extends Error {
 }
 
 // --- "Offline demo data" signal ---------------------------------------------------------------
-// Any response served from fixtures flips this on; the OfflineChip subscribes to it.
+// Any response served from fixtures flips this on (nothing on screen shows it since 2026-11-13).
 
 let usingFixtures = false;
 const listeners = new Set<() => void>();
